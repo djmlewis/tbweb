@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Page Title</title>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+ <!--   <link rel="stylesheet" href="https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css" />
+    <script src="https://code.jquery.com/jquery-1.12.0.min.js"></script>
+    <script src="https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
+-->
+    <link rel="stylesheet" href="jquery.mobile-1.4.5.css">
+    <script src="jquery-1.12.3.js"></script>
+    <script src="jquery.mobile-1.4.5.js"></script>
+
+
+    <script src="startup-script.js"></script>
+</head>
+<body>
+
+<div data-role="page" id = "page_1">
+
+    <div data-role="header">
+        <h1>TB Prescribing Guide</h1>
+    </div><!-- /header -->
+
+
+    <div role="main" class="ui-content">
+
+
+        <!--<div class="ui-field-contain">-->
+            <label for="slider_weight" class="ui-hidden-accessible">Input slider:</label>
+            <input type="range" name="slider_weight" id="slider_weight" data-highlight="true" value="60" min="30" max="100">
+        <!--</div>-->
+
+        <h2 id="text_weight">Induction Phase (First 2 months)</h2>
+
+        <!--<div class="ui-field-contain">-->
+            <div data-role='collapsible-set' id = "list_drugs" data-collapsed-icon="alert" data-expanded-icon="delete" data-iconpos="right"></div>
+        <!--</div>-->
+
+
+
+    </div><!-- /content -->
+
+    <div data-role="footer">
+        <h4>Page Footer</h4>
+    </div><!-- /footer -->
+</div><!-- /page -->
+
+</body>
+</html>
