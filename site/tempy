@@ -122,7 +122,7 @@ function addAlertsToCollapsible(arrayToParse, collapsibleDiv)
             collapsibleDiv.append($(document.createElement("p")).text('⚠ '+arrayToParse[w]))
         }
         collapsibleDiv.attr('data-collapsed-icon','alert');
-        collapsibleDiv.attr('data-expanded-icon','alert');
+        collapsibleDiv.attr('data-expanded-icon','arrow-u');
     }
 }
 
@@ -151,8 +151,9 @@ function rebuildDrugsLists()
     for (var ph=0;ph<numPhases;ph++)
     {
         var phaseDivName = "#"+kPhaseDrugsDiv_Stem+ph.toString();
-        var jqo_CollapsibleSetForPhase = $(phaseDivName);
-        jqo_CollapsibleSetForPhase.empty();
+        var jqo_drugsListDivForPhase = $(phaseDivName);
+        console.log(jqo_drugsListDivForPhase);
+        jqo_drugsListDivForPhase.empty();
 
         numDrugs = gIndicationsList[gCurrentIndicationIndex].phases[ph].drug_list.length;
         for(var drug=0; drug<numDrugs; drug++)
@@ -163,11 +164,12 @@ function rebuildDrugsLists()
             aDiv.append($(document.createElement("h3")).text(drugsInstructionsWarningsInfos.instructionsString));
             addAlertsToCollapsible(drugsInstructionsWarningsInfos.warningArray,aDiv);
             addInfoToCollapsible(drugsInstructionsWarningsInfos.infoArray,aDiv);
-            aDiv.appendTo(jqo_CollapsibleSetForPhase);
-            aDiv.collapsible();//.collapsible('refresh');
+            aDiv.appendTo(jqo_drugsListDivForPhase);
         }
-        jqo_CollapsibleSetForPhase.collapsibleset('refresh');
     }
+    $('[data-role=collapsible-set]').collapsibleset('refresh');
+
+
 }
 
 function setupPageForIndication()
@@ -185,13 +187,12 @@ function setupPageForIndication()
     {
         $(document.createElement("p")).text(gIndicationsList[gCurrentIndicationIndex].phases[ph].phase_name).appendTo(jqo_fieldcontain_drugs);
         var phaseDivName = kPhaseDrugsDiv_Stem+ph.toString();
-        var newColSet = $(document.createElement("div"))
+        $(document.createElement("div"))
             .attr('id',phaseDivName)
             .attr('data-role','collapsible-set')
             .attr('data-collapsed-icon','false')
-            .attr('data-expanded-icon','false');
-        newColSet.appendTo(jqo_fieldcontain_drugs);
-        newColSet.collapsibleset();//.collapsibleset('refresh');
+            .attr('data-expanded-icon','false')
+            .appendTo(jqo_fieldcontain_drugs);
     }
     rebuildDrugsLists();
 

@@ -20,15 +20,14 @@
 <body>
 
 <div data-role="page" id = "page_1">
-      <div role="main" class="ui-content">
-        <div class="ui-field-contain">
-            <label for="slider_weight" class="ui-hidden-accessible">Input slider:</label>
-            <input type="range" name="slider_weight" id="slider_weight" data-highlight="true" value="60" min="30" max="100">
-        </div>
-        <div class="ui-field-contain">
-            <h4>Adult Daily Doses</h4>
-            <p><em>Induction Phase</em></p>
-            <div data-role='collapsible-set' id = "list_drugs_induction" data-collapsed-icon="false" data-expanded-icon="false" data-iconpos="right"></div>
+      <div role="main" class="ui-content" id = "ui-content">
+        <!--<div class="ui-field-contain" id="ui-field-contain_slider">-->
+          <h2>Weight Of patient (Kg)</h2>
+          <label for="slider_weight" class="ui-hidden-accessible">Input slider:</label>
+          <input type="range" name="slider_weight" id="slider_weight" data-highlight="true" value="60" min="30" max="100">
+        <!--</div>-->
+        <div class="ui-field-contain" id = "ui-field-contain-drugs">
+            <!--<div data-role='collapsible-set' id = "list_drugs_induction" data-collapsed-icon="false" data-expanded-icon="false" data-iconpos="right"></div>-->
         </div>
 
 
