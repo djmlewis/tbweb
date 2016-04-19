@@ -6,10 +6,10 @@
 
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
- <!--   <link rel="stylesheet" href="https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css" />
-    <script src="https://code.jquery.com/jquery-1.12.0.min.js"></script>
-    <script src="https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
--->
+    <!--   <link rel="stylesheet" href="https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css" />
+       <script src="https://code.jquery.com/jquery-1.12.0.min.js"></script>
+       <script src="https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
+   -->
     <link rel="stylesheet" href="jquery.mobile-1.4.5.css">
     <script src="jquery-1.12.3.js"></script>
     <script src="jquery.mobile-1.4.5.js"></script>
@@ -19,19 +19,21 @@
 </head>
 <body>
 
-<div data-role="page" id = "page_1">
-      <div role="main" class="ui-content" id = "ui-content">
-        <!--<div class="ui-field-contain" id="ui-field-contain_slider">-->
-          <h2>Weight Of patient (Kg)</h2>
-          <label for="slider_weight" class="ui-hidden-accessible">Input slider:</label>
-          <input type="range" name="slider_weight" id="slider_weight" data-highlight="true" value="60" min="30" max="100">
-        <!--</div>-->
-        <div class="ui-field-contain" id = "ui-field-contain-drugs">
-            <!--<div data-role='collapsible-set' id = "list_drugs_induction" data-collapsed-icon="false" data-expanded-icon="false" data-iconpos="right"></div>-->
+<div data-role="page" id="page_1">
+    <div role="main" class="ui-content" id="ui-content">
+        <div class="ui-field-contain">
+            <fieldset data-role="controlgroup" data-type="horizontal">
+                <legend><strong>Weight (Kg):</strong></legend>
+                <label for="select_weight"></label><!-- ignored for inline -->
+                <select name="select_weight" id="select_weight"></select>
+            </fieldset>
+        </div>
+        <div class="ui-field-contain" id="contain_indications">
+            <fieldset data-role="controlgroup" data-type="horizontal" id="fieldset_indications" ></fieldset>
         </div>
 
 
-
+        <div class="ui-field-contain" id="ui-field-contain-drugs"></div>
     </div><!-- /content -->
 
 

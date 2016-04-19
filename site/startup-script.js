@@ -59,7 +59,59 @@ var gIndicationsList =
                     ]
                 }
             ]
+        },
+        {//Adult daily drug list object
+            d_indication_name: "DOTS",
+            phases: [
+                {//induction drug list
+                    phase_name: "Induction Phase",
+                    drug_list: [
+                        {
+                            d_name: "Isoniazid", d_how: "mg/Kg",
+                            d_mgkg_initial: 5, d_mgkg_min: 4, d_mgkg_max: 6,
+                            d_round_val: 50, d_round_direct: 1,
+                            d_max: 300, d_units: "mg"
+                        },
+                        {
+                            d_name: "Rifampicin", d_how: "mg/Kg",
+                            d_mgkg_initial: 10, d_mgkg_min: 8, d_mgkg_max: 12,
+                            d_round_val: 150, d_round_direct: 1,
+                            d_max: 600, d_units: "mg"
+                        },
+                        {
+                            d_name: "Pyrazinamide", d_how: "mg/Kg",
+                            d_mgkg_initial: 25, d_mgkg_min: 20, d_mgkg_max: 30,
+                            d_round_val: 100, d_round_direct: 1,
+                            d_max: 2000, d_units: "mg"
+                        },
+                        {
+                            d_name: "Ethambutol", d_how: "mg/Kg",
+                            d_mgkg_initial: 15, d_mgkg_min: 15, d_mgkg_max: 20,
+                            d_round_val: 100, d_round_direct: -1,
+                            d_max: 1600, d_units: "mg"
+                        }
+                    ]
+                },
+                {//Continuation drug list
+                    phase_name: "Continuation Phase",
+                    drug_list: [
+                        {
+                            d_name: "Isoniazid", d_how: "mg/Kg",
+                            d_mgkg_initial: 5, d_mgkg_min: 4, d_mgkg_max: 6,
+                            d_round_val: 50, d_round_direct: 1,
+                            d_max: 300, d_units: "mg"
+                        },
+                        {
+                            d_name: "Rifampicin", d_how: "mg/Kg",
+                            d_mgkg_initial: 10, d_mgkg_min: 8, d_mgkg_max: 12,
+                            d_round_val: 150, d_round_direct: 1,
+                            d_max: 600, d_units: "mg"
+                        }
+                    ]
+                }
+            ]
         }
+
     ];
 
 
@@ -142,10 +194,9 @@ function addInfoToCollapsible(arrayToParse, collapsibleDiv)
 
 function rebuildDrugsLists()
 {
-
     var numDrugs;
-    var jqo_slider_weight = $("#slider_weight");
-    gCurrentWeight = jqo_slider_weight.val();
+    var jqo_select_weight = $("#select_weight");
+    gCurrentWeight = jqo_select_weight.val();
     //cycle thru the phases
     var numPhases = gIndicationsList[gCurrentIndicationIndex].phases.length;
     for (var ph=0;ph<numPhases;ph++)
@@ -164,26 +215,72 @@ function rebuildDrugsLists()
             addAlertsToCollapsible(drugsInstructionsWarningsInfos.warningArray,aDiv);
             addInfoToCollapsible(drugsInstructionsWarningsInfos.infoArray,aDiv);
             aDiv.appendTo(jqo_CollapsibleSetForPhase);
-            aDiv.collapsible();//.collapsible('refresh');
         }
-        jqo_CollapsibleSetForPhase.collapsibleset('refresh');
+        //activate the collapsible
+        jqo_CollapsibleSetForPhase.trigger("create");
     }
 }
 
-function setupPageForIndication()
+function buildSelectMenuWeight() 
 {
-    var jqo_slider_weight = $("#slider_weight");
-    jqo_slider_weight.on("slidestop change",rebuildDrugsLists);
+    var jqo_select_weight = $("#select_weight");
+    jqo_select_weight.on("change", rebuildDrugsLists);
+    for (var i = 30; i < 101; i++) {
+        //var opt = 
+        $(document.createElement("option"))
+            .prop('value', i)
+            .prop('selected', i == 60)
+            .text(i.toString())
+            .appendTo(jqo_select_weight);
+    }
+    //refresh the selectmenu as created already in markup
+    jqo_select_weight.selectmenu('refresh');
+}
 
+function buildIndicationsRadio() {
+    var jqo_radiofieldsetcontainer = $('#fieldset_indications').controlgroup("container");//.find('.ui-controlgroup-controls');
+
+    // build radio button list gIndicationsList.length
+    for (var i = 0; i < gIndicationsList.length; i++) {
+        var id = gIndicationsList[i].d_indication_name;
+        var label = gIndicationsList[i].d_indication_name;
+
+        //var rad = 
+        $(document.createElement("input"))
+            .attr('id', id)
+            .attr('type', 'radio')
+            .attr('name', 'indications')
+            .attr('value', i)
+            .prop('checked', i == gCurrentIndicationIndex)
+            .appendTo(jqo_radiofieldsetcontainer);
+    
+        //var lab = 
+        $(document.createElement("label"))
+            .attr('for', id)
+            .text(label)
+            .appendTo(jqo_radiofieldsetcontainer);
+    }
+    // activate control group
+    jqo_radiofieldsetcontainer.trigger("create");
+}
+
+function buildDrugsListScaffold()
+{
     var jqo_fieldcontain_drugs = $("#ui-field-contain-drugs");
     jqo_fieldcontain_drugs.empty();
-    //add indication name
-    $(document.createElement("h3")).text(gIndicationsList[gCurrentIndicationIndex].d_indication_name).appendTo(jqo_fieldcontain_drugs);
-
-    // for each phase add the indication name and a collapsible set hanger
+    /*add indication name
+    $(document.createElement("h3"))
+        .text(gIndicationsList[gCurrentIndicationIndex].d_indication_name)
+        .addClass("ui-bar ui-bar-a ui-corner-all")
+        .appendTo(jqo_fieldcontain_drugs);
+    */
+    // for each phase add the phase name and a collapsible set hanger
     for (var ph=0;ph<gIndicationsList[gCurrentIndicationIndex].phases.length;ph++)
     {
-        $(document.createElement("p")).text(gIndicationsList[gCurrentIndicationIndex].phases[ph].phase_name).appendTo(jqo_fieldcontain_drugs);
+        $(document.createElement("p"))
+            .text(gIndicationsList[gCurrentIndicationIndex].phases[ph].phase_name)
+            .addClass("ui-bar ui-bar-a ui-corner-all")
+            .appendTo(jqo_fieldcontain_drugs);
         var phaseDivName = kPhaseDrugsDiv_Stem+ph.toString();
         var newColSet = $(document.createElement("div"))
             .attr('id',phaseDivName)
@@ -191,8 +288,22 @@ function setupPageForIndication()
             .attr('data-collapsed-icon','false')
             .attr('data-expanded-icon','false');
         newColSet.appendTo(jqo_fieldcontain_drugs);
-        newColSet.collapsibleset();//.collapsibleset('refresh');
     }
+    //activate the collapsible set components
+    jqo_fieldcontain_drugs.trigger("create");
+
+}
+
+function setupPageForIndication()
+{
+    var jqo_slider_weight = $("#slider_weight");
+    jqo_slider_weight.on("slidestop change",rebuildDrugsLists);
+
+    buildSelectMenuWeight();
+    buildIndicationsRadio();
+    buildDrugsListScaffold();
     rebuildDrugsLists();
+
+    
 
 }
