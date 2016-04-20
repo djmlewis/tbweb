@@ -19,8 +19,11 @@
 </head>
 <body>
 
-<div data-role="page" id="page_1">
-    <div role="main" class="ui-content" id="ui-content">
+<div data-role="page" id="page_1" data-theme="b"><!-- /page -->
+
+    <div role="main" class="ui-content" id="ui-content"><!-- /content -->
+
+        <!--  Weight Menu -->
         <div class="ui-field-contain">
             <fieldset data-role="controlgroup" data-type="horizontal">
                 <legend><strong>Weight (Kg):</strong></legend>
@@ -28,14 +31,16 @@
                 <select name="select_weight" id="select_weight"></select>
             </fieldset>
         </div>
+
+        <!--  Indications Selector -->
         <div class="ui-field-contain" id="contain_indications">
-            <fieldset data-role="controlgroup" data-type="horizontal" id="fieldset_indications" ></fieldset>
+            <fieldset data-role="controlgroup" data-type="horizontal" id="fieldset_indications"></fieldset>
         </div>
 
-
+        <!--  Drugs Collapsible -->
         <div class="ui-field-contain" id="ui-field-contain-drugs"></div>
-    </div><!-- /content -->
 
+    </div><!-- /content -->
 
 </div><!-- /page -->
 
