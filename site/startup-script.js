@@ -1,108 +1,178 @@
 /**
  * Created by davidjmlewis on 14/04/2016.
  */
+
+function Guideline(name)
+{
+    this.name = name || "";
+    this.indications = [];
+
+}
+
+function Indication(name) {
+    this.name = name || "";
+    this.phases = [];
+}
+
+function Phase(name) {
+    this.name = name || "";
+    this.drugs = [];
+}
+
+function Drug_mgKg(name, max, mgkg_initial, mgkg_min, mgkg_max,rounval,roundirect)
+{
+    this.name = name || "";
+    this.how = "mg/Kg";
+    this.units = "mg";
+    this.max = max;
+    this.mgkg_initial = mgkg_initial;
+    this.mgkg_min = mgkg_min;
+    this.mgkg_max = mgkg_max;
+    this.rounval = rounval;
+    this.roundirect = roundirect;
+}
+
 /* CO NSTANTS */
 var kPhaseDiv_Stem = 'ph_';
 
 /* GLOBALS */
+
+var guide = JSON.parse(
+    '{"name":"WHO","indications":[{"name":"Adults Daily","phases":[{"name":"Induction Phase","drugs":[{"name":"Isoniazid","how":"mg/Kg","units":"mg","max":300,"mgkg_initial":5,"mgkg_min":4,"mgkg_max":6,"rounval":50,"roundirect":1},{"name":"Rifampicin","how":"mg/Kg","units":"mg","max":600,"mgkg_initial":10,"mgkg_min":8,"mgkg_max":12,"rounval":150,"roundirect":1},{"name":"Pyrazinamide","how":"mg/Kg","units":"mg","max":2000,"mgkg_initial":25,"mgkg_min":20,"mgkg_max":30,"rounval":100,"roundirect":1},{"name":"Ethambutol","how":"mg/Kg","units":"mg","max":1600,"mgkg_initial":15,"mgkg_min":15,"mgkg_max":20,"rounval":100,"roundirect":1}]},{"name":"Continuation Phase","drugs":[{"name":"Isoniazid","how":"mg/Kg","units":"mg","max":300,"mgkg_initial":5,"mgkg_min":4,"mgkg_max":6,"rounval":50,"roundirect":1},{"name":"Rifampicin","how":"mg/Kg","units":"mg","max":600,"mgkg_initial":10,"mgkg_min":8,"mgkg_max":12,"rounval":150,"roundirect":1}]}]},{"name":"DOTs","phases":[{"name":"Induction Phase","drugs":[{"name":"Ethambutol","how":"mg/Kg","units":"mg","max":1600,"mgkg_initial":15,"mgkg_min":15,"mgkg_max":20,"rounval":100,"roundirect":1}]},{"name":"Continuation Phase","drugs":[{"name":"Rifampicin","how":"mg/Kg","units":"mg","max":600,"mgkg_initial":10,"mgkg_min":8,"mgkg_max":12,"rounval":150,"roundirect":1}]}]}]}'
+);
+
+/*
+    new Guideline("WHO");
+var indic;
+var phse;
+
+indic = new Indication("Adults Daily");
+guide.indications.push(indic);
+phse = new Phase("Induction Phase");
+phse.drugs.push(new Drug_mgKg("Isoniazid",300,5,4,6,50,1));
+phse.drugs.push(new Drug_mgKg("Rifampicin",600,10,8,12,150,1));
+phse.drugs.push(new Drug_mgKg("Pyrazinamide",2000,25,20,30,100,1));
+phse.drugs.push(new Drug_mgKg("Ethambutol",1600,15,15,20,100,1));
+indic.phases.push(phse);
+
+phse = new Phase("Continuation Phase");
+phse.drugs.push(new Drug_mgKg("Isoniazid",300,5,4,6,50,1));
+phse.drugs.push(new Drug_mgKg("Rifampicin",600,10,8,12,150,1));
+indic.phases.push(phse);
+
+indic = new Indication("DOTs");
+guide.indications.push(indic);
+phse = new Phase("Induction Phase");
+phse.drugs.push(new Drug_mgKg("Ethambutol",1600,15,15,20,100,1));
+indic.phases.push(phse);
+
+phse = new Phase("Continuation Phase");
+phse.drugs.push(new Drug_mgKg("Rifampicin",600,10,8,12,150,1));
+indic.phases.push(phse);
+*/
+
+//console.log(JSON.stringify(guide));
+
 var GLOBALS = {
     weight: 60,
     indicationIndex: 0,
-    indicationsList:
-        [
+    guideline: ""//guide
+
+
+/*        [
             {//Adult daily drug list object
-                d_indication_name: "Adult Daily",
+                name: "Adult Daily",
                 phases: [
                     {//induction drug list
-                        phase_name: "Induction Phase",
-                        drug_list: [
+                        name: "Induction Phase",
+                        drugs: [
                             {
-                                d_name: "Isoniazid", d_how: "mg/Kg",
-                                d_mgkg_initial: 5, d_mgkg_min: 4, d_mgkg_max: 6,
-                                d_round_val: 50, d_round_direct: 1,
-                                d_max: 300, d_units: "mg"
+                                name: "Isoniazid", how: "mg/Kg",
+                                mgkg_initial: 5, mgkg_min: 4, mgkg_max: 6,
+                                rounval: 50, roundirect: 1,
+                                max: 300, units: "mg"
                             },
                             {
-                                d_name: "Rifampicin", d_how: "mg/Kg",
-                                d_mgkg_initial: 10, d_mgkg_min: 8, d_mgkg_max: 12,
-                                d_round_val: 150, d_round_direct: 1,
-                                d_max: 600, d_units: "mg"
+                                name: "Rifampicin", how: "mg/Kg",
+                                mgkg_initial: 10, mgkg_min: 8, mgkg_max: 12,
+                                rounval: 150, roundirect: 1,
+                                max: 600, units: "mg"
                             },
                             {
-                                d_name: "Pyrazinamide", d_how: "mg/Kg",
-                                d_mgkg_initial: 25, d_mgkg_min: 20, d_mgkg_max: 30,
-                                d_round_val: 100, d_round_direct: 1,
-                                d_max: 2000, d_units: "mg"
+                                name: "Pyrazinamide", how: "mg/Kg",
+                                mgkg_initial: 25, mgkg_min: 20, mgkg_max: 30,
+                                rounval: 100, roundirect: 1,
+                                max: 2000, units: "mg"
                             },
                             {
-                                d_name: "Ethambutol", d_how: "mg/Kg",
-                                d_mgkg_initial: 15, d_mgkg_min: 15, d_mgkg_max: 20,
-                                d_round_val: 100, d_round_direct: -1,
-                                d_max: 1600, d_units: "mg"
+                                name: "Ethambutol", how: "mg/Kg",
+                                mgkg_initial: 15, mgkg_min: 15, mgkg_max: 20,
+                                rounval: 100, roundirect: -1,
+                                max: 1600, units: "mg"
                             }
                         ]
                     },
                     {//Continuation drug list
-                        phase_name: "Continuation Phase",
-                        drug_list: [
+                        name: "Continuation Phase",
+                        drugs: [
                             {
-                                d_name: "Isoniazid", d_how: "mg/Kg",
-                                d_mgkg_initial: 5, d_mgkg_min: 4, d_mgkg_max: 6,
-                                d_round_val: 50, d_round_direct: 1,
-                                d_max: 300, d_units: "mg"
+                                name: "Isoniazid", how: "mg/Kg",
+                                mgkg_initial: 5, mgkg_min: 4, mgkg_max: 6,
+                                rounval: 50, roundirect: 1,
+                                max: 300, units: "mg"
                             },
                             {
-                                d_name: "Rifampicin", d_how: "mg/Kg",
-                                d_mgkg_initial: 10, d_mgkg_min: 8, d_mgkg_max: 12,
-                                d_round_val: 150, d_round_direct: 1,
-                                d_max: 600, d_units: "mg"
+                                name: "Rifampicin", how: "mg/Kg",
+                                mgkg_initial: 10, mgkg_min: 8, mgkg_max: 12,
+                                rounval: 150, roundirect: 1,
+                                max: 600, units: "mg"
                             }
                         ]
                     }
                 ]
             },
             {//Adult daily drug list object
-                d_indication_name: "DOTS",
+                name: "DOTS",
                 phases: [
                     {//induction drug list
-                        phase_name: "Induction Phase",
-                        drug_list: [
+                        name: "Induction Phase",
+                        drugs: [
                             {
-                                d_name: "Isoniazid", d_how: "mg/Kg",
-                                d_mgkg_initial: 5, d_mgkg_min: 4, d_mgkg_max: 6,
-                                d_round_val: 50, d_round_direct: 1,
-                                d_max: 300, d_units: "mg"
+                                name: "Isoniazid", how: "mg/Kg",
+                                mgkg_initial: 5, mgkg_min: 4, mgkg_max: 6,
+                                rounval: 50, roundirect: 1,
+                                max: 300, units: "mg"
                             },
                             {
-                                d_name: "Ethambutol", d_how: "mg/Kg",
-                                d_mgkg_initial: 15, d_mgkg_min: 15, d_mgkg_max: 20,
-                                d_round_val: 100, d_round_direct: -1,
-                                d_max: 1600, d_units: "mg"
+                                name: "Ethambutol", how: "mg/Kg",
+                                mgkg_initial: 15, mgkg_min: 15, mgkg_max: 20,
+                                rounval: 100, roundirect: -1,
+                                max: 1600, units: "mg"
                             }
                         ]
                     },
                     {//Continuation drug list
-                        phase_name: "Continuation Phase",
-                        drug_list: [
+                        name: "Continuation Phase",
+                        drugs: [
                             {
-                                d_name: "Rifampicin", d_how: "mg/Kg",
-                                d_mgkg_initial: 10, d_mgkg_min: 8, d_mgkg_max: 12,
-                                d_round_val: 150, d_round_direct: 1,
-                                d_max: 600, d_units: "mg"
+                                name: "Rifampicin", how: "mg/Kg",
+                                mgkg_initial: 10, mgkg_min: 8, mgkg_max: 12,
+                                rounval: 150, roundirect: 1,
+                                max: 600, units: "mg"
                             }
                         ]
                     }
                 ]
             }
-
-        ]
+        ]*/
 };
 
 var OBJECT_IDs = {
     page: "#page_1",
     weight: "#select_weight",
     indications: '#fieldset_indications',
-    drugs: "#ui-field-contain-drugs"
+    drugs: "#ui-field-contain-drugs",
+    storageTag_guideline: "guideline"
 };
 
 /* GLOBAL STARTUPS */
@@ -110,6 +180,16 @@ jQuery(document).one( "pagecreate", OBJECT_IDs.page, setupPageForIndication);
 
 function loadSettingsAndGlobals()
 {
+    if(typeof(Storage) !== "undefined") {
+        // Code for localStorage/sessionStorage.
+        localStorage.setItem(OBJECT_IDs.storageTag_guideline,JSON.stringify(guide));
+        GLOBALS.guideline = guide;//JSON.parse(localStorage.getItem(OBJECT_IDs.storageTag_guideline));
+
+
+    } else {
+        // Sorry! No Web Storage support..
+        console.log("Sorry! No Web Storage support");
+    }
 
 }
 
@@ -145,10 +225,10 @@ function phaseButtonClicked()
 function buildIndicationsRadio() {
     var jqo_radiofieldsetcontainer = $(OBJECT_IDs.indications).controlgroup("container");//.find('.ui-controlgroup-controls');
 
-    // build radio button list GLOBALS.indicationsList.length
-    for (var i = 0; i < GLOBALS.indicationsList.length; i++) {
-        var id = GLOBALS.indicationsList[i].d_indication_name;
-        var label = GLOBALS.indicationsList[i].d_indication_name;
+    // build radio button list GLOBALS.guideline.indications.length
+    for (var i = 0; i < GLOBALS.guideline.indications.length; i++) {
+        var id = GLOBALS.guideline.indications[i].name;
+        var label = GLOBALS.guideline.indications[i].name;
 
         //var rad =
         $(document.createElement("input"))
@@ -174,44 +254,44 @@ function drugDoseString(drugInfo)
 {
     var warningsarray = [];
     var infosarray = [];
-    var calculatedDose = GLOBALS.weight*drugInfo.d_mgkg_initial;
+    var calculatedDose = GLOBALS.weight*drugInfo.mgkg_initial;
 
     // dont use calculatedDose now, apply changes to correctedDose
     var correctedDose = calculatedDose;
     // apply rounding if necessary
-    if (correctedDose % drugInfo.d_round_val != 0)
+    if (correctedDose % drugInfo.rounval != 0)
     {
-        switch (drugInfo.d_round_direct) {//-1 down 0 ignore +1 up
+        switch (drugInfo.roundirect) {//-1 down 0 ignore +1 up
             case -1:
-                correctedDose = Math.floor(correctedDose / drugInfo.d_round_val) * drugInfo.d_round_val;
-                infosarray.push(["Dose rounded DOWN by", drugInfo.d_round_val.toString(), drugInfo.d_units].join(" "));
+                correctedDose = Math.floor(correctedDose / drugInfo.rounval) * drugInfo.rounval;
+                infosarray.push(["Dose rounded DOWN by", drugInfo.rounval.toString(), drugInfo.units].join(" "));
                 break;
             case 1:
-                correctedDose = (Math.floor(correctedDose / drugInfo.d_round_val)+1) * drugInfo.d_round_val;
-                infosarray.push(["Dose rounded UP by", drugInfo.d_round_val.toString(), drugInfo.d_units].join(" "));
+                correctedDose = (Math.floor(correctedDose / drugInfo.rounval)+1) * drugInfo.rounval;
+                infosarray.push(["Dose rounded UP by", drugInfo.rounval.toString(), drugInfo.units].join(" "));
                 break;
         }
     }
     //apply maximum, use >= so we add a warning when limit reached and when breached
-    if (correctedDose>=drugInfo.d_max)
+    if (correctedDose>=drugInfo.max)
     {
-        correctedDose = drugInfo.d_max;
-        warningsarray.push("Maximum Dose is "+drugInfo.d_max+" "+drugInfo.d_units);
+        correctedDose = drugInfo.max;
+        warningsarray.push("Maximum Dose is "+drugInfo.max+" "+drugInfo.units);
     }
 
     //create the instruction
-    var instructionsstring = [drugInfo.d_name,correctedDose.toString(),drugInfo.d_units].join(" ");
+    var instructionsstring = [drugInfo.name,correctedDose.toString(),drugInfo.units].join(" ");
 
     //add info on calculated,lower and higher doses
     var weightStrX = GLOBALS.weight.toString()+" Kg @";
-    infosarray.push(["Dose:",weightStrX,drugInfo.d_mgkg_initial.toString(),drugInfo.d_how,"=",calculatedDose.toString(),drugInfo.d_units].join(" "));
-    if (drugInfo.d_mgkg_min)
+    infosarray.push(["℞",weightStrX,drugInfo.mgkg_initial.toString(),drugInfo.how,"=",calculatedDose.toString(),drugInfo.units].join(" "));
+    if (drugInfo.mgkg_min)
     {
-        infosarray.push(["Lower:", weightStrX, drugInfo.d_mgkg_min.toString(), drugInfo.d_how, "=", (GLOBALS.weight*drugInfo.d_mgkg_min).toString(), drugInfo.d_units].join(" "));
+        infosarray.push(["↓", weightStrX, drugInfo.mgkg_min.toString(), drugInfo.how, "=", (GLOBALS.weight*drugInfo.mgkg_min).toString(), drugInfo.units].join(" "));
     }
-    if (drugInfo.d_mgkg_max)
+    if (drugInfo.mgkg_max)
     {
-        infosarray.push(["Higher:", weightStrX, drugInfo.d_mgkg_max.toString(), drugInfo.d_how, "=", (GLOBALS.weight*drugInfo.d_mgkg_max).toString(), drugInfo.d_units].join(" "));
+        infosarray.push(["↑", weightStrX, drugInfo.mgkg_max.toString(), drugInfo.how, "=", (GLOBALS.weight*drugInfo.mgkg_max).toString(), drugInfo.units].join(" "));
     }
     return {instructionsString:instructionsstring, warningArray:warningsarray, infoArray:infosarray};
 }
@@ -253,18 +333,18 @@ function uniqueIDforDrugHangerDivInPhase(phaseIndex)
 function buildDrugsListsForPhases()
 {
     //cycle thru the phases
-    var numPhases = GLOBALS.indicationsList[GLOBALS.indicationIndex].phases.length;
+    var numPhases = GLOBALS.guideline.indications[GLOBALS.indicationIndex].phases.length;
     for (var ph=0;ph<numPhases;ph++)
     {
         var phaseDrugsCollSet = $('#'+uniqueIDforDrugHangerDivInPhase(ph));
         phaseDrugsCollSet.empty();
-        var numDrugs = GLOBALS.indicationsList[GLOBALS.indicationIndex].phases[ph].drug_list.length;
+        var numDrugs = GLOBALS.guideline.indications[GLOBALS.indicationIndex].phases[ph].drugs.length;
         for(var drug=0; drug<numDrugs; drug++)
         {
             var aDrugDiv = $(document.createElement("div"))
                 .attr('data-role','collapsible');
 
-            var drugsInstructionsWarningsInfos = drugDoseString(GLOBALS.indicationsList[GLOBALS.indicationIndex].phases[ph].drug_list[drug]);
+            var drugsInstructionsWarningsInfos = drugDoseString(GLOBALS.guideline.indications[GLOBALS.indicationIndex].phases[ph].drugs[drug]);
             aDrugDiv.append($(document.createElement("h3")).text(drugsInstructionsWarningsInfos.instructionsString));
             addAlertsToCollapsible(drugsInstructionsWarningsInfos.warningArray,aDrugDiv);
             addInfoToCollapsible(drugsInstructionsWarningsInfos.infoArray,aDrugDiv);
@@ -286,13 +366,13 @@ function buildDrugsListsScaffoldAndDrugsLists()
         .attr('data-collapsed-icon','false')
         .attr('data-expanded-icon','false');
     //cycle thru the phases
-    var numPhases = GLOBALS.indicationsList[GLOBALS.indicationIndex].phases.length;
+    var numPhases = GLOBALS.guideline.indications[GLOBALS.indicationIndex].phases.length;
     for (var ph=0;ph<numPhases;ph++)
     {
         $(document.createElement("div"))//add a collapsible to hang the drugs set on
             .attr('data-role','collapsible')
             .attr('data-collapsed', (ph==0 ? "false" : "true"))
-            .append($(document.createElement("h3")).text(GLOBALS.indicationsList[GLOBALS.indicationIndex].phases[ph].phase_name))
+            .append($(document.createElement("h3")).text(GLOBALS.guideline.indications[GLOBALS.indicationIndex].phases[ph].name))
             //make and add collapsible set for drugs in the phase, mark with unique ID so we can find it later for the drugs themselves
             .append
             (
