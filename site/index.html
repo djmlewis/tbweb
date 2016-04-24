@@ -23,19 +23,43 @@
 
     <div role="main" class="ui-content" id="ui-content"><!-- /content -->
 
-        <!--  Weight Menu -->
-        <div class="ui-field-contain">
-            <fieldset data-role="controlgroup" data-type="horizontal">
-                <legend><strong>Weight (Kg):</strong></legend>
-                <label for="select_weight"></label><!-- ignored for inline -->
-                <select name="select_weight" id="select_weight"></select>
-            </fieldset>
-        </div>
 
-        <!--  Indications Selector -->
-        <div class="ui-field-contain" id="contain_indications">
-            <fieldset data-role="controlgroup" data-type="horizontal" id="fieldset_indications"></fieldset>
-        </div>
+        <table data-role="table" class="ui-responsive">
+            <thead>
+            <tr>
+                <th>Weight (Kg)</th>
+                <th>Indication</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td>
+                    <!--  Weight Menu -->
+                    <!--<div class="ui-field-contain">-->
+                        <fieldset data-role="controlgroup" data-type="horizontal">
+                            <!--<legend><strong>Weight (Kg):</strong></legend>-->
+                            <label for="select_weight"></label><!-- ignored for inline -->
+                            <select name="select_weight" id="select_weight"></select>
+                        </fieldset>
+                    <!--</div>-->
+                </td>
+                <td>
+                    <!--  Indications Menu -->
+                    <!--<div class="ui-field-contain">-->
+                        <fieldset data-role="controlgroup" data-type="horizontal">
+                            <!--<legend><strong>Indication</strong></legend>-->
+                            <label for="select_indications"></label><!-- ignored for inline -->
+                            <select name="select_indications" id="select_indications"></select>
+                        </fieldset>
+                    <!--</div>-->
+                </td>
+            </tr>
+            </tbody>
+        </table>
+
+
+
+
 
         <!--  Drugs Collapsible -->
         <div class="ui-field-contain" id="ui-field-contain-drugs"></div>
