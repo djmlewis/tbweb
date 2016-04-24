@@ -170,8 +170,9 @@ var GLOBALS = {
 var OBJECT_IDs = {
     page: "#page_1",
     weight: "#select_weight",
-    indications: '#fieldset_indications',
-    drugs: "#ui-field-contain-drugs",
+    fieldsetIndications: '#fieldset_indications',
+    selectIndications: "#select_indications",
+    fieldsetDrugs: "#ui-field-contain-drugs",
     storageTag_guideline: "guideline"
 };
 
@@ -193,7 +194,7 @@ function loadSettingsAndGlobals()
 
 }
 
-function selectMenuChanged()
+function selectWeightChanged()
 {
     GLOBALS.weight = $(this).val();
     buildDrugsListsForPhases();
@@ -202,7 +203,7 @@ function selectMenuChanged()
 function buildSelectMenuWeight()
 {
     var jqo_select_weight = $(OBJECT_IDs.weight);
-    jqo_select_weight.on("change",selectMenuChanged);
+    jqo_select_weight.change(selectWeightChanged);
     var curweight = GLOBALS.weight;
     for (var i = 30; i < 101; i++) {
         //var opt =
@@ -216,39 +217,27 @@ function buildSelectMenuWeight()
     jqo_select_weight.selectmenu('refresh');
 }
 
-function phaseButtonClicked()
+function selectIndicationsChanged()
 {
     GLOBALS.indicationIndex = ($(this).val());
     buildDrugsListsScaffoldAndDrugsLists();
 }
 
-function buildIndicationsRadio() {
-    var jqo_radiofieldsetcontainer = $(OBJECT_IDs.indications).controlgroup("container");//.find('.ui-controlgroup-controls');
-
-    // build radio button list GLOBALS.guideline.indications.length
+function buildSelectMenuIndications()
+{
+    var jqo_select_indications = $(OBJECT_IDs.selectIndications);
+    jqo_select_indications.change(selectIndicationsChanged);
     for (var i = 0; i < GLOBALS.guideline.indications.length; i++) {
-        var id = GLOBALS.guideline.indications[i].name;
-        var label = GLOBALS.guideline.indications[i].name;
-
-        //var rad =
-        $(document.createElement("input"))
-            .attr('id', id)
-            .attr('type', 'radio')
-            .attr('name', 'indications')
-            .attr('value', i)
-            .prop('checked', i == GLOBALS.indicationIndex)
-            .bind( "click", phaseButtonClicked)
-            .appendTo(jqo_radiofieldsetcontainer);
-
-        //var lab =
-        $(document.createElement("label"))
-            .attr('for', id)
-            .text(label)
-            .appendTo(jqo_radiofieldsetcontainer);
+        $(document.createElement("option"))
+            .prop('value', i)
+            .prop('selected', i == GLOBALS.indicationIndex)
+            .text(GLOBALS.guideline.indications[i].name)
+            .appendTo(jqo_select_indications);
     }
-    // activate control group
-    jqo_radiofieldsetcontainer.trigger("create");
+    //refresh the selectmenu as created already in markup
+    jqo_select_indications.selectmenu('refresh');
 }
+
 
 function drugDoseString(drugInfo)
 {
@@ -351,13 +340,13 @@ function buildDrugsListsForPhases()
             aDrugDiv.appendTo(phaseDrugsCollSet);
         }
     }
-    $(OBJECT_IDs.drugs).trigger("create");
-    $(OBJECT_IDs.drugs).fieldcontain("refresh");
+    $(OBJECT_IDs.fieldsetDrugs).trigger("create");
+    $(OBJECT_IDs.fieldsetDrugs).fieldcontain("refresh");
 }
 
 function buildDrugsListsScaffoldAndDrugsLists()
 {
-    var jqo_fieldcontain_drugs = $(OBJECT_IDs.drugs);
+    var jqo_fieldcontain_drugs = $(OBJECT_IDs.fieldsetDrugs);
     jqo_fieldcontain_drugs.empty();
 
     //make a collapsible set for phases to hang on to
@@ -388,6 +377,7 @@ function buildDrugsListsScaffoldAndDrugsLists()
     // add the top set to the container
     phasesTopSet.appendTo(jqo_fieldcontain_drugs);
 
+    
     //activate the collapsible set components
     jqo_fieldcontain_drugs.trigger("create");
     buildDrugsListsForPhases();
@@ -398,8 +388,9 @@ function setupPageForIndication()
 {
     loadSettingsAndGlobals();
 
+    //now safe to do stuff
     buildSelectMenuWeight();
-    buildIndicationsRadio();
+    buildSelectMenuIndications();
     buildDrugsListsScaffoldAndDrugsLists();
 
 
