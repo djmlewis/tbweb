@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Page Title</title>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link rel="stylesheet" href="css/myStyles.css"/>
+    <link rel="stylesheet" href="css/themes/phases.css"/>
+    <link rel="stylesheet" href="css/themes/jquery.mobile.icons.min.css"/>
+    <link rel="stylesheet" href="css/jquery.mobile.structure-1.4.5.min.css"/>
+
+    <!-- JQM JS -->
+    <script src="jquery-1.12.3.js"></script>
+    <script src="jquery.mobile-1.4.5.js"></script>
+
+    <!--My JS-->
+    <script src="objectsDefinitions.js"></script>
+    <script src="startup-script-editor.js"></script>
+</head>
+<body>
+
+<div data-role="page" id="page_editor"><!-- /page -->
+
+    <div role="main" class="ui-content" id="ui-content"><!-- /content -->
+
+        <a href="index.html" class="ui-btn ui-corner-all ui-shadow ui-btn-inline">Prescribing</a>
+
+
+        <table data-role="table" class="ui-responsive">
+            <thead>
+            <tr>
+                <th></th>
+                <th></th>
+            </tr>
+            </thead>
+            <tbody>
+            <!--GUIDELINES-->
+            <tr>
+                <td>
+                    <!--Guideline name display-->
+                    <h3 id="editor-display_guideline_name">Guideline</h3>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <!--Guideline Text-->
+                    <div class="ui-field-contain">
+                        <label for="editor-text_guideline_name">Name</label>
+                        <input type="text" name="editor-text_guideline_name" id="editor-text_guideline_name" data-mini="true"
+                               placeholder="Guideline Name" value="">
+                    </div>
+                </td>
+                <td>
+                    <!--Guideline  SAVE-->
+                    <button class="ui-btn ui-icon-check ui-btn-icon-notext"
+                            id="editor-button_guideline_name"></button>
+                </td>
+            </tr>
+            <!--INDICATIONS-->
+            <tr>
+                <!--Indications Legend-->
+                <td id="editor-display_indications_name"><strong>Indications</strong></td>
+            </tr>
+            <tr>
+                <td>
+                    <!--Indications Menu-->
+                    <label for="editor-select_indications" class="ui-hidden-accessible"></label>
+                    <select name="editor-select_indications" id="editor-select_indications" data-mini="true"></select>
+                </td>
+                <td>
+                    <!--Add new indication-->
+                    <button class="ui-btn ui-icon-plus ui-btn-icon-notext " id="editor-button_indication_new">Add…
+                    </button>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <div class="ui-field-contain">
+                        <label for="editor-text_indication_name">Indication Name</label>
+                        <input type="text" name="editor-text_indication_name" id="editor-text_indication_name"
+                               placeholder="Indication Name" value="">
+                    </div>
+                </td>
+                <td>
+                    <!--Indication  SAVE-->
+                    <button class="ui-btn ui-icon-check ui-btn-icon-notext" id="editor-button_indication_name"></button>
+                </td>
+            </tr>
+            <!--PHASES-->
+            <tr>
+                <!--Phases Legend-->
+                <td id="editor-display_indications_phases"><strong>Phases</strong></td>
+            </tr>
+            <tr>
+                <td>
+                    <!--Phases Menu-->
+                    <label for="editor-select_phases" class="ui-hidden-accessible"></label>
+                    <select name="editor-select_phases" id="editor-select_phases" data-mini="true"></select>
+                </td>
+                <td>
+                    <!--Add new Phase-->
+                    <button class="ui-btn ui-icon-plus ui-btn-icon-notext " id="editor-button_phase_new">Add…
+                    </button>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <!-- Phase Name-->
+                    <div class="ui-field-contain">
+                        <label for="editor-text_phase_name">Phase Name</label>
+                        <input type="text" name="editor-text_phase_name" id="editor-text_phase_name"
+                               placeholder="Phase Name" value="">
+                    </div>
+                </td>
+                <td>
+                    <!--Phase  SAVE-->
+                    <button class="ui-btn ui-icon-check ui-btn-icon-notext" id="editor-button_phase_name"></button>
+                </td>
+            </tr>
+
+            <!--DRUGS-->
+            <tr>
+                <!--drugs Legend-->
+                <td id="editor-display_indications_drugs"><strong>Drugs</strong></td>
+            </tr>
+            <tr>
+                <td>
+                    <!--drugs Menu-->
+                    <label for="editor-select_drugs" class="ui-hidden-accessible"></label>
+                    <select name="editor-select_drugs" id="editor-select_drugs" data-mini="true"></select>
+                </td>
+                <td>
+                    <!--Add new drug-->
+                    <button class="ui-btn ui-icon-plus ui-btn-icon-notext " id="editor-button_drug_new"></button>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <!-- drug Name-->
+                    <div class="ui-field-contain">
+                        <label for="editor-text_drug_name">Drug Name</label>
+                        <input type="text" name="editor-text_drug_name" id="editor-text_drug_name"
+                               placeholder="drug Name" value="">
+                    </div>
+                </td>
+                <td>
+                    <!--drug  SAVE-->
+                    <button class="ui-btn ui-icon-check ui-btn-icon-notext" id="editor-button_drug_name"></button>
+                </td>
+            </tr>
+
+            </tbody>
+        </table>
+
+
+    </div><!-- /content -->
+
+</div><!-- /page -->
+
+</body>
+</html>

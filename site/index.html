@@ -10,17 +10,24 @@
        <script src="https://code.jquery.com/jquery-1.12.0.min.js"></script>
        <script src="https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
    -->
-    <link rel="stylesheet" href="jquery.mobile-1.4.5.css">
+    <!--CSS -->
+    <!--<link rel="stylesheet" href="css/jquery.mobile-1.4.5.css"> DEFAULT-->
+    <link rel="stylesheet" href="css/myStyles.css" />
+    <link rel="stylesheet" href="css/themes/phases.css" />
+    <link rel="stylesheet" href="css/themes/jquery.mobile.icons.min.css" />
+    <link rel="stylesheet" href="css/jquery.mobile.structure-1.4.5.min.css" />
+
+    <!-- JQM JS -->
     <script src="jquery-1.12.3.js"></script>
     <script src="jquery.mobile-1.4.5.js"></script>
 
-
+    <!--My JS-->
     <script src="objectsDefinitions.js"></script>
     <script src="startup-script.js"></script>
 </head>
 <body>
 
-<div data-role="page" id="page_1" data-theme="b"><!-- /page -->
+<div data-role="page" id="page_1" data-theme = 'a'><!-- /page -->
 
     <div role="main" class="ui-content" id="ui-content"><!-- /content -->
 
@@ -58,8 +65,10 @@
             </tbody>
         </table>
 
+        <a href="editor.html" class="ui-btn ui-corner-all ui-shadow ui-btn-inline">Editor</a>
+
         <!--  Drugs Collapsible -->
-        <div class="ui-field-contain" id="ui-field-contain-drugs"></div>
+        <div class="ui-field-contain" id="ui-field-contain-drugs" ></div>
 
     </div><!-- /content -->
 

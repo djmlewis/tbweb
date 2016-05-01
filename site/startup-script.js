@@ -7,99 +7,16 @@
 /* CONSTANTS */
 var kPhaseDiv_Stem = 'ph_';
 
+
+
 /* GLOBALS */
 var jstring = '{"name":"WHO","indications":[{"name":"Adults Daily","phases":[{"name":"Induction Phase","drugs":[{"name":"Isoniazid","how":"mg/Kg","units":"mg","maxDose":300,"mgkg_initial":5,"mgkg_min":4,"mgkg_max":6,"rounval":50,"roundirect":1},{"name":"Rifampicin","how":"mg/Kg","units":"mg","maxDose":600,"mgkg_initial":10,"mgkg_min":8,"mgkg_max":12,"rounval":150,"roundirect":1},{"name":"Pyrazinamide","how":"mg/Kg","units":"mg","maxDose":2000,"mgkg_initial":25,"mgkg_min":20,"mgkg_max":30,"rounval":100,"roundirect":1},{"name":"Ethambutol","how":"mg/Kg","units":"mg","maxDose":1600,"mgkg_initial":15,"mgkg_min":15,"mgkg_max":20,"rounval":100,"roundirect":1}]},{"name":"Continuation Phase","drugs":[{"name":"Isoniazid","how":"mg/Kg","units":"mg","maxDose":300,"mgkg_initial":5,"mgkg_min":4,"mgkg_max":6,"rounval":50,"roundirect":1},{"name":"Rifampicin","how":"mg/Kg","units":"mg","maxDose":600,"mgkg_initial":10,"mgkg_min":8,"mgkg_max":12,"rounval":150,"roundirect":1}]}]},{"name":"DOTs","phases":[{"name":"Induction Phase","drugs":[{"name":"Ethambutol","how":"mg/Kg","units":"mg","maxDose":1600,"mgkg_initial":15,"mgkg_min":15,"mgkg_max":20,"rounval":100,"roundirect":1}]},{"name":"Continuation Phase","drugs":[{"name":"Rifampicin","how":"mg/Kg","units":"mg","maxDose":600,"mgkg_initial":10,"mgkg_min":8,"mgkg_max":12,"rounval":150,"roundirect":1}]}]}]}';
-
-var GLOBALS = {
+var GLOBALS =
+{
     weight: 60,
-    indicationIndex: 0
-
-/*        [
-            {//Adult daily drug list object
-                name: "Adult Daily",
-                phases: [
-                    {//induction drug list
-                        name: "Induction Phase",
-                        drugs: [
-                            {
-                                name: "Isoniazid", how: "mg/Kg",
-                                mgkg_initial: 5, mgkg_min: 4, mgkg_max: 6,
-                                rounval: 50, roundirect: 1,
-                                maxDose: 300, units: "mg"
-                            },
-                            {
-                                name: "Rifampicin", how: "mg/Kg",
-                                mgkg_initial: 10, mgkg_min: 8, mgkg_max: 12,
-                                rounval: 150, roundirect: 1,
-                                maxDose: 600, units: "mg"
-                            },
-                            {
-                                name: "Pyrazinamide", how: "mg/Kg",
-                                mgkg_initial: 25, mgkg_min: 20, mgkg_max: 30,
-                                rounval: 100, roundirect: 1,
-                                maxDose: 2000, units: "mg"
-                            },
-                            {
-                                name: "Ethambutol", how: "mg/Kg",
-                                mgkg_initial: 15, mgkg_min: 15, mgkg_max: 20,
-                                rounval: 100, roundirect: -1,
-                                maxDose: 1600, units: "mg"
-                            }
-                        ]
-                    },
-                    {//Continuation drug list
-                        name: "Continuation Phase",
-                        drugs: [
-                            {
-                                name: "Isoniazid", how: "mg/Kg",
-                                mgkg_initial: 5, mgkg_min: 4, mgkg_max: 6,
-                                rounval: 50, roundirect: 1,
-                                maxDose: 300, units: "mg"
-                            },
-                            {
-                                name: "Rifampicin", how: "mg/Kg",
-                                mgkg_initial: 10, mgkg_min: 8, mgkg_max: 12,
-                                rounval: 150, roundirect: 1,
-                                maxDose: 600, units: "mg"
-                            }
-                        ]
-                    }
-                ]
-            },
-            {//Adult daily drug list object
-                name: "DOTS",
-                phases: [
-                    {//induction drug list
-                        name: "Induction Phase",
-                        drugs: [
-                            {
-                                name: "Isoniazid", how: "mg/Kg",
-                                mgkg_initial: 5, mgkg_min: 4, mgkg_max: 6,
-                                rounval: 50, roundirect: 1,
-                                maxDose: 300, units: "mg"
-                            },
-                            {
-                                name: "Ethambutol", how: "mg/Kg",
-                                mgkg_initial: 15, mgkg_min: 15, mgkg_max: 20,
-                                rounval: 100, roundirect: -1,
-                                maxDose: 1600, units: "mg"
-                            }
-                        ]
-                    },
-                    {//Continuation drug list
-                        name: "Continuation Phase",
-                        drugs: [
-                            {
-                                name: "Rifampicin", how: "mg/Kg",
-                                mgkg_initial: 10, mgkg_min: 8, mgkg_max: 12,
-                                rounval: 150, roundirect: 1,
-                                maxDose: 600, units: "mg"
-                            }
-                        ]
-                    }
-                ]
-            }
-        ]*/
+    indicationIndex: 0,
+    themesLetters: ['b','c'],
+    themesForIndex: function(index){ return this.themesLetters[index % this.themesLetters.length]}
 };
 
 var OBJECT_IDs = {
@@ -174,81 +91,27 @@ function buildSelectMenuIndications()
     jqo_select_indications.selectmenu('refresh');
 }
 
-
-function drugDoseString(drugInfo)
+function acronymSpanForString(acronym)
 {
-    var warningsarray = [];
-    var infosarray = [];
-    var calculatedDose = GLOBALS.weight*drugInfo.mgkg_initial;
-
-    // dont use calculatedDose now, apply changes to correctedDose
-    var correctedDose = calculatedDose;
-    // apply rounding if necessary
-    if (correctedDose % drugInfo.rounval != 0)
-    {
-        switch (drugInfo.roundirect) {//-1 down 0 ignore +1 up
-            case -1:
-                correctedDose = Math.floor(correctedDose / drugInfo.rounval) * drugInfo.rounval;
-                infosarray.push(["Dose rounded DOWN by", drugInfo.rounval.toString(), drugInfo.units].join(" "));
-                break;
-            case 1:
-                correctedDose = (Math.floor(correctedDose / drugInfo.rounval)+1) * drugInfo.rounval;
-                infosarray.push(["Dose rounded UP by", drugInfo.rounval.toString(), drugInfo.units].join(" "));
-                break;
-        }
-    }
-    //apply maximum, use >= so we add a warning when limit reached and when breached
-    if (correctedDose>=drugInfo.maxDose)
-    {
-        correctedDose = drugInfo.maxDose;
-        warningsarray.push("Maximum Dose is "+drugInfo.maxDose+" "+drugInfo.units);
-    }
-
-    //create the instruction
-    var instructionsstring = [drugInfo.name,correctedDose.toString(),drugInfo.units].join(" ");
-
-    //add info on calculated,lower and higher doses
-    var weightStrX = GLOBALS.weight.toString()+" Kg @";
-    infosarray.push(["℞",weightStrX,drugInfo.mgkg_initial.toString(),drugInfo.how,"=",calculatedDose.toString(),drugInfo.units].join(" "));
-    if (drugInfo.mgkg_min)
-    {
-        infosarray.push(["↓", weightStrX, drugInfo.mgkg_min.toString(), drugInfo.how, "=", (GLOBALS.weight*drugInfo.mgkg_min).toString(), drugInfo.units].join(" "));
-    }
-    if (drugInfo.mgkg_max)
-    {
-        infosarray.push(["↑", weightStrX, drugInfo.mgkg_max.toString(), drugInfo.how, "=", (GLOBALS.weight*drugInfo.mgkg_max).toString(), drugInfo.units].join(" "));
-    }
-    return {instructionsString:instructionsstring, warningArray:warningsarray, infoArray:infosarray};
+    return $(document.createElement("span")).text(" acronym").addClass("phaseAcronym")
 }
 
-function addAlertsToCollapsible(arrayToParse, collapsibleDiv)
+function addAlertsOrInfosToCollapsible(arrayToParse, addAlertIcon, collapsibleDiv)
 {
     //Objects are Passed by Reference, so aDiv passed in gets updated. Arguments by Value
     var numAlerts = arrayToParse.length;
     if (numAlerts > 0)
     {
+        collapsibleDiv.attr('data-collapsed-icon',(collapsibleDiv.attr('data-collapsed-icon') == 'alert' || addAlertIcon ? 'alert' : 'false'));
+        collapsibleDiv.attr('data-expanded-icon', (collapsibleDiv.attr('data-collapsed-icon') == 'alert' || addAlertIcon ? 'alert' : 'false'));
+
         for (var w=0; w<numAlerts; w++)
         {
-            collapsibleDiv.append($(document.createElement("p")).text('⚠ '+arrayToParse[w]))
+            collapsibleDiv.append($(document.createElement("p")).text((addAlertIcon ? '⚠ ' : '')+arrayToParse[w]))
         }
-        collapsibleDiv.attr('data-collapsed-icon','alert');
-        collapsibleDiv.attr('data-expanded-icon','alert');
     }
 }
 
-function addInfoToCollapsible(arrayToParse, collapsibleDiv)
-{
-    //Objects are Passed by Reference, so aDiv passed in gets updated. Arguments by Value
-    var numInfos = arrayToParse.length;
-    if (numInfos > 0)
-    {
-        for (var w=0; w<numInfos; w++)
-        {
-            collapsibleDiv.append($(document.createElement("p")).text(arrayToParse[w]))
-        }
-    }
-
-}
 
 function uniqueIDforDrugHangerDivInPhase(phaseIndex)
 {
@@ -262,17 +125,26 @@ function buildDrugsListsForPhases()
     for (var ph=0;ph<numPhases;ph++)
     {
         var phaseDrugsCollSet = $('#'+uniqueIDforDrugHangerDivInPhase(ph));
+        // var themeLetter =  GLOBALS.themesForIndex(ph);
         phaseDrugsCollSet.empty();
         var numDrugs = GLOBALS.guideline.indications[GLOBALS.indicationIndex].phases[ph].drugs.length;
         for(var drug=0; drug<numDrugs; drug++)
         {
             var aDrugDiv = $(document.createElement("div"))
                 .attr('data-role','collapsible');
+            var drugObj = GLOBALS.guideline.indications[GLOBALS.indicationIndex].phases[ph].drugs[drug];
+            // Add warnings
+            var drugsInstructionsWarningsInfos = drugObj.doseWarningsCommentsArrayForWeight(GLOBALS.weight);
+            var header = $(document.createElement("h3")).text(drugsInstructionsWarningsInfos.instructionsString);
+            header.append(acronymSpanForString(drugObj.acronym));
 
-            var drugsInstructionsWarningsInfos = drugDoseString(GLOBALS.guideline.indications[GLOBALS.indicationIndex].phases[ph].drugs[drug]);
-            aDrugDiv.append($(document.createElement("h3")).text(drugsInstructionsWarningsInfos.instructionsString));
-            addAlertsToCollapsible(drugsInstructionsWarningsInfos.warningArray,aDrugDiv);
-            addInfoToCollapsible(drugsInstructionsWarningsInfos.infoArray,aDrugDiv);
+            aDrugDiv.append(header);
+
+            addAlertsOrInfosToCollapsible(drugsInstructionsWarningsInfos.warningArray,true, aDrugDiv);
+            addAlertsOrInfosToCollapsible(drugsInstructionsWarningsInfos.infoArray,false, aDrugDiv);
+            //Add drug notes
+            aDrugDiv.append($(document.createElement("p")).text(drugObj.notes));
+            //Append to drug hanger
             aDrugDiv.appendTo(phaseDrugsCollSet);
         }
     }
@@ -294,10 +166,16 @@ function buildDrugsListsScaffoldAndDrugsLists()
     var numPhases = GLOBALS.guideline.indications[GLOBALS.indicationIndex].phases.length;
     for (var ph=0;ph<numPhases;ph++)
     {
+        var themeLetter =  GLOBALS.themesForIndex(ph);
+
+        var header = $(document.createElement("h3")).text(GLOBALS.guideline.indications[GLOBALS.indicationIndex].phases[ph].name);
+        header.append(acronymSpanForString(GLOBALS.guideline.indications[GLOBALS.indicationIndex].phases[ph].drugsAcronym));
+
         $(document.createElement("div"))//add a collapsible to hang the drugs set on
             .attr('data-role','collapsible')
+            .attr('data-theme',themeLetter)
             .attr('data-collapsed', (ph==0 ? "false" : "true"))
-            .append($(document.createElement("h3")).text(GLOBALS.guideline.indications[GLOBALS.indicationIndex].phases[ph].name))
+            .append(header)
             //make and add collapsible set for drugs in the phase, mark with unique ID so we can find it later for the drugs themselves
             .append
             (
@@ -306,6 +184,7 @@ function buildDrugsListsScaffoldAndDrugsLists()
                     .attr('data-role','collapsible-set')
                     .attr('data-collapsed-icon','false')
                     .attr('data-expanded-icon','false')
+                    .attr('data-theme',themeLetter)
             )
             //add the drugs collapsible to the drugs top set
             .appendTo(phasesTopSet);
