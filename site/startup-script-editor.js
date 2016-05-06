@@ -13,7 +13,7 @@ function SelectedGIPD()
 /* CONSTANTS */
 
 /* GLOBALS_EDITOR */
-var jstring = '{"name":"WHO","indications":[{"name":"Adults Daily","phases":[{"name":"Induction Phase","drugs":[{"name":"Isoniazid","how":"mg/Kg","units":"mg","maxDose":300,"mgkg_initial":5,"mgkg_min":4,"mgkg_max":6,"rounval":50,"roundirect":1},{"name":"Rifampicin","how":"mg/Kg","units":"mg","maxDose":600,"mgkg_initial":10,"mgkg_min":8,"mgkg_max":12,"rounval":150,"roundirect":1},{"name":"Pyrazinamide","how":"mg/Kg","units":"mg","maxDose":2000,"mgkg_initial":25,"mgkg_min":20,"mgkg_max":30,"rounval":100,"roundirect":1},{"name":"Ethambutol","how":"mg/Kg","units":"mg","maxDose":1600,"mgkg_initial":15,"mgkg_min":15,"mgkg_max":20,"rounval":100,"roundirect":1}]},{"name":"Continuation Phase","drugs":[{"name":"Isoniazid","how":"mg/Kg","units":"mg","maxDose":300,"mgkg_initial":5,"mgkg_min":4,"mgkg_max":6,"rounval":50,"roundirect":1},{"name":"Rifampicin","how":"mg/Kg","units":"mg","maxDose":600,"mgkg_initial":10,"mgkg_min":8,"mgkg_max":12,"rounval":150,"roundirect":1}]}]},{"name":"DOTs","phases":[{"name":"Induction Phase","drugs":[{"name":"Ethambutol","how":"mg/Kg","units":"mg","maxDose":1600,"mgkg_initial":15,"mgkg_min":15,"mgkg_max":20,"rounval":100,"roundirect":1}]},{"name":"Continuation Phase","drugs":[{"name":"Rifampicin","how":"mg/Kg","units":"mg","maxDose":600,"mgkg_initial":10,"mgkg_min":8,"mgkg_max":12,"rounval":150,"roundirect":1}]}]}]}';
+var jstring = '{"name":"WHO","indications":[{"name":"Adults Daily","phases":[{"name":"ADInduction Phase","drugs":[{"name":"ADI_Isoniazid","how":"mg/Kg","units":"mg","maxDose":300,"mgkg_initial":5,"mgkg_min":4,"mgkg_max":6,"rounval":50,"roundirect":1},{"name":"ADI_Rifampicin","how":"mg/Kg","units":"mg","maxDose":600,"mgkg_initial":10,"mgkg_min":8,"mgkg_max":12,"rounval":150,"roundirect":1},{"name":"ADI_Pyrazinamide","how":"mg/Kg","units":"mg","maxDose":2000,"mgkg_initial":25,"mgkg_min":20,"mgkg_max":30,"rounval":100,"roundirect":1},{"name":"ADI_Ethambutol","how":"mg/Kg","units":"mg","maxDose":1600,"mgkg_initial":15,"mgkg_min":15,"mgkg_max":20,"rounval":100,"roundirect":1}]},{"name":"ADContinuation Phase","drugs":[{"name":"ADC_Isoniazid","how":"mg/Kg","units":"mg","maxDose":300,"mgkg_initial":5,"mgkg_min":4,"mgkg_max":6,"rounval":50,"roundirect":1},{"name":"ADC_Rifampicin","how":"mg/Kg","units":"mg","maxDose":600,"mgkg_initial":10,"mgkg_min":8,"mgkg_max":12,"rounval":150,"roundirect":1}]}]},{"name":"DOTs","phases":[{"name":"D_Induction Phase","drugs":[{"name":"DI_Ethambutol","how":"mg/Kg","units":"mg","maxDose":1600,"mgkg_initial":15,"mgkg_min":15,"mgkg_max":20,"rounval":100,"roundirect":1}]},{"name":"D_Continuation Phase","drugs":[{"name":"DC_Rifampicin","how":"mg/Kg","units":"mg","maxDose":600,"mgkg_initial":10,"mgkg_min":8,"mgkg_max":12,"rounval":150,"roundirect":1}]}]}]}';
 
 var GLOBALS_EDITOR =
 {
@@ -36,6 +36,8 @@ var OBJECT_IDs_EDITOR = {
     //Phases
     select_phases: "#editor-select_phases",
     text_phase_name: "#editor-text_phase_name",
+    text_phase_duration: "#editor-text_phase_duration",
+    text_phase_acronym: "#editor-text_phase_acronym",
     button_phase_new: "#editor-button_phase_new",
     button_phase_name: "#editor-button_phase_name",
     //drugs
@@ -60,7 +62,7 @@ function setupPageForEditing() {
     /*create structure*/
     setupEvents();
     /*update display*/
-    updateGuideline();
+    displayGuideline();
 
     //refresh
 }
@@ -86,6 +88,8 @@ function setupEvents()
     $(OBJECT_IDs_EDITOR.button_indication_new).click(newIndicationTapped);
     //PHASES
     $(OBJECT_IDs_EDITOR.select_phases).change(selectPhasesChanged);
+    //DRUGS
+    $(OBJECT_IDs_EDITOR.select_drugs).change(selectDrugsChanged);
 
 }
 
@@ -95,27 +99,37 @@ function enterGuidelineName() {
     $(OBJECT_IDs_EDITOR.display_guideline_name).text(GLOBALS_EDITOR.guideline.name);
 }
 
-function updateGuideline()
+function displayGuideline()
+{
+    displayTextsForGuideLine();
+
+    //reset Indication to zero , validity will be checked
+    GLOBALS_EDITOR.GIPD.i = 0;
+
+    //cascade down
+    displayIndications();
+
+}
+function displayTextsForGuideLine()
 {
     $(OBJECT_IDs_EDITOR.display_guideline_name).text(GLOBALS_EDITOR.guideline.name);
     $(OBJECT_IDs_EDITOR.text_guideline_name).val(GLOBALS_EDITOR.guideline.name);
-    //reset Indication to zero , validity will be checked
-    GLOBALS_EDITOR.GIPD.i = 0;//(GLOBALS_EDITOR.guideline.indications.length > 0) ? 0 : -1;
-
-    //cascade down
-    updateIndications();
-
 }
 
-
-function updateIndications()
+function displayIndications()
 {
     populateIndicationsSelect();
+    displayTextsForIndication();
     //reset phase to zero , validity will be checked
-    GLOBALS_EDITOR.GIPD.p = 0;//(GLOBALS_EDITOR.guideline.indications[GLOBALS_EDITOR.GIPD.i].phases.length > 0) ? 0 : -1;//reset to first
+    GLOBALS_EDITOR.GIPD.p = 0;
 
     //cascade down
-    updatePhases();
+    displayPhases();
+}
+function displayTextsForIndication()
+{
+    $(OBJECT_IDs_EDITOR.text_indication_name).val(GLOBALS_EDITOR.guideline.indications[GLOBALS_EDITOR.GIPD.i].name);
+
 }
 
 function populateIndicationsSelect()
@@ -136,26 +150,40 @@ function populateIndicationsSelect()
 function selectIndicationsChanged()
 {
     GLOBALS_EDITOR.GIPD.i = ($(this).val());
-    updatePhases();
+    //update self and cascade down
+    displayTextsForIndication();
+    displayPhases();
 }
 
 function newIndicationTapped()
 {
     GLOBALS_EDITOR.guideline.addIndication('unknown');
-    updateGuideline();
+    displayGuideline();
 }
 
-function updatePhases()
+function displayPhases()
 {
+    displayTextsForPhase();
     populatePhasesSelect();
     //reset drug to zero , validity will be checked
-    GLOBALS_EDITOR.GIPD.d = 0;//(GLOBALS_EDITOR.guideline.indications[GLOBALS_EDITOR.GIPD.i].phases.length > 0) ? 0 : -1;//reset to first
-    updateDrugs();
+    GLOBALS_EDITOR.GIPD.d = 0;
+    displayDrugs();
 }
+
+function displayTextsForPhase()
+{
+    $(OBJECT_IDs_EDITOR.text_phase_name).val(GLOBALS_EDITOR.guideline.indications[GLOBALS_EDITOR.GIPD.i].phases[GLOBALS_EDITOR.GIPD.p].name);
+    $(OBJECT_IDs_EDITOR.text_phase_duration).val(GLOBALS_EDITOR.guideline.indications[GLOBALS_EDITOR.GIPD.i].phases[GLOBALS_EDITOR.GIPD.p].duration);
+    $(OBJECT_IDs_EDITOR.text_phase_acronym).val(GLOBALS_EDITOR.guideline.indications[GLOBALS_EDITOR.GIPD.i].phases[GLOBALS_EDITOR.GIPD.p].acronym);
+
+}
+
 function selectPhasesChanged()
 {
     GLOBALS_EDITOR.GIPD.p = ($(this).val());
-    updateDrugs();
+    //update self and cascade down
+    displayTextsForPhase();
+    displayDrugs();
 }
 
 function populatePhasesSelect()
@@ -178,10 +206,16 @@ function populatePhasesSelect()
 
 }
 
-function updateDrugs()
+function displayDrugs()
 {
-
+    displayTextsForDrug();
     populateDrugsSelect();
+
+}
+
+function displayTextsForDrug()
+{
+    $(OBJECT_IDs_EDITOR.text_drug_name).val(GLOBALS_EDITOR.guideline.indications[GLOBALS_EDITOR.GIPD.i].phases[GLOBALS_EDITOR.GIPD.p].drugs[GLOBALS_EDITOR.GIPD.d].name);
 
 }
 
@@ -205,4 +239,11 @@ function populateDrugsSelect()
     //refresh the selectmenu as created already in markup
     jqo_select_drugs.selectmenu('refresh');
 
+}
+
+function selectDrugsChanged()
+{
+    GLOBALS_EDITOR.GIPD.d = ($(this).val());
+    //update self
+    displayTextsForDrug();
 }

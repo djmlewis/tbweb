@@ -48,7 +48,8 @@
                     <!--Guideline Text-->
                     <div class="ui-field-contain">
                         <label for="editor-text_guideline_name">Name</label>
-                        <input type="text" name="editor-text_guideline_name" id="editor-text_guideline_name" data-mini="true"
+                        <input type="text" name="editor-text_guideline_name" id="editor-text_guideline_name"
+                               data-mini="true"
                                placeholder="Guideline Name" value="">
                     </div>
                 </td>
@@ -65,15 +66,17 @@
             </tr>
             <tr>
                 <td>
-                    <!--Indications Menu-->
-                    <label for="editor-select_indications" class="ui-hidden-accessible"></label>
-                    <select name="editor-select_indications" id="editor-select_indications" data-mini="true"></select>
+                    <fieldset data-role="controlgroup" data-type="horizontal">
+                        <!--Indications Menu-->
+                        <label for="editor-select_indications" class="ui-hidden-accessible"></label>
+                        <select name="editor-select_indications" id="editor-select_indications"></select>
+                        <!--Indication  SAVE-->
+                        <button class="ui-btn ui-icon-check ui-btn-icon-notext " id="editor-button_indication_name">Add…</button>
+                        <!--Add new indication-->
+                        <button class="ui-btn ui-icon-plus ui-btn-icon-notext " id="editor-button_indication_new">Add…</button>
+                    </fieldset>
                 </td>
-                <td>
-                    <!--Add new indication-->
-                    <button class="ui-btn ui-icon-plus ui-btn-icon-notext " id="editor-button_indication_new">Add…
-                    </button>
-                </td>
+                <td></td>
             </tr>
             <tr>
                 <td>
@@ -83,10 +86,7 @@
                                placeholder="Indication Name" value="">
                     </div>
                 </td>
-                <td>
-                    <!--Indication  SAVE-->
-                    <button class="ui-btn ui-icon-check ui-btn-icon-notext" id="editor-button_indication_name"></button>
-                </td>
+                <td></td>
             </tr>
             <!--PHASES-->
             <tr>
@@ -112,6 +112,12 @@
                         <label for="editor-text_phase_name">Phase Name</label>
                         <input type="text" name="editor-text_phase_name" id="editor-text_phase_name"
                                placeholder="Phase Name" value="">
+                        <label for="editor-text_phase_duration">Phase Duration</label>
+                        <input type="text" name="editor-text_phase_duration" id="editor-text_phase_duration"
+                               placeholder="Phase Duration" value="">
+                        <label for="editor-text_phase_acronym">Phase Drugs Acronym</label>
+                        <input type="text" name="editor-text_phase_acronym" id="editor-text_phase_acronym"
+                               placeholder="Phase Drugs Acronym" value="">
                     </div>
                 </td>
                 <td>
@@ -155,7 +161,7 @@
         </table>
 
 
-    </div><!-- /content -->
+</div><!-- /content -->
 
 </div><!-- /page -->
 
