@@ -5,6 +5,10 @@
 function Guideline(name) {
     this.name = name || "Untitled";
     this.indications = [];
+    this.selectedIndex_indication = -1;
+    this.selectedIndex_phase = -1;
+    this.selectedIndex_drug = -1;
+
 
 }
 Guideline.prototype.initFromJSONstring = function (jasonString) {
@@ -41,8 +45,31 @@ Guideline.prototype.initFromJSONstring = function (jasonString) {
         this.indications = [];
     }
 };
-Guideline.prototype.addIndication = function(name){
-    this.indications.push(new Indication(name));
+
+Guideline.prototype.active_Indication = function(){
+    return this.indications[this.selectedIndex_indication];
+};
+Guideline.prototype.active_Phase = function(){
+    return this.indications[this.selectedIndex_indication].phases[this.selectedIndex_phase];
+};
+Guideline.prototype.active_Drug= function(){
+    return this.indications[this.selectedIndex_indication].phases[this.selectedIndex_phase].drugs[this.selectedIndex_drug];
+};
+
+Guideline.prototype.addIndication = function(){
+    this.indications.push(new Indication());
+};
+/*
+Guideline.prototype.addPhaseToIndication = function(indicationIndex)
+{
+    if (this.indications[indicationIndex])
+    {this.indications[indicationIndex].push(new Phase())}
+};
+*/
+Guideline.prototype.addPhaseToActiveIndication = function()
+{
+    if (this.active_Indication())
+    {this.active_Indication().push(new Phase())}
 };
 
 function Indication(name) {
