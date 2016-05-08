@@ -55,11 +55,12 @@ function setupPageForEditing() {
     //now safe to do stuff
     GLOBALS_EDITOR.guideline.initFromJSONstring(jstring);
     /*create structure*/
-    setupEvents();
+    GLOBALS_EDITOR.guideline.addElementsToThis($('#editor-guideline-hanger'));
     /*update display*/
     displayGuideline();
 
-    //refresh
+    /* Bind events */
+    setupEvents();
 }
 
 function loadSettingsAndGlobals() {
@@ -77,7 +78,6 @@ function loadSettingsAndGlobals() {
 function setupEvents()
 {
     //GUIDELINE
-    $(OBJECT_IDs_EDITOR.button_guideline_save).click(updateGuidelineSpecificData);
     //INDICATIONS
     $(OBJECT_IDs_EDITOR.select_indications).change(selectIndicationsChanged);
     $(OBJECT_IDs_EDITOR.button_indication_new).click(addIndication);
@@ -93,34 +93,18 @@ function setupEvents()
 }
 
 /* GUIDELINES */
-function saveGuideline()
+
+/*
+function callUpdateGuidelineSpecificData()
 {
-    var guidelineString = JSON.stringify(GLOBALS_EDITOR.guideline);
-    console.log(guidelineString);
-    var newwindow=window.open();
-    var newdocument=newwindow.document;
-    var HTMLstring ='<HTML><HEAD><TITLE>';
-    HTMLstring +=GLOBALS_EDITOR.guideline.name;
-    HTMLstring +='</TITLE></HEAD><BODY>';
-    HTMLstring +=guidelineString;
-    HTMLstring +='</BODY></HTML>';
-
-    newdocument.write(HTMLstring);
-
+    GLOBALS_EDITOR.guideline.updateGuidelineSpecificData();
 }
+*/
 
-function updateGuidelineSpecificData()
-{
-    GLOBALS_EDITOR.guideline.name = $(OBJECT_IDs_EDITOR.text_guideline_name).val();
-    $(OBJECT_IDs_EDITOR.display_guideline_name).text(GLOBALS_EDITOR.guideline.name);
-
-    //SAVE
-    saveGuideline();
-}
 
 function displayGuideline()
 {
-    displayTextsForGuideLine();
+    GLOBALS_EDITOR.guideline.displayTextsForGuideLine();
 
     //reset Indication to zero , validity will be checked
     GLOBALS_EDITOR.guideline.selectedIndex_indication = 0;
@@ -128,11 +112,6 @@ function displayGuideline()
     //cascade down
     displayIndications();
 
-}
-function displayTextsForGuideLine()
-{
-    $(OBJECT_IDs_EDITOR.display_guideline_name).text(GLOBALS_EDITOR.guideline.name);
-    $(OBJECT_IDs_EDITOR.text_guideline_name).val(GLOBALS_EDITOR.guideline.name);
 }
 
 /*INDICATIONS */
