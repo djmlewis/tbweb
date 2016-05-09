@@ -96,7 +96,6 @@ Guideline.prototype.addElementsToThis = function (baseElement) {
         .appendTo(baseElement)
         .append//SAVE BUTTON
         ($(document.createElement("button"))
-        // .attr('id', this.ID_button_save)
             .addClass("ui-btn ui-icon-check ui-btn-icon-notext")
             .text('Save')
             .click(function () {
@@ -104,7 +103,6 @@ Guideline.prototype.addElementsToThis = function (baseElement) {
             }))
         .append//EXPORT BUTTON
         ($(document.createElement("button"))
-        // .attr('id', this.ID_button_export)
             .addClass("ui-btn ui-icon-action ui-btn-icon-notext")
             .text('Export')
             .click(function () {
@@ -348,7 +346,8 @@ Guideline.prototype.displayIndications = function () {
     this.displayPhases();
 };
 Guideline.prototype.displayTextsForIndication = function () {
-    $(this.ID_text_indication_name).val(this.active_Indication() ? this.active_Indication().name : "?");
+    var activeIndic = this.active_Indication();
+    $('#' + this.ID_text_indication_name).val(activeIndic ? activeIndic.name : "?").textinput("option", "disabled", !activeIndic);
 };
 Guideline.prototype.populateIndicationsSelect = function () {
     var jqo_select_indications = $("#" + this.ID_select_indications);
@@ -365,10 +364,7 @@ Guideline.prototype.populateIndicationsSelect = function () {
     jqo_select_indications.selectmenu('refresh');
 };
 Guideline.prototype.addIndication = function () {
-    var newI = new Indication("Untitled");
-    newI.phases.push(new Phase());
-    newI.phases[0].drugs.push(new Drug());
-    this.indications.push(newI);
+    this.indications.push(new Indication("Untitled"));
     this.selectedIndex_indication = this.indications.length - 1;
     this.displayIndications();
 };
@@ -383,7 +379,7 @@ Guideline.prototype.selectIndicationsChanged = function (index) {
 };
 Guideline.prototype.updateIndicationSpecificData = function () {
     if (this.active_Indication()) {
-        this.active_Indication().name = $(this.ID_text_indication_name).val();
+        this.active_Indication().name = $('#' + this.ID_text_indication_name).val();
     }
 
     //Update menu
@@ -402,9 +398,9 @@ Guideline.prototype.displayPhases = function () {
 };
 Guideline.prototype.displayTextsForPhase = function () {
     var activePhase = this.active_Phase();
-    $('#' + this.ID_text_phase_name).val(activePhase ? activePhase.name : "?");
-    $('#' + this.ID_text_phase_duration).val(activePhase ? activePhase.duration : "?");
-    $('#' + this.ID_text_phase_acronym).val(activePhase ? activePhase.acronym : "?");
+    $('#' + this.ID_text_phase_name).val(activePhase ? activePhase.name : "?").textinput("option", "disabled", !activePhase);
+    $('#' + this.ID_text_phase_duration).val(activePhase ? activePhase.duration : "?").textinput("option", "disabled", !activePhase);
+    $('#' + this.ID_text_phase_acronym).val(activePhase ? activePhase.acronym : "?").textinput("option", "disabled", !activePhase);
 };
 Guideline.prototype.selectPhasesChanged = function (index) {
     this.selectedIndex_phase = index;
@@ -454,8 +450,8 @@ Guideline.prototype.displayDrugs = function () {
     this.displayTextsForDrug();
 };
 Guideline.prototype.displayTextsForDrug = function () {
-    console.log(this.active_Drug());
-    $('#' + this.ID_text_drug_name).val(this.active_Drug() ? this.active_Drug().name : "?");
+    var activDrug = this.active_Drug();
+    $('#' + this.ID_text_drug_name).val(activDrug ? activDrug.name : "?").textinput("option", "disabled", !activDrug);
 };
 Guideline.prototype.populateDrugsSelect = function () {
     var jqo_select_drugs = $('#' + this.ID_select_drugs);
@@ -480,9 +476,9 @@ Guideline.prototype.selectDrugsChanged = function (index) {
     this.displayTextsForDrug();
 };
 Guideline.prototype.updateDrugSpecificData = function () {
-    var activeIDrug = this.active_Drug();
-    if (activeIDrug) {
-        activeIDrug.name = $('#' + this.ID_text_drug_name).val();
+    var activeDrug = this.active_Drug();
+    if (activeDrug) {
+        activeDrug.name = $('#' + this.ID_text_drug_name).val();
     }
     //Update menu
     this.populateDrugsSelect();
