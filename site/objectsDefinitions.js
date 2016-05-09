@@ -6,6 +6,7 @@ function Indication(name) {
     this.name = name || "Untitled";
     this.phases = [];
 }
+Indication.prototype.constructor = Indication;
 
 function Phase(name, duration, drugsAcronym) {
     this.name = name || "Untitled";
