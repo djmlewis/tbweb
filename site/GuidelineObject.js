@@ -8,13 +8,14 @@ function Guideline(name) {
     this.selectedIndex_indication = -1;
     this.selectedIndex_phase = -1;
     this.selectedIndex_drug = -1;
-
-    var uniqueystring = new Date().getTime();
+    this.uniqueystring = new Date().getTime();
     /*IDs */
-    this.ID_h3_name = "nameh3" + uniqueystring;
-    this.ID_text_name = "nametext" + uniqueystring;
-    this.ID_button_save = "savebutton" + uniqueystring;
-    this.ID_button_export = "exportbutton" + uniqueystring;
+    this.ID_text_name = "nametext" + this.uniqueystring;
+    /*
+     this.ID_h3_name = "nameh3" + this.uniqueystring;
+     this.ID_button_save = "savebutton" + this.uniqueystring;
+     this.ID_button_export = "exportbutton" + this.uniqueystring;
+     */
 
 }
 Guideline.prototype.initFromJSONstring = function (jasonString) {
@@ -53,15 +54,7 @@ Guideline.prototype.initFromJSONstring = function (jasonString) {
 };
 
 Guideline.prototype.exportGuideline = function (myself) {
-    var guidelineString = JSON.stringify(myself);
-    var newwindow = window.open();
-    var newdocument = newwindow.document;
-    var HTMLstring = '<HTML><HEAD><TITLE>';
-    HTMLstring += myself.name;
-    HTMLstring += '</TITLE></HEAD><BODY>';
-    HTMLstring += guidelineString;
-    HTMLstring += '</BODY></HTML>';
-    newdocument.write(HTMLstring);
+    window.open().document.write(JSON.stringify(myself));
 };
 
 Guideline.prototype.addElementsToThis = function (baseElement) {
@@ -69,7 +62,7 @@ Guideline.prototype.addElementsToThis = function (baseElement) {
 
     //GUIDELINE elements
     $(document.createElement("h3"))
-        .attr('id', this.ID_h3_name)
+    // .attr('id', this.ID_h3_name)
         .addClass("ui-bar ui-bar-b")
         .text('Guideline')
         .appendTo(baseElement);
@@ -77,12 +70,12 @@ Guideline.prototype.addElementsToThis = function (baseElement) {
     $(document.createElement("div"))
         .addClass("ui-field-contain")
         .appendTo(baseElement)
-        .append(
-            $(document.createElement("label"))
+        .append//LABEL for TEXT NAME
+        ($(document.createElement("label"))
                 .attr('for', this.ID_text_name)
                 .text('Name'))
-        .append(
-            $(document.createElement("input"))
+        .append// TEXT NAME
+        ($(document.createElement("input"))
                 .attr('type', "text")
                 .attr('id', this.ID_text_name)
                 .attr('name', this.ID_text_name)
@@ -96,17 +89,17 @@ Guideline.prototype.addElementsToThis = function (baseElement) {
         .attr('data-role', "controlgroup")
         .attr('data-type', "horizontal")
         .appendTo(baseElement)
-        .append
+        .append//SAVE BUTTON
         ($(document.createElement("button"))
-            .attr('id', this.ID_button_save)
+        // .attr('id', this.ID_button_save)
             .addClass("ui-btn ui-icon-check ui-btn-icon-notext")
             .text('Save')
             .click(function () {
                 myself.updateGuidelineSpecificData(myself)
             }))
-        .append
+        .append//EXPORT BUTTON
         ($(document.createElement("button"))
-            .attr('id', this.ID_button_export)
+        // .attr('id', this.ID_button_export)
             .addClass("ui-btn ui-icon-action ui-btn-icon-notext")
             .text('Export')
             .click(function () {
@@ -118,14 +111,14 @@ Guideline.prototype.addElementsToThis = function (baseElement) {
 };
 
 Guideline.prototype.displayTextsForGuideLine = function () {
-    $("#" + this.ID_h3_name).text(this.name);
+    // $("#" + this.ID_h3_name).text(this.name);
     $("#" + this.ID_text_name).val(this.name);
 };
 
 
 Guideline.prototype.updateGuidelineSpecificData = function (myself) {
     myself.name = $("#" + myself.ID_text_name).val();
-    $("#" + myself.ID_h3_name).text(myself.name);
+    // $("#" + myself.ID_h3_name).text(myself.name);
     myself.exportGuideline(myself);
 };
 
@@ -142,13 +135,7 @@ Guideline.prototype.active_Drug = function () {
 Guideline.prototype.addIndication = function () {
     this.indications.push(new Indication());
 };
-/*
- Guideline.prototype.addPhaseToIndication = function(indicationIndex)
- {
- if (this.indications[indicationIndex])
- {this.indications[indicationIndex].push(new Phase())}
- };
- */
+
 Guideline.prototype.addPhaseToActiveIndication = function () {
     if (this.active_Indication()) {
         this.active_Indication().push(new Phase())
