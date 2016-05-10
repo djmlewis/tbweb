@@ -9,17 +9,18 @@ function Guideline(name, pageid) {
     this.selectedIndex_drug = -1;
     this.selectedIndex_drug = -1;
     this.pageID = pageid;
-    /*IDs */
-    this.ID_text_guideline_name = "textguidelinename" + this.pageID;
-    this.ID_select_indications = "selectindications" + this.pageID;
-    this.ID_text_indication_name = "textindicationname" + this.pageID;
-    this.ID_select_phases = "selectphases" + this.pageID;
-    this.ID_text_phase_name = "textphasename" + this.pageID;
-    this.ID_text_phase_duration = "textphaseduration" + this.pageID;
-    this.ID_text_phase_acronym = "textphaseacronym" + this.pageID;
-    this.ID_select_drugs = "selectdrugs" + this.pageID;
-    this.ID_text_drug_name = "textdrugname" + this.pageID;
 }
+
+/*IDs */
+Guideline.ID_text_guideline_name = "textguidelinename";
+Guideline.ID_select_indications = "selectindications";
+Guideline.ID_text_indication_name = "textindicationname";
+Guideline.ID_select_phases = "selectphases";
+Guideline.ID_text_phase_name = "textphasename";
+Guideline.ID_text_phase_duration = "textphaseduration";
+Guideline.ID_text_phase_acronym = "textphaseacronym";
+Guideline.ID_select_drugs = "selectdrugs";
+
 Guideline.prototype.constructor = Guideline;
 /* IN OUTs */
 Guideline.prototype.initFromJSONstring = function (jasonString) {
@@ -115,14 +116,14 @@ Guideline.prototype.addElementsToThis = function (baseElement) {
         .appendTo(baseElement)
         .append//LABEL for TEXT NAME
         ($(document.createElement("label"))
-            .attr('for', this.ID_text_guideline_name)
+            .attr('for', Guideline.ID_text_guideline_name)
             .text('Name'))
         .append// TEXT NAME
         ($(document.createElement("input"))
             .attr({
                 'type': "text",
-                'id': this.ID_text_guideline_name,
-                'name': this.ID_text_guideline_name,
+                'id': Guideline.ID_text_guideline_name,
+                'name': Guideline.ID_text_guideline_name,
                 'placeholder': "Guideline Name"
             })
             .prop('value', ""));
@@ -139,14 +140,14 @@ Guideline.prototype.addElementsToThis = function (baseElement) {
         .appendTo(baseElement)
         .append//LABEL for Indications Select
         ($(document.createElement("label"))
-            .attr('for', this.ID_select_indications)
+            .attr('for', Guideline.ID_select_indications)
             .text('Indications'))
         .append// Indications Select
         ($(document.createElement("select"))
             .change(function () {
                 myself.selectIndicationsChanged($(this).val())
             })
-            .attr({'id': this.ID_select_indications, 'name': this.ID_select_indications}))
+            .attr({'id': Guideline.ID_select_indications, 'name': Guideline.ID_select_indications}))
         .append//SAVE BUTTON
         ($(document.createElement("button"))
             .addClass("ui-btn ui-icon-check ui-btn-icon-notext")
@@ -168,14 +169,14 @@ Guideline.prototype.addElementsToThis = function (baseElement) {
         .appendTo(baseElement)
         .append//LABEL for TEXT NAME
         ($(document.createElement("label"))
-            .attr('for', this.ID_text_indication_name)
+            .attr('for', Guideline.ID_text_indication_name)
             .text('Name'))
         .append// TEXT NAME
         ($(document.createElement("input"))
             .attr({
                 'type': "text",
-                'id': this.ID_text_indication_name,
-                'name': this.ID_text_indication_name,
+                'id': Guideline.ID_text_indication_name,
+                'name': Guideline.ID_text_indication_name,
                 'placeholder': "Indication Name"
             })
             .prop('value', ""));
@@ -192,14 +193,14 @@ Guideline.prototype.addElementsToThis = function (baseElement) {
         .appendTo(baseElement)
         .append//LABEL for Indications Select
         ($(document.createElement("label"))
-            .attr('for', this.ID_select_phases)
+            .attr('for', Guideline.ID_select_phases)
             .text('Indications'))
         .append// Indications Select
         ($(document.createElement("select"))
             .change(function () {
                 myself.selectPhasesChanged($(this).val())
             })
-            .attr({'id': this.ID_select_phases, 'name': this.ID_select_phases}))
+            .attr({'id': Guideline.ID_select_phases, 'name': Guideline.ID_select_phases}))
         .append//SAVE BUTTON
         ($(document.createElement("button"))
             .addClass("ui-btn ui-icon-check ui-btn-icon-notext")
@@ -221,40 +222,40 @@ Guideline.prototype.addElementsToThis = function (baseElement) {
         .appendTo(baseElement)
         .append//LABEL for phase NAME
         ($(document.createElement("label"))
-            .attr('for', this.ID_text_phase_name)
+            .attr('for', Guideline.ID_text_phase_name)
             .text('Name'))
         .append// phase NAME
         ($(document.createElement("input"))
             .attr({
                 'type': "text",
-                'id': this.ID_text_phase_name,
-                'name': this.ID_text_phase_name,
+                'id': Guideline.ID_text_phase_name,
+                'name': Guideline.ID_text_phase_name,
                 'placeholder': "Phase Name"
             })
             .prop('value', ""))
         .append//LABEL for phase duratioh
         ($(document.createElement("label"))
-            .attr('for', this.ID_text_phase_duration)
+            .attr('for', Guideline.ID_text_phase_duration)
             .text('Duration'))
         .append// phase duration
         ($(document.createElement("input"))
             .attr({
                 'type': "text",
-                'id': this.ID_text_phase_duration,
-                'name': this.ID_text_phase_duration,
+                'id': Guideline.ID_text_phase_duration,
+                'name': Guideline.ID_text_phase_duration,
                 'placeholder': "Phase Duration"
             })
             .prop('value', ""))
         .append//LABEL for phase acronym
         ($(document.createElement("label"))
-            .attr('for', this.ID_text_phase_acronym)
+            .attr('for', Guideline.ID_text_phase_acronym)
             .text('Acronym'))
         .append// phase NAME
         ($(document.createElement("input"))
             .attr({
                 'type': "text",
-                'id': this.ID_text_phase_acronym,
-                'name': this.ID_text_phase_acronym,
+                'id': Guideline.ID_text_phase_acronym,
+                'name': Guideline.ID_text_phase_acronym,
                 'placeholder': "Phase Acronym"
             })
             .prop('value', ""));
@@ -271,14 +272,14 @@ Guideline.prototype.addElementsToThis = function (baseElement) {
         .appendTo(baseElement)
         .append//LABEL for drug Select
         ($(document.createElement("label"))
-            .attr('for', this.ID_select_drugs)
+            .attr('for', Guideline.ID_select_drugs)
             .text('Indications'))
         .append// Indications Select
         ($(document.createElement("select"))
             .change(function () {
                 myself.selectDrugsChanged($(this).val())
             })
-            .attr({'id': this.ID_select_drugs, 'name': this.ID_select_drugs}))
+            .attr({'id': Guideline.ID_select_drugs, 'name': Guideline.ID_select_drugs}))
         .append//SAVE BUTTON
         ($(document.createElement("button"))
             .addClass("ui-btn ui-icon-check ui-btn-icon-notext")
@@ -294,24 +295,10 @@ Guideline.prototype.addElementsToThis = function (baseElement) {
                 myself.addDrugToActivePhase()
             }));
 
-//drugs Texts
+    /* Drugs Texts Hanger */
     $(document.createElement("div"))
-        .addClass("ui-field-contain")
-        .appendTo(baseElement)
-        .append//LABEL for drug NAME
-        ($(document.createElement("label"))
-            .attr('for', this.ID_text_drug_name)
-            .text('Name'))
-        .append// drug NAME
-        ($(document.createElement("input"))
-            .attr({
-                'type': "text",
-                'id': this.ID_text_drug_name,
-                'name': this.ID_text_drug_name,
-                'placeholder': "Drug Name"
-            })
-            .prop('value', ""));
-
+        .attr('id', Drug.ID_hanger_drug_texts)
+        .appendTo(baseElement);
 
 
     //Refresh
@@ -329,10 +316,10 @@ Guideline.prototype.displayGuideline = function () {
 
 };
 Guideline.prototype.displayTextsForGuideLine = function () {
-    $("#" + this.ID_text_guideline_name).val(this.name);
+    $("#" + Guideline.ID_text_guideline_name).val(this.name);
 };
 Guideline.prototype.updateGuidelineSpecificData = function () {
-    this.name = $("#" + this.ID_text_guideline_name).val();
+    this.name = $("#" + Guideline.ID_text_guideline_name).val();
 };
 
 /* INDICATIONS */
@@ -347,10 +334,10 @@ Guideline.prototype.displayIndications = function () {
 };
 Guideline.prototype.displayTextsForIndication = function () {
     var activeIndic = this.active_Indication();
-    $('#' + this.ID_text_indication_name).val(activeIndic ? activeIndic.name : "?").textinput("option", "disabled", !activeIndic);
+    $('#' + Guideline.ID_text_indication_name).val(activeIndic ? activeIndic.name : "?").textinput("option", "disabled", !activeIndic);
 };
 Guideline.prototype.populateIndicationsSelect = function () {
-    var jqo_select_indications = $("#" + this.ID_select_indications);
+    var jqo_select_indications = $("#" + Guideline.ID_select_indications);
     jqo_select_indications.empty();
     var selectedIndication = this.selectedIndex_indication;
     for (var i = 0; i < this.indications.length; i++) {
@@ -379,7 +366,7 @@ Guideline.prototype.selectIndicationsChanged = function (index) {
 };
 Guideline.prototype.updateIndicationSpecificData = function () {
     if (this.active_Indication()) {
-        this.active_Indication().name = $('#' + this.ID_text_indication_name).val();
+        this.active_Indication().name = $('#' + Guideline.ID_text_indication_name).val();
     }
 
     //Update menu
@@ -398,9 +385,9 @@ Guideline.prototype.displayPhases = function () {
 };
 Guideline.prototype.displayTextsForPhase = function () {
     var activePhase = this.active_Phase();
-    $('#' + this.ID_text_phase_name).val(activePhase ? activePhase.name : "?").textinput("option", "disabled", !activePhase);
-    $('#' + this.ID_text_phase_duration).val(activePhase ? activePhase.duration : "?").textinput("option", "disabled", !activePhase);
-    $('#' + this.ID_text_phase_acronym).val(activePhase ? activePhase.acronym : "?").textinput("option", "disabled", !activePhase);
+    $('#' + Guideline.ID_text_phase_name).val(activePhase ? activePhase.name : "?").textinput("option", "disabled", !activePhase);
+    $('#' + Guideline.ID_text_phase_duration).val(activePhase ? activePhase.duration : "?").textinput("option", "disabled", !activePhase);
+    $('#' + Guideline.ID_text_phase_acronym).val(activePhase ? activePhase.acronym : "?").textinput("option", "disabled", !activePhase);
 };
 Guideline.prototype.selectPhasesChanged = function (index) {
     this.selectedIndex_phase = index;
@@ -410,7 +397,7 @@ Guideline.prototype.selectPhasesChanged = function (index) {
 };
 
 Guideline.prototype.populatePhasesSelect = function () {
-    var jqo_select_phases = $('#' + this.ID_select_phases);
+    var jqo_select_phases = $('#' + Guideline.ID_select_phases);
     jqo_select_phases.empty();
     var selectedPhase = this.selectedIndex_phase;
     var activeIndication = this.active_Indication();
@@ -431,9 +418,9 @@ Guideline.prototype.populatePhasesSelect = function () {
 Guideline.prototype.updatePhaseSpecificData = function () {
     var activeIPhase = this.active_Phase();
     if (activeIPhase) {
-        activeIPhase.name = $('#' + this.ID_text_phase_name).val();
-        activeIPhase.acronym = $('#' + this.ID_text_phase_acronym).val();
-        activeIPhase.duration = $('#' + this.ID_text_phase_duration).val();
+        activeIPhase.name = $('#' + Guideline.ID_text_phase_name).val();
+        activeIPhase.acronym = $('#' + Guideline.ID_text_phase_acronym).val();
+        activeIPhase.duration = $('#' + Guideline.ID_text_phase_duration).val();
     }
     //Update menu
     this.populatePhasesSelect();
@@ -450,11 +437,15 @@ Guideline.prototype.displayDrugs = function () {
     this.displayTextsForDrug();
 };
 Guideline.prototype.displayTextsForDrug = function () {
-    var activDrug = this.active_Drug();
-    $('#' + this.ID_text_drug_name).val(activDrug ? activDrug.name : "?").textinput("option", "disabled", !activDrug);
+    if (this.active_Drug()) {
+        this.active_Drug().displayDrugsForGuideline(this);
+    }
+    else {
+        Drug.emptyDrugTextsHanger();
+    }
 };
 Guideline.prototype.populateDrugsSelect = function () {
-    var jqo_select_drugs = $('#' + this.ID_select_drugs);
+    var jqo_select_drugs = $('#' + Guideline.ID_select_drugs);
     jqo_select_drugs.empty();
     var selectedDrug = this.selectedIndex_drug;
     var activePhase = this.active_Phase();
@@ -478,7 +469,7 @@ Guideline.prototype.selectDrugsChanged = function (index) {
 Guideline.prototype.updateDrugSpecificData = function () {
     var activeDrug = this.active_Drug();
     if (activeDrug) {
-        activeDrug.name = $('#' + this.ID_text_drug_name).val();
+        activeDrug.name = $('#' + Drug.ID_text_drug_name).val();
     }
     //Update menu
     this.populateDrugsSelect();

@@ -2,6 +2,22 @@
  * Created by davidjmlewis on 22/04/2016.
  */
 
+function appendLabelAndEmptyTextToFieldContain(fieldContain, id, labeltext) {
+    $(document.createElement("label"))
+        .attr('for', id)
+        .text(labeltext)
+        .appendTo(fieldContain);
+    $(document.createElement("input"))
+        .attr({
+            'type': "text",
+            'id': id,
+            'name': id,
+            'placeholder': labeltext
+        })
+        .prop('value', "")
+        .appendTo(fieldContain);
+}
+
 function Indication(name) {
     this.name = name || "Untitled";
     this.phases = [];
@@ -23,10 +39,31 @@ function Drug(name, acronym, howDoseCalc, units, notes) {
     this.notes = notes || "No notes";
 
 }
+Drug.ID_hanger_drug_texts = "hangerdrugtexts";
+Drug.ID_text_drug_name = "textdrugname";
+Drug.ID_text_drug_acronym = "textdrugacronym";
+
+
 Drug.prototype.constructor = Drug;
-Drug.prototype.doseWarningsCommentsArrayForWeight = function (weight) {
-    return {instructionsString: "Undefined for '+weight"+" Kg", warningArray: [], infoArray: []};
+/* STATICS */
+
+/* INSTANCE */
+Drug.emptyDrugTextsHanger = function () {
+    $('#' + Drug.ID_hanger_drug_texts).empty();
 };
+Drug.prototype.addElementsToThisForGuideline = function (guideline) {
+    Drug.emptyDrugTextsHanger();
+    //Refresh
+    $('#' + Drug.ID_hanger_drug_texts).trigger("create");
+
+};
+Drug.prototype.displayDrugsForGuideline = function (guideline) {
+
+};
+Drug.prototype.doseWarningsCommentsArrayForWeight = function (weight) {
+    return {instructionsString: "Undefined for '+weight" + " Kg", warningArray: [], infoArray: []};
+};
+
 
 function Drug_mgKg(name, acronym, maxDose, mgkg_initial, mgkg_min, mgkg_max, rounval, roundirect, notes) {
     //super init
@@ -41,8 +78,23 @@ function Drug_mgKg(name, acronym, maxDose, mgkg_initial, mgkg_min, mgkg_max, rou
 }
 Drug_mgKg.prototype = Object.create(Drug.prototype);
 Drug_mgKg.prototype.constructor = Drug_mgKg;
-Drug_mgKg.prototype.doseWarningsCommentsArrayForWeight = function (weight)
-{
+Drug_mgKg.prototype.addElementsToThisForGuideline = function (guideline) {
+    Drug.emptyDrugTextsHanger();
+    var baseElement = $('#' + Drug.ID_hanger_drug_texts);
+    var fieldContain = $(document.createElement("div")).addClass("ui-field-contain");
+    appendLabelAndEmptyTextToFieldContain(fieldContain, Drug.ID_text_drug_name, "Name");
+    appendLabelAndEmptyTextToFieldContain(fieldContain, Drug.ID_text_drug_acronym, "Acronym");
+    baseElement.append(fieldContain);
+    //Refresh
+    baseElement.trigger("create");
+
+};
+Drug_mgKg.prototype.displayDrugsForGuideline = function (guideline) {
+    this.addElementsToThisForGuideline(guideline);
+    $('#' + Drug.ID_text_drug_name).val(this.name).textinput("option", "disabled", false);
+};
+
+Drug_mgKg.prototype.doseWarningsCommentsArrayForWeight = function (weight) {
     var warningsarray = [];
     var infosarray = [];
     var calculatedDose = weight * this.mgkg_initial;

@@ -22,16 +22,17 @@
     <script src="jquery.mobile-1.4.5.js"></script>
 
     <!--My JS-->
+    <script src="GuidelineObject.js"></script>
     <script src="objectsDefinitions.js"></script>
     <script src="startup-script.js"></script>
+    <script src="startup-script-editor.js"></script>
+
 </head>
 <body>
 
 <div data-role="page" id="page_1" data-theme = 'a'><!-- /page -->
-
     <div role="main" class="ui-content" id="ui-content"><!-- /content -->
-
-
+        <a href="page_editor" class="ui-btn ui-corner-all ui-shadow ui-btn-inline">Editor</a>
         <table data-role="table" class="ui-responsive">
             <thead>
             <tr>
@@ -64,14 +65,16 @@
             </tr>
             </tbody>
         </table>
-
-        <a href="editor.html" class="ui-btn ui-corner-all ui-shadow ui-btn-inline">Editor</a>
-
         <!--  Drugs Collapsible -->
         <div class="ui-field-contain" id="ui-field-contain-drugs" ></div>
-
     </div><!-- /content -->
+</div><!-- /page -->
 
+<div data-role="page" id="page_editor"><!-- /page -->
+    <div role="main" class="ui-content" id="ui-content-editor"><!-- /content -->
+        <a href="page_1" class="ui-btn ui-corner-all ui-shadow ui-btn-inline">Prescribing</a>
+        <div id="editor-guideline-hanger"></div>
+    </div><!-- /content -->
 </div><!-- /page -->
 
 </body>
