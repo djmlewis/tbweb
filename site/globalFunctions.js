@@ -37,33 +37,9 @@ function appendLabelAndTextValueTo(fieldContain, id, labeltext, texttext) {
         .prop('value', texttext)
         .appendTo(localFC);
 }
-function emptyThisHanger(id) {
+function emptyThisHangerWithID(id) {
     $('#' + id).empty();
 }
-function triggerCreateElementsOnThisHanger(id) {
+function triggerCreateElementsOnThisHangerWithID(id) {
     $('#' + id).trigger("create");
 }
-
-function Indication(name) {
-    this.name = name || "Untitled";
-    this.phases = [];
-}
-/* STATICS */
-Indication.ID_hanger_indication_texts = "hangerIndication";
-/* INSTANCE */
-Indication.prototype.constructor = Indication;
-Indication.prototype.addElementsToThisForGuideline = function (guideline) {
-    emptyThisHanger(Indication.ID_hanger_indication_texts);
-
-    //Refresh
-    $('#' + Drug.ID_hanger_drug_texts).trigger("create");
-
-};
-
-function Phase(name, duration, drugsAcronym) {
-    this.name = name || "Untitled";
-    this.duration = duration || "";
-    this.drugsAcronym = drugsAcronym || "";
-    this.drugs = [];
-}
-
