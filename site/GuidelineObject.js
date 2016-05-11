@@ -19,7 +19,6 @@ Guideline.ID_select_phases = "selectphases";
 Guideline.ID_text_phase_name = "textphasename";
 Guideline.ID_text_phase_duration = "textphaseduration";
 Guideline.ID_text_phase_acronym = "textphaseacronym";
-Guideline.ID_select_drugs = "selectdrugs";
 
 Guideline.prototype.constructor = Guideline;
 /* IN OUTs */
@@ -129,6 +128,11 @@ Guideline.prototype.addElementsToThis = function (baseElement) {
             .prop('value', ""));
 
     /* INDCATIONS */
+    /* INDCATIONS Texts Hanger */
+    $(document.createElement("div"))
+        .attr('id', Indication.ID_hanger_indication_texts)
+        .appendTo(baseElement);
+
     $(document.createElement("h4"))
         .addClass("ui-bar ui-bar-b")
         .text('Indications')
@@ -261,44 +265,11 @@ Guideline.prototype.addElementsToThis = function (baseElement) {
             .prop('value', ""));
 
     <!--DRUGS-->
-    $(document.createElement("h4"))
-        .addClass("ui-bar ui-bar-b")
-        .text('drugs')
+    /* Drugs  Hanger */
+    var drugshanger = $(document.createElement("div"))
         .appendTo(baseElement);
+    Drug.addElementsToThisHangerForGuideline(drugshanger, this);
 
-    //drugs Select &  buttons group
-    $(document.createElement("div"))
-        .attr({'data-role': "controlgroup", 'data-type': "horizontal"})
-        .appendTo(baseElement)
-        .append//LABEL for drug Select
-        ($(document.createElement("label"))
-            .attr('for', Guideline.ID_select_drugs)
-            .text('Indications'))
-        .append// Indications Select
-        ($(document.createElement("select"))
-            .change(function () {
-                myself.selectDrugsChanged($(this).val())
-            })
-            .attr({'id': Guideline.ID_select_drugs, 'name': Guideline.ID_select_drugs}))
-        .append//SAVE BUTTON
-        ($(document.createElement("button"))
-            .addClass("ui-btn ui-icon-check ui-btn-icon-notext")
-            .text('Save')
-            .click(function () {
-                myself.updateDrugSpecificData()
-            }))
-        .append//+ BUTTON
-        ($(document.createElement("button"))
-            .addClass("ui-btn ui-icon-plus ui-btn-icon-notext")
-            .text('Add')
-            .click(function () {
-                myself.addDrugToActivePhase()
-            }));
-
-    /* Drugs Texts Hanger */
-    $(document.createElement("div"))
-        .attr('id', Drug.ID_hanger_drug_texts)
-        .appendTo(baseElement);
 
 
     //Refresh
@@ -395,7 +366,6 @@ Guideline.prototype.selectPhasesChanged = function (index) {
     this.displayTextsForPhase();
     this.displayDrugs();
 };
-
 Guideline.prototype.populatePhasesSelect = function () {
     var jqo_select_phases = $('#' + Guideline.ID_select_phases);
     jqo_select_phases.empty();
@@ -414,7 +384,6 @@ Guideline.prototype.populatePhasesSelect = function () {
     jqo_select_phases.selectmenu('refresh');
 
 };
-
 Guideline.prototype.updatePhaseSpecificData = function () {
     var activeIPhase = this.active_Phase();
     if (activeIPhase) {
@@ -425,7 +394,6 @@ Guideline.prototype.updatePhaseSpecificData = function () {
     //Update menu
     this.populatePhasesSelect();
 };
-
 Guideline.prototype.newPhaseTapped = function () {
     this.addPhaseToActiveIndication();
     this.displayPhases();
@@ -438,14 +406,14 @@ Guideline.prototype.displayDrugs = function () {
 };
 Guideline.prototype.displayTextsForDrug = function () {
     if (this.active_Drug()) {
-        this.active_Drug().displayDrugsForGuideline(this);
+        this.active_Drug().displayDrugsForGuideline();
     }
     else {
-        Drug.emptyDrugTextsHanger();
+        emptyThisHanger(Drug.ID_hanger_drug_texts);
     }
 };
 Guideline.prototype.populateDrugsSelect = function () {
-    var jqo_select_drugs = $('#' + Guideline.ID_select_drugs);
+    var jqo_select_drugs = $('#' + Drug.ID_select_drugs);
     jqo_select_drugs.empty();
     var selectedDrug = this.selectedIndex_drug;
     var activePhase = this.active_Phase();

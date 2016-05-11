@@ -1,12 +1,32 @@
 /**
  * Created by davidjmlewis on 22/04/2016.
  */
+function appendSelectMenuWithTheseOptions(fieldContain, id, options, labeltext) {
+    var localFC = $(document.createElement("div")).addClass("ui-field-contain").appendTo(fieldContain);
 
-function appendLabelAndEmptyTextToFieldContain(fieldContain, id, labeltext) {
+    var select = $(document.createElement("select"))
+        .attr({'id': id, 'name': id, 'data-mini': true})
+        .attr({'id': id, 'name': id});
+
+    for (var i = 0; i < options.length; i++) {
+        $(document.createElement("option"))
+            .prop('value', i)
+            .text(options[i])
+            .appendTo(select);
+    }
+    var labelForSelect = $(document.createElement("label"))
+        .attr('for', id)
+        .text(labeltext);
+    localFC.append(labelForSelect);
+    localFC.append(select);
+}
+function appendLabelAndTextValueTo(fieldContain, id, labeltext, texttext) {
+    var localFC = $(document.createElement("div")).addClass("ui-field-contain").appendTo(fieldContain);
+
     $(document.createElement("label"))
         .attr('for', id)
         .text(labeltext)
-        .appendTo(fieldContain);
+        .appendTo(localFC);
     $(document.createElement("input"))
         .attr({
             'type': "text",
@@ -14,15 +34,31 @@ function appendLabelAndEmptyTextToFieldContain(fieldContain, id, labeltext) {
             'name': id,
             'placeholder': labeltext
         })
-        .prop('value', "")
-        .appendTo(fieldContain);
+        .prop('value', texttext)
+        .appendTo(localFC);
+}
+function emptyThisHanger(id) {
+    $('#' + id).empty();
+}
+function triggerCreateElementsOnThisHanger(id) {
+    $('#' + id).trigger("create");
 }
 
 function Indication(name) {
     this.name = name || "Untitled";
     this.phases = [];
 }
+/* STATICS */
+Indication.ID_hanger_indication_texts = "hangerIndication";
+/* INSTANCE */
 Indication.prototype.constructor = Indication;
+Indication.prototype.addElementsToThisForGuideline = function (guideline) {
+    emptyThisHanger(Indication.ID_hanger_indication_texts);
+
+    //Refresh
+    $('#' + Drug.ID_hanger_drug_texts).trigger("create");
+
+};
 
 function Phase(name, duration, drugsAcronym) {
     this.name = name || "Untitled";
@@ -31,109 +67,3 @@ function Phase(name, duration, drugsAcronym) {
     this.drugs = [];
 }
 
-function Drug(name, acronym, howDoseCalc, units, notes) {
-    this.name = name || "Untitled";
-    this.acronym = acronym || "";
-    this.howDoseCalc = howDoseCalc || "Undefined";
-    this.units = units || "Undefined";
-    this.notes = notes || "No notes";
-
-}
-Drug.ID_hanger_drug_texts = "hangerdrugtexts";
-Drug.ID_text_drug_name = "textdrugname";
-Drug.ID_text_drug_acronym = "textdrugacronym";
-
-
-Drug.prototype.constructor = Drug;
-/* STATICS */
-
-/* INSTANCE */
-Drug.emptyDrugTextsHanger = function () {
-    $('#' + Drug.ID_hanger_drug_texts).empty();
-};
-Drug.prototype.addElementsToThisForGuideline = function (guideline) {
-    Drug.emptyDrugTextsHanger();
-    //Refresh
-    $('#' + Drug.ID_hanger_drug_texts).trigger("create");
-
-};
-Drug.prototype.displayDrugsForGuideline = function (guideline) {
-
-};
-Drug.prototype.doseWarningsCommentsArrayForWeight = function (weight) {
-    return {instructionsString: "Undefined for '+weight" + " Kg", warningArray: [], infoArray: []};
-};
-
-
-function Drug_mgKg(name, acronym, maxDose, mgkg_initial, mgkg_min, mgkg_max, rounval, roundirect, notes) {
-    //super init
-    Drug.call(this, name, acronym, "mg/Kg", "mg", notes);
-    // subclass init
-    this.maxDose = maxDose;
-    this.mgkg_initial = mgkg_initial;
-    this.mgkg_min = mgkg_min;
-    this.mgkg_max = mgkg_max;
-    this.rounval = rounval;
-    this.roundirect = roundirect;
-}
-Drug_mgKg.prototype = Object.create(Drug.prototype);
-Drug_mgKg.prototype.constructor = Drug_mgKg;
-Drug_mgKg.prototype.addElementsToThisForGuideline = function (guideline) {
-    Drug.emptyDrugTextsHanger();
-    var baseElement = $('#' + Drug.ID_hanger_drug_texts);
-    var fieldContain = $(document.createElement("div")).addClass("ui-field-contain");
-    appendLabelAndEmptyTextToFieldContain(fieldContain, Drug.ID_text_drug_name, "Name");
-    appendLabelAndEmptyTextToFieldContain(fieldContain, Drug.ID_text_drug_acronym, "Acronym");
-    baseElement.append(fieldContain);
-    //Refresh
-    baseElement.trigger("create");
-
-};
-Drug_mgKg.prototype.displayDrugsForGuideline = function (guideline) {
-    this.addElementsToThisForGuideline(guideline);
-    $('#' + Drug.ID_text_drug_name).val(this.name).textinput("option", "disabled", false);
-};
-
-Drug_mgKg.prototype.doseWarningsCommentsArrayForWeight = function (weight) {
-    var warningsarray = [];
-    var infosarray = [];
-    var calculatedDose = weight * this.mgkg_initial;
-
-// dont use calculatedDose now, apply changes to correctedDose
-    var correctedDose = calculatedDose;
-// apply rounding if necessary
-    if (correctedDose % this.rounval != 0) {
-        switch (this.roundirect) {//-1 down 0 ignore +1 up
-            case -1:
-                correctedDose = Math.floor(correctedDose / this.rounval) * this.rounval;
-                infosarray.push(["Dose rounded DOWN by", this.rounval.toString(), this.units].join(" "));
-                break;
-            case 1:
-                correctedDose = (Math.floor(correctedDose / this.rounval) + 1) * this.rounval;
-                infosarray.push(["Dose rounded UP by", this.rounval.toString(), this.units].join(" "));
-                break;
-        }
-    }
-//apply maximum, use >= so we add a warning when limit reached and when breached by max dose or corrected
-    if (correctedDose >= this.maxDose)
-    {correctedDose = this.maxDose;
-        warningsarray.push("Maximum Dose is " + this.maxDose + " " + this.units);
-    }
-    else if ((weight * this.mgkg_max)>=this.maxDose)
-    {warningsarray.push("Maximum Dose is " + this.maxDose + " " + this.units);}
-
-
-//create the instruction
-    var instructionsstring = [this.name, correctedDose.toString(), this.units].join(" ");
-
-//add info on calculated,lower and higher doses
-    var weightStrX = weight.toString() + " Kg @";
-    infosarray.push(["℞", weightStrX, this.mgkg_initial.toString(), this.howDoseCalc, "=", calculatedDose.toString(), this.units].join(" "));
-    if (this.mgkg_min) {
-        infosarray.push(["↓", weightStrX, this.mgkg_min.toString(), this.howDoseCalc, "=", (weight * this.mgkg_min).toString(), this.units].join(" "));
-    }
-    if (this.mgkg_max) {
-        infosarray.push(["↑", weightStrX, this.mgkg_max.toString(), this.howDoseCalc, "=", (weight * this.mgkg_max).toString(), this.units].join(" "));
-    }
-    return {instructionsString: instructionsstring, warningArray: warningsarray, infoArray: infosarray};
-};
