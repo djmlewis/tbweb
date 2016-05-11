@@ -20,7 +20,7 @@ var GLOBALS =
 };
 
 var OBJECT_IDs = {
-    page: "#page_1",
+    page: "#page_prescribe",
     weight: "#select_weight",
     fieldsetIndications: '#fieldset_indications',
     selectIndications: "#select_indications",

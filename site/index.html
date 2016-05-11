@@ -24,15 +24,18 @@
     <!--My JS-->
     <script src="GuidelineObject.js"></script>
     <script src="globalFunctions.js"></script>
-    <script src="startup-script.js"></script>
+    <script src="DrugObject.js"></script>
+    <script src="PhaseObject.js"></script>
+    <script src="IndicationObject.js"></script>
     <script src="startup-script-editor.js"></script>
+    <script src="startup-script.js"></script>
 
 </head>
 <body>
 
-<div data-role="page" id="page_1" data-theme = 'a'><!-- /page -->
-    <div role="main" class="ui-content" id="ui-content"><!-- /content -->
-        <a href="page_editor" class="ui-btn ui-corner-all ui-shadow ui-btn-inline">Editor</a>
+<div data-role="page" id="page_prescribe" data-theme='a'><!-- /page -->
+    <div role="main" class="ui-content" id="ui-content-prescribe"><!-- /content -->
+        <a href="#page_editor" class="ui-btn ui-corner-all ui-shadow ui-btn-inline">Editor</a>
         <table data-role="table" class="ui-responsive">
             <thead>
             <tr>
@@ -72,10 +75,9 @@
 
 <div data-role="page" id="page_editor"><!-- /page -->
     <div role="main" class="ui-content" id="ui-content-editor"><!-- /content -->
-        <a href="page_1" class="ui-btn ui-corner-all ui-shadow ui-btn-inline">Prescribing</a>
+        <a href="#page_prescribe" class="ui-btn ui-corner-all ui-shadow ui-btn-inline">Prescribing</a>
         <div id="editor-guideline-hanger"></div>
     </div><!-- /content -->
 </div><!-- /page -->
-
 </body>
 </html>
