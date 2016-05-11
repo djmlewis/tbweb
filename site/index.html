@@ -34,8 +34,22 @@
 <body>
 
 <div data-role="page" id="page_prescribe" data-theme='a'><!-- /page -->
+    <div data-role="header" style="overflow:hidden;">
+        <h1>Prescribing Guidance</h1>
+            
+        <div data-role="navbar">
+                    
+            <ul>
+                        
+                <li><a href="#page_prescribe" class="ui-btn-active" data-icon="search">Prescribe</a></li>
+                        
+                <li><a href="#page_editor" data-icon="search">Edit</a></li>
+                        
+            </ul>
+                
+        </div><!-- /navbar -->
+    </div><!-- /header -->
     <div role="main" class="ui-content" id="ui-content-prescribe"><!-- /content -->
-        <a href="#page_editor" class="ui-btn ui-corner-all ui-shadow ui-btn-inline">Editor</a>
         <table data-role="table" class="ui-responsive">
             <thead>
             <tr>
@@ -74,8 +88,22 @@
 </div><!-- /page -->
 
 <div data-role="page" id="page_editor"><!-- /page -->
+    <div data-role="header" style="overflow:hidden;">
+        <h1>Edit Guideline</h1>
+            
+        <div data-role="navbar">
+                    
+            <ul>
+                        
+                <li><a href="#page_prescribe" data-icon="search">Prescribe</a></li>
+                        
+                <li><a href="#page_editor" class="ui-btn-active" data-icon="search">Edit</a></li>
+                        
+            </ul>
+                
+        </div><!-- /navbar -->
+    </div><!-- /header -->
     <div role="main" class="ui-content" id="ui-content-editor"><!-- /content -->
-        <a href="#page_prescribe" class="ui-btn ui-corner-all ui-shadow ui-btn-inline">Prescribing</a>
         <div id="editor-guideline-hanger"></div>
     </div><!-- /content -->
 </div><!-- /page -->
