@@ -21,10 +21,7 @@ function setupPageForEditing() {
 
     //now safe to do stuff
     gActiveGuideline.initFromJSONstring(jstring);
-    /*create structure*/
-    gActiveGuideline.addElementsToThis($('#editor-guideline-hanger'));
-    /*update display*/
-    gActiveGuideline.displayGuideline();
+    gActiveGuideline.createPagesAndDisplay();
 }
 
 function loadSettingsAndGlobals() {

@@ -1,22 +1,30 @@
-/**
- * Created by davidlewis on 09/05/2016.
- */
-/* Objects for guidelines */
-function Guideline(name, pageid) {
+//Created by davidlewis on 09/05/2016.
+
+
+//    Objects for guidelines
+function Guideline(name) {
     this.name = name || "Untitled";
     this.indications = [];
-    this.selectedIndex_indication = -1;
-    this.selectedIndex_drug = -1;
-    this.selectedIndex_drug = -1;
-    this.pageID = pageid;
 }
+//   STATICS
+//   IDs
+Guideline.ID_editor_text_guideline_editor_name = "editor_textguidelinename";
+Guideline.ID_editor_hanger_guideline_editor_texts = "editor_hangerguidelineeditortexts";
+Guideline.ID_editor_hanger_guideline_editor_texts_Editor = "editor-guideline-hanger";
+Guideline.ID_editor_select_indications = "editor_selectindication";
 
-/*IDs */
-Guideline.ID_text_guideline_name = "textguidelinename";
-Guideline.ID_hanger_guideline = "hangerguideline";
+//STATICS
+Guideline.selectedIndicationIndex = function (newIndex) {
+    if (newIndex) {
+        jqo(Guideline.ID_editor_select_indications).val(newIndex).selectmenu('refresh');
+    } else {
+        return jqo(Guideline.ID_editor_select_indications).val();
+    }
+};
 
+//  INSTANCE
 Guideline.prototype.constructor = Guideline;
-/* IN OUTs */
+//    IN OUTs
 Guideline.prototype.initFromJSONstring = function (jasonString) {
     if (jasonString) {
         var g = JSON.parse(jasonString);
@@ -54,29 +62,29 @@ Guideline.prototype.initFromJSONstring = function (jasonString) {
 Guideline.prototype.exportGuideline = function () {
     window.open().document.write(JSON.stringify(this));
 };
-/* ACTIVES */
+//    ACTIVES
 Guideline.prototype.active_Indication = function () {
-    return this.indications[this.selectedIndex_indication];
+    return this.indications[Guideline.selectedIndicationIndex()];
 };
 Guideline.prototype.active_Phase = function () {
-    if (this.active_Indication()) {
-        return this.indications[this.selectedIndex_indication].phases[this.selectedIndex_phase];
-    }
-    else return false;
+    return this.active_Indication() ? this.active_Indication().active_Phase() : false;
 };
 Guideline.prototype.active_Drug = function () {
-    if (this.active_Indication() && this.active_Phase()) {
-        return this.indications[this.selectedIndex_indication].phases[this.selectedIndex_phase].drugs[this.selectedIndex_drug];
-    }
-    else return false;
+    return this.active_Phase() ? this.active_Phase().active_Drug() : false;
 };
+//    CREATE HTML
+Guideline.prototype.createPagesAndDisplay = function () {
+    /*create structure*/
+    gActiveGuideline.createPage_Editor();
+    /*update display*/
+    gActiveGuideline.displayGuideline();
 
-/* CREATE HTML */
-Guideline.prototype.addElementsToThis = function (baseElement) {
+};
+Guideline.prototype.createPage_Editor = function () {
     // closure over this via myself to give access to self, as when the anonymous mini function is called,  this->element_calling.
     // When that calls the prototype function this reverts to the Object again, so no need to pass this parameter
     var myself = this;
-
+    var baseElement = jqo(Guideline.ID_editor_hanger_guideline_editor_texts_Editor);
     baseElement.empty();
 
     //GUIDELINE BAR
@@ -91,7 +99,7 @@ Guideline.prototype.addElementsToThis = function (baseElement) {
             .addClass("ui-btn ui-icon-check ui-btn-icon-notext")
             .text('Save')
             .click(function () {
-                myself.updateGuidelineSpecificData()
+                myself.enterGuidelineSpecificData()
             }))
         .append//EXPORT BUTTON
         ($(document.createElement("button"))
@@ -102,200 +110,94 @@ Guideline.prototype.addElementsToThis = function (baseElement) {
             }));
 
     //GUIDELINE Texts Hanger
-    $(document.createElement("div")).attr('id', Guideline.ID_hanger_guideline).appendTo(baseElement);
+    $(document.createElement("div")).attr('id', Guideline.ID_editor_hanger_guideline_editor_texts).appendTo(baseElement);
 
 
-    /* INDCATIONS */
-    Indication.addElementsToThisHangerForGuideline(baseElement, this);
+    //    INDCATIONS
+    Indication.addElementsToThisHangerForGuideline_editor(baseElement, this);
     <!--PHASES-->
-    Phase.addElementsToThisHangerForGuideline(baseElement, this);
+    Phase.addElementsToThisHangerForGuideline_editor(baseElement, this);
     <!--DRUGS-->
-    Drug.addElementsToThisHangerForGuideline(baseElement, this);
+    Drug.addElementsToThisHangerForGuideline_editor(baseElement, this);
 
     //Refresh
     baseElement.trigger("create");
 };
 
-/* DISPLAY */
+//    Display GL
 Guideline.prototype.displayGuideline = function () {
     this.displayTextsForGuideLine();
-    //reset Indication to zero , validity will be checked
-    this.selectedIndex_indication = 0;
-
     //cascade down
-    this.displayIndications();
+    this.populateIndicationsSelect();
+    this.displayIndication();
 
 };
 Guideline.prototype.displayTextsForGuideLine = function () {
-    var baseElement = $('#' + Guideline.ID_hanger_guideline);
-    emptyThisHangerWithID(Guideline.ID_hanger_guideline);
-//Indications Texts
-    appendLabelAndTextValueTo(baseElement, Guideline.ID_text_guideline_name, "Name", this.name);
-
+    var baseElement = jqo(Guideline.ID_editor_hanger_guideline_editor_texts);
+    emptyThisHangerWithID(Guideline.ID_editor_hanger_guideline_editor_texts);
+//Guideline Texts
+    appendLabelAndTextValueTo(baseElement, Guideline.ID_editor_text_guideline_editor_name, "Name", this.name);
     //Refresh
-    triggerCreateElementsOnThisHangerWithID(Guideline.ID_hanger_guideline);
+    triggerCreateElementsOnThisHangerWithID(Guideline.ID_editor_hanger_guideline_editor_texts);
 };
-Guideline.prototype.updateGuidelineSpecificData = function () {
-    this.name = $("#" + Guideline.ID_text_guideline_name).val();
+//    Save
+Guideline.prototype.enterGuidelineSpecificData = function () {
+    this.name = jqo(Guideline.ID_editor_text_guideline_editor_name).val();
 };
-
-/* INDICATIONS */
-Guideline.prototype.displayIndications = function () {
-    this.populateIndicationsSelect();
-    this.displayTextsForIndication();
-    //reset phase to zero , validity will be checked
-    this.selectedIndex_phase = 0;
-
-    //cascade down
-    this.displayPhases();
-};
-Guideline.prototype.displayTextsForIndication = function () {
-    if (this.active_Indication()) {
-        this.active_Indication().displayTextsForIndication();
-    }
-    else {
-        emptyThisHangerWithID(Indication.ID_hanger_indication_texts);
-    }
-};
+//    INDICATIONS
+//Display
 Guideline.prototype.populateIndicationsSelect = function () {
-    var jqo_select_indications = $("#" + Indication.ID_select_indications);
+    var jqo_select_indications = jqo(Guideline.ID_editor_select_indications);
     jqo_select_indications.empty();
-    var selectedIndication = this.selectedIndex_indication;
     for (var i = 0; i < this.indications.length; i++) {
         $(document.createElement("option"))
             .prop('value', i)
-            .prop('selected', i == selectedIndication)
             .text(this.indications[i].name)
             .appendTo(jqo_select_indications);
     }
     //refresh the selectmenu as created already in markup
     jqo_select_indications.selectmenu('refresh');
 };
+Guideline.prototype.displayIndication = function () {
+    if (this.active_Indication()) {
+        this.active_Indication().displayIndication();
+    }
+    else {
+        emptyThisHangerWithID(Indication.ID_editor_hanger_indication_texts);
+        emptyThisHangerWithID(Phase.ID_editor_hanger_phase_texts);
+        emptyThisHangerWithID(Drug.ID_editor_hanger_drug_texts);
+        jqo(Guideline.ID_editor_select_indications).empty().selectmenu('refresh');
+        jqo(Indication.ID_editor_select_phases).empty().selectmenu('refresh');
+        jqo(Phase.ID_editor_select_drugs).empty().selectmenu('refresh');
+    }
+};
+//Events
+Guideline.prototype.selectIndicationsChanged = function () {
+    this.displayIndication();
+};
 Guideline.prototype.addIndication = function () {
-    this.indications.push(new Indication("Untitled"));
-    this.selectedIndex_indication = this.indications.length - 1;
-    this.displayIndications();
-};
-Guideline.prototype.addPhaseToActiveIndication = function () {
-    if (this.active_Indication()) {
-        this.active_Indication().push(new Phase())
-    }
-};
-Guideline.prototype.selectIndicationsChanged = function (index) {
-    this.selectedIndex_indication = index;
-    this.displayIndications();
-};
-Guideline.prototype.updateIndicationSpecificData = function () {
-    if (this.active_Indication()) {
-        this.active_Indication().name = $('#' + Guideline.ID_text_indication_name).val();
-    }
-
-    //Update menu
+    this.indications.push(new Indication());
     this.populateIndicationsSelect();
-
-    //SAVE
-
+    Guideline.selectedIndicationIndex(this.indications.length - 1);
+    this.active_Indication().displayIndication();
 };
-/* PHASES */
-Guideline.prototype.displayPhases = function () {
-    this.populatePhasesSelect();
-    this.displayTextsForPhase();
-    //reset drug to zero , validity will be checked
-    this.selectedIndex_drug = 0;
-    this.displayDrugs();
+//    PHASES Events
+Guideline.prototype.selectPhasesChanged = function () {
+    this.active_Phase().displayPhase();
 };
-Guideline.prototype.displayTextsForPhase = function () {
+Guideline.prototype.addPhase = function () {
+    if (this.active_Indication()) {
+        this.active_Indication().addPhase();
+    }
+};
+
+//    DRUGS Events
+Guideline.prototype.selectDrugsChanged = function () {
+    this.active_Drug().displayDrugs();
+};
+Guideline.prototype.addDrug = function () {
+
     if (this.active_Phase()) {
-        this.active_Phase().displayTextsForPhase();
-    }
-    else {
-        emptyThisHangerWithID(Phase.ID_hanger_phase_texts);
-    }
-};
-Guideline.prototype.selectPhasesChanged = function (index) {
-    this.selectedIndex_phase = index;
-    //update self and cascade down
-    this.displayTextsForPhase();
-    this.displayDrugs();
-};
-Guideline.prototype.populatePhasesSelect = function () {
-    var jqo_select_phases = $('#' + Phase.ID_select_phases);
-    jqo_select_phases.empty();
-    var selectedPhase = this.selectedIndex_phase;
-    var activeIndication = this.active_Indication();
-    if (activeIndication) {
-        for (var i = 0; i < activeIndication.phases.length; i++) {
-            $(document.createElement("option"))
-                .prop('value', i)
-                .prop('selected', i == selectedPhase)
-                .text(activeIndication.phases[i].name)
-                .appendTo(jqo_select_phases);
-        }
-    }
-    //refresh the selectmenu as created already in markup
-    jqo_select_phases.selectmenu('refresh');
-
-};
-Guideline.prototype.updatePhaseSpecificData = function () {
-    var activeIPhase = this.active_Phase();
-    if (activeIPhase) {
-        activeIPhase.name = $('#' + Guideline.ID_text_phase_name).val();
-        activeIPhase.acronym = $('#' + Guideline.ID_text_phase_acronym).val();
-        activeIPhase.duration = $('#' + Guideline.ID_text_phase_duration).val();
-    }
-    //Update menu
-    this.populatePhasesSelect();
-};
-Guideline.prototype.newPhaseTapped = function () {
-    this.addPhaseToActiveIndication();
-    this.displayPhases();
-};
-
-/* DRUGS*/
-Guideline.prototype.displayDrugs = function () {
-    this.populateDrugsSelect();
-    this.displayTextsForDrug();
-};
-Guideline.prototype.displayTextsForDrug = function () {
-    if (this.active_Drug()) {
-        this.active_Drug().displayDrugsForGuideline();
-    }
-    else {
-        emptyThisHangerWithID(Drug.ID_hanger_drug_texts);
-    }
-};
-Guideline.prototype.populateDrugsSelect = function () {
-    var jqo_select_drugs = $('#' + Drug.ID_select_drugs);
-    jqo_select_drugs.empty();
-    var selectedDrug = this.selectedIndex_drug;
-    var activePhase = this.active_Phase();
-    if (activePhase) {
-        for (var i = 0; i < activePhase.drugs.length; i++) {
-            $(document.createElement("option"))
-                .prop('value', i)
-                .prop('selected', i == selectedDrug)
-                .text(activePhase.drugs[i].name)
-                .appendTo(jqo_select_drugs);
-        }
-    }
-    //refresh the selectmenu as created already in markup
-    jqo_select_drugs.selectmenu('refresh');
-};
-Guideline.prototype.selectDrugsChanged = function (index) {
-    this.selectedIndex_drug = index;
-    //update self
-    this.displayTextsForDrug();
-};
-Guideline.prototype.updateDrugSpecificData = function () {
-    var activeDrug = this.active_Drug();
-    if (activeDrug) {
-        activeDrug.name = $('#' + Drug.ID_text_drug_name).val();
-    }
-    //Update menu
-    this.populateDrugsSelect();
-};
-Guideline.prototype.addDrugToActivePhase = function () {
-    if (this.active_Phase()) {
-        this.active_Phase().push(new Drug())
+        this.active_Phase().addDrug();
     }
 };

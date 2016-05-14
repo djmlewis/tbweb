@@ -25,3 +25,4 @@ staticProperty is defined in the MyClass object (which is a function)
 and has nothing to do with its created instances, JavaScript treats functions as first-class objects,
     so being an object, you can assign properties to a function
     */
+

@@ -15,8 +15,7 @@ var GLOBALS =
 {
     weight: 60,
     indicationIndex: 0,
-    themesLetters: ['b','c'],
-    themesForIndex: function(index){ return this.themesLetters[index % this.themesLetters.length]}
+    themesLetters: ['a', 'a']
 };
 
 var OBJECT_IDs = {
@@ -29,7 +28,7 @@ var OBJECT_IDs = {
 };
 
 /* GLOBAL STARTUPS */
-jQuery(document).one( "pagecreate", OBJECT_IDs.page, setupPageForIndication);
+jQuery(document).on("pagecreate", OBJECT_IDs.page, setupPageForIndication);
 
 function loadSettingsAndGlobals()
 {
@@ -166,14 +165,12 @@ function buildDrugsListsScaffoldAndDrugsLists()
     var numPhases = GLOBALS.guideline.indications[GLOBALS.indicationIndex].phases.length;
     for (var ph=0;ph<numPhases;ph++)
     {
-        var themeLetter =  GLOBALS.themesForIndex(ph);
-
         var header = $(document.createElement("h3")).text(GLOBALS.guideline.indications[GLOBALS.indicationIndex].phases[ph].name);
         header.append(acronymSpanForString(GLOBALS.guideline.indications[GLOBALS.indicationIndex].phases[ph].drugsAcronym));
 
         $(document.createElement("div"))//add a collapsible to hang the drugs set on
             .attr('data-role','collapsible')
-            .attr('data-theme',themeLetter)
+            // .attr('data-theme',themeLetter)
             .attr('data-collapsed', (ph==0 ? "false" : "true"))
             .append(header)
             //make and add collapsible set for drugs in the phase, mark with unique ID so we can find it later for the drugs themselves
@@ -184,7 +181,7 @@ function buildDrugsListsScaffoldAndDrugsLists()
                     .attr('data-role','collapsible-set')
                     .attr('data-collapsed-icon','false')
                     .attr('data-expanded-icon','false')
-                    .attr('data-theme',themeLetter)
+                // .attr('data-theme',themeLetter)
             )
             //add the drugs collapsible to the drugs top set
             .appendTo(phasesTopSet);
@@ -201,6 +198,7 @@ function buildDrugsListsScaffoldAndDrugsLists()
 
 function setupPageForIndication()
 {
+    alert("setupPageForIndication");
     loadSettingsAndGlobals();
 
     //now safe to do stuff

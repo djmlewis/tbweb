@@ -1,11 +1,18 @@
 /**
  * Created by davidjmlewis on 22/04/2016.
  */
-function appendSelectMenuWithTheseOptions(fieldContain, id, options, labeltext) {
-    var localFC = $(document.createElement("div")).addClass("ui-field-contain").appendTo(fieldContain);
+
+function appendSelectMenuWithTheseOptions(fieldContain, id, options, labeltext, mini) {
+    var labelAndSelect = createSelectLabelAndSelectMenuWithTheseOptions(id, options, labeltext, mini);
+    $(document.createElement("div")).addClass("ui-field-contain")
+        .append(labelAndSelect.label_)
+        .append(labelAndSelect.select_)
+        .appendTo(fieldContain);
+}
+function createSelectLabelAndSelectMenuWithTheseOptions(id, options, labeltext, mini) {
 
     var select = $(document.createElement("select"))
-        .attr({'id': id, 'name': id, 'data-mini': true})
+        .attr({'id': id, 'name': id, 'data-mini': mini})
         .attr({'id': id, 'name': id});
 
     for (var i = 0; i < options.length; i++) {
@@ -14,12 +21,12 @@ function appendSelectMenuWithTheseOptions(fieldContain, id, options, labeltext) 
             .text(options[i])
             .appendTo(select);
     }
-    var labelForSelect = $(document.createElement("label"))
+    var label = $(document.createElement("label"))
         .attr('for', id)
         .text(labeltext);
-    localFC.append(labelForSelect);
-    localFC.append(select);
+    return {label_: label, select_: select};
 }
+
 function appendLabelAndTextValueTo(fieldContain, id, labeltext, texttext) {
     var localFC = $(document.createElement("div")).addClass("ui-field-contain").appendTo(fieldContain);
 
@@ -42,4 +49,7 @@ function emptyThisHangerWithID(id) {
 }
 function triggerCreateElementsOnThisHangerWithID(id) {
     $('#' + id).trigger("create");
+}
+function jqo(id) {
+    return $('#' + id);
 }

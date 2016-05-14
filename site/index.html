@@ -5,17 +5,17 @@
     <title>Page Title</title>
 
     <meta name="viewport" content="width=device-width, initial-scale=1">
-
-    <!--   <link rel="stylesheet" href="https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css" />
+    <link rel="stylesheet" href="https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css"/>
        <script src="https://code.jquery.com/jquery-1.12.0.min.js"></script>
        <script src="https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
-   -->
     <!--CSS -->
-    <!--<link rel="stylesheet" href="css/jquery.mobile-1.4.5.css"> DEFAULT-->
-    <link rel="stylesheet" href="css/myStyles.css" />
-    <link rel="stylesheet" href="css/themes/phases.css" />
-    <link rel="stylesheet" href="css/themes/jquery.mobile.icons.min.css" />
-    <link rel="stylesheet" href="css/jquery.mobile.structure-1.4.5.min.css" />
+    <link rel="stylesheet" href="css/jquery.mobile-1.4.5.css">
+    <!--
+        <link rel="stylesheet" href="css/myStyles.css" />
+        <link rel="stylesheet" href="css/themes/phases.css" />
+        <link rel="stylesheet" href="css/themes/jquery.mobile.icons.min.css" />
+        <link rel="stylesheet" href="css/jquery.mobile.structure-1.4.5.min.css" />
+    -->
 
     <!-- JQM JS -->
     <script src="jquery-1.12.3.js"></script>
@@ -27,26 +27,37 @@
     <script src="DrugObject.js"></script>
     <script src="PhaseObject.js"></script>
     <script src="IndicationObject.js"></script>
-    <script src="startup-script-editor.js"></script>
-    <script src="startup-script.js"></script>
 
 </head>
 <body>
 
-<div data-role="page" id="page_prescribe" data-theme='a'><!-- /page -->
+<div data-role="page" id="page_editor"><!-- /page -->
     <div data-role="header" style="overflow:hidden;">
+        <script src="startup-script-editor.js"></script>
         <h1>Prescribing Guidance</h1>
-            
         <div data-role="navbar">
-                    
             <ul>
-                        
-                <li><a href="#page_prescribe" class="ui-btn-active" data-icon="search">Prescribe</a></li>
-                        
-                <li><a href="#page_editor" data-icon="search">Edit</a></li>
-                        
+                <li><a href="#page_prescribe" data-icon="search">Prescribe</a>
+                </li>
+                <li><a href="#page_editor" data-icon="search" class="ui-btn-active">Edit</a></li>
             </ul>
-                
+        </div><!-- /navbar -->
+    </div><!-- /header -->
+    <div role="main" class="ui-content" id="ui-content-editor"><!-- /content -->
+        <div id="editor-guideline-hanger"></div>
+    </div><!-- /content -->
+</div><!-- /page -->
+
+<div data-role="page" id="page_prescribe"><!-- /page -->
+    <div data-role="header" style="overflow:hidden;">
+        <script src="startup-script.js"></script>
+        <h1>Prescribing Guidance</h1>
+        <div data-role="navbar">
+            <ul>
+                <li><a href="#page_prescribe" class="ui-btn-active" data-icon="search">Prescribe</a>
+                </li>
+                <li><a href="#page_editor" data-icon="search">Edit</a></li>
+            </ul>
         </div><!-- /navbar -->
     </div><!-- /header -->
     <div role="main" class="ui-content" id="ui-content-prescribe"><!-- /content -->
@@ -87,25 +98,5 @@
     </div><!-- /content -->
 </div><!-- /page -->
 
-<div data-role="page" id="page_editor"><!-- /page -->
-    <div data-role="header" style="overflow:hidden;">
-        <h1>Edit Guideline</h1>
-            
-        <div data-role="navbar">
-                    
-            <ul>
-                        
-                <li><a href="#page_prescribe" data-icon="search">Prescribe</a></li>
-                        
-                <li><a href="#page_editor" class="ui-btn-active" data-icon="search">Edit</a></li>
-                        
-            </ul>
-                
-        </div><!-- /navbar -->
-    </div><!-- /header -->
-    <div role="main" class="ui-content" id="ui-content-editor"><!-- /content -->
-        <div id="editor-guideline-hanger"></div>
-    </div><!-- /content -->
-</div><!-- /page -->
 </body>
 </html>
