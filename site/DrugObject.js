@@ -11,6 +11,7 @@ function Drug(name, acronym, howDoseCalc, units, notes) {
     this.notes = notes || "No notes";
 }
 // STATICS 
+Drug.ID_editor_hanger_drug = "editor_hangerdrug";
 Drug.ID_editor_hanger_drug_texts = "editor_hangerdrugtexts";
 Drug.ID_editor_text_drug_name = "editor_textdrugname";
 Drug.ID_editor_text_drug_acronym = "editor_textdrugacronym";
@@ -21,8 +22,12 @@ Drug.ID_editor_select_drugHowDoseCalc = "editor_selectdrugtype";
 Drug.howDoseCalculatedOptions = ["mg/Kg", "Thresholds", "Directed"];
 // STATIC FUNCTS 
 Drug.addElementsToThisHangerForGuideline_editor = function (baseElement, guideline) {
+    var drugsHanger = $(document.createElement("div"))
+        .attr('id', Drug.ID_editor_hanger_drug)
+        .appendTo(baseElement);
+
     //drugs Header
-    $(document.createElement("h4")).addClass("ui-bar ui-bar-b ").text('Drugs').appendTo(baseElement);
+    $(document.createElement("h4")).addClass("ui-bar ui-bar-b ").text('Drugs').appendTo(drugsHanger);
 
     //drugs Select &  buttons group
     var labelAndSelectDrugs = createSelectLabelAndSelectMenuWithTheseOptions(Phase.ID_editor_select_drugs, [], "Drugs", false);
@@ -30,10 +35,10 @@ Drug.addElementsToThisHangerForGuideline_editor = function (baseElement, guideli
 
     $(document.createElement("div"))
         .attr({'data-role': "controlgroup", 'data-type': "horizontal"})
-        .appendTo(baseElement)
+        .appendTo(drugsHanger)
         .append(labelAndSelectDrugs.label_)//LABEL for drug Select
         .append(labelAndSelectDrugs.select_.change(function () {
-            guideline.selectDrugsChanged()
+            guideline.selectmenuChanged(Phase.ID_editor_select_drugs)
         }))
         .append//SAVE BUTTON
         ($(document.createElement("button"))
@@ -47,18 +52,26 @@ Drug.addElementsToThisHangerForGuideline_editor = function (baseElement, guideli
             .addClass("ui-btn ui-icon-plus ui-btn-icon-notext")
             .text('Add')
             .click(function () {
-                guideline.addDrug()
+                guideline.addSomething('d')
             }))
         .append//LABEL for drug type
         (labelAndSelectDrugTypes.label_)
         .append// Indications Select
-        (labelAndSelectDrugTypes.select_);
+        (labelAndSelectDrugTypes.select_)
+        .append//- BUTTON
+        ($(document.createElement("button"))
+            .addClass("ui-btn ui-icon-minus ui-btn-icon-notext")
+            .text('Delete')
+            .click(function () {
+                guideline.deleteSomething('d')
+            }));
+
 
     /* Drugs Texts Hanger */
-    $(document.createElement("div")).attr('id', Drug.ID_editor_hanger_drug_texts).appendTo(baseElement);
+    $(document.createElement("div")).attr('id', Drug.ID_editor_hanger_drug_texts).appendTo(drugsHanger);
 
     //Refresh
-    baseElement.trigger('create');
+    drugsHanger.trigger('create');
 };
 Drug.selectedHowDoseCalculatedString = function () {
     return Drug.howDoseCalculatedOptions[jqo(Drug.ID_editor_select_drugHowDoseCalc).val()];

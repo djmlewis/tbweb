@@ -26,13 +26,17 @@ Indication.selectedPhaseIndex = function (newIndex) {
 
 // Create HTML
 Indication.addElementsToThisHangerForGuideline_editor = function (baseElement, guideline) {
+    var indicationHanger = $(document.createElement("div"))
+        .attr('id', Indication.ID_editor_hanger_indication)
+        .appendTo(baseElement);
 
-    $(document.createElement("h4")).addClass("ui-bar ui-bar-b ").text('Indications').appendTo(baseElement);
+
+    $(document.createElement("h4")).addClass("ui-bar ui-bar-b ").text('Indications').appendTo(indicationHanger);
 
     //Indications Select &  buttons group
     $(document.createElement("div"))
         .attr({'data-role': "controlgroup", 'data-type': "horizontal"})
-        .appendTo(baseElement)
+        .appendTo(indicationHanger)
         .append//LABEL for Indications Select
         ($(document.createElement("label"))
             .attr('for', Guideline.ID_editor_select_indications)
@@ -40,7 +44,7 @@ Indication.addElementsToThisHangerForGuideline_editor = function (baseElement, g
         .append// Indications Select
         ($(document.createElement("select"))
             .change(function () {
-                guideline.selectIndicationsChanged()
+                guideline.selectmenuChanged(Guideline.ID_editor_select_indications)
             })
             .attr({'id': Guideline.ID_editor_select_indications, 'name': Guideline.ID_editor_select_indications}))
         .append//SAVE BUTTON
@@ -55,15 +59,22 @@ Indication.addElementsToThisHangerForGuideline_editor = function (baseElement, g
             .addClass("ui-btn ui-icon-plus ui-btn-icon-notext")
             .text('Add')
             .click(function () {
-                guideline.addIndication()
+                guideline.addSomething('i')
+            }))
+        .append//- BUTTON
+        ($(document.createElement("button"))
+            .addClass("ui-btn ui-icon-minus ui-btn-icon-notext")
+            .text('Delete')
+            .click(function () {
+                guideline.deleteSomething('i')
             }));
 
     //Texts Hanger
-    $(document.createElement("div")).attr('id', Indication.ID_editor_hanger_indication_texts).appendTo(baseElement);
+    $(document.createElement("div")).attr('id', Indication.ID_editor_hanger_indication_texts).appendTo(indicationHanger);
 
 
     //Refresh
-    baseElement.trigger('create');
+    indicationHanger.trigger('create');
 };
 
 // INSTANCE
@@ -77,11 +88,14 @@ Indication.prototype.active_Drug = function () {
 };
 
 //DISPLAY INDIC
+Indication.prototype.initialisePhase = function () {
+    this.populatePhasesSelect();
+    this.displayPhase();
+};
 Indication.prototype.displayIndication = function () {
     this.displayTextsForIndication();
     //cascade down
-    this.populatePhasesSelect();
-    this.displayPhase();
+    this.initialisePhase();
 };
 Indication.prototype.displayTextsForIndication = function () {
     var baseElement = jqo(Indication.ID_editor_hanger_indication_texts);
@@ -106,6 +120,12 @@ Indication.prototype.populatePhasesSelect = function () {
     }
     //refresh the selectmenu as created already in markup
     jqo_select_phases.selectmenu('refresh');
+    if (this.phases.length > 0) {
+        jqo(Drug.ID_editor_hanger_drug).show();
+    }
+    else {
+        jqo(Drug.ID_editor_hanger_drug).hide();
+    }
 
 };
 Indication.prototype.displayPhase = function () {
@@ -126,4 +146,10 @@ Indication.prototype.addPhase = function () {
     this.populatePhasesSelect();
     Indication.selectedPhaseIndex(this.phases.length - 1);
     this.active_Phase().displayPhase();
+};
+Indication.prototype.deletePhase = function () {
+    if (this.phases.length > Indication.selectedPhaseIndex()) {
+        this.phases.splice(Indication.selectedPhaseIndex(), 1);
+        this.initialisePhase();
+    }
 };

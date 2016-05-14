@@ -9,6 +9,7 @@ function Phase(name, duration, drugsAcronym) {
     this.drugs = [];
 }
 // STATICS
+Phase.ID_editor_hanger_phase = "editor_hangerphase";
 Phase.ID_editor_hanger_phase_texts = "editor_hangerphasetexts";
 Phase.ID_editor_text_phase_name = "editor_textphasename";
 Phase.ID_editor_text_phase_duration = "editor_textphaseduration";
@@ -34,12 +35,16 @@ Phase.prototype.constructor = Phase;
 // Create HTML
 Phase.addElementsToThisHangerForGuideline_editor = function (baseElement, guideline) {
 
-    $(document.createElement("h4")).addClass("ui-bar ui-bar-b ").text('Phases').appendTo(baseElement);
+    var phasesHanger = $(document.createElement("div"))
+        .attr('id', Phase.ID_editor_hanger_phase)
+        .appendTo(baseElement);
+
+    $(document.createElement("h4")).addClass("ui-bar ui-bar-b ").text('Phases').appendTo(phasesHanger);
 
     //Phases Select &  buttons group
     $(document.createElement("div"))
         .attr({'data-role': "controlgroup", 'data-type': "horizontal"})
-        .appendTo(baseElement)
+        .appendTo(phasesHanger)
         .append//LABEL for Indications Select
         ($(document.createElement("label"))
             .attr('for', Indication.ID_editor_select_phases)
@@ -47,7 +52,7 @@ Phase.addElementsToThisHangerForGuideline_editor = function (baseElement, guidel
         .append// Indications Select
         ($(document.createElement("select"))
             .change(function () {
-                guideline.selectPhasesChanged()
+                guideline.selectmenuChanged(Indication.ID_editor_select_phases)
             })
             .attr({'id': Indication.ID_editor_select_phases, 'name': Indication.ID_editor_select_phases}))
         .append//SAVE BUTTON
@@ -62,20 +67,31 @@ Phase.addElementsToThisHangerForGuideline_editor = function (baseElement, guidel
             .addClass("ui-btn ui-icon-plus ui-btn-icon-notext")
             .text('Add')
             .click(function () {
-                guideline.addPhase()
+                guideline.addSomething('p')
+            }))
+        .append//- BUTTON
+        ($(document.createElement("button"))
+            .addClass("ui-btn ui-icon-minus ui-btn-icon-notext")
+            .text('Delete')
+            .click(function () {
+                guideline.deleteSomething('p')
             }));
 
+
     //Texts Hanger
-    $(document.createElement("div")).attr('id', Phase.ID_editor_hanger_phase_texts).appendTo(baseElement);
+    $(document.createElement("div")).attr('id', Phase.ID_editor_hanger_phase_texts).appendTo(phasesHanger);
 
 
     //Refresh
-    baseElement.trigger('create');
+    phasesHanger.trigger('create');
 };
 // Display
 Phase.prototype.displayPhase = function () {
     this.displayTextsForPhase();
     //cascade down
+    this.initialiseDrugs();
+};
+Phase.prototype.initialiseDrugs = function () {
     this.populateDrugsSelect();
     this.displayDrugs();
 };
@@ -126,4 +142,10 @@ Phase.prototype.addDrug = function () {
     this.populateDrugsSelect();
     Phase.selectedDrugIndex(this.drugs.length - 1);
     this.active_Drug().displayDrugs();
+};
+Phase.prototype.deleteDrug = function () {
+    if (this.drugs.length > Phase.selectedDrugIndex()) {
+        this.drugs.splice(Phase.selectedDrugIndex(), 1);
+        this.initialiseDrugs();
+    }
 };

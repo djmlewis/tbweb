@@ -123,14 +123,11 @@ Guideline.prototype.createPage_Editor = function () {
     //Refresh
     baseElement.trigger("create");
 };
-
 //    Display GL
 Guideline.prototype.displayGuideline = function () {
     this.displayTextsForGuideLine();
     //cascade down
-    this.populateIndicationsSelect();
-    this.displayIndication();
-
+    this.initialiseIndication();
 };
 Guideline.prototype.displayTextsForGuideLine = function () {
     var baseElement = jqo(Guideline.ID_editor_hanger_guideline_editor_texts);
@@ -144,8 +141,65 @@ Guideline.prototype.displayTextsForGuideLine = function () {
 Guideline.prototype.enterGuidelineSpecificData = function () {
     this.name = jqo(Guideline.ID_editor_text_guideline_editor_name).val();
 };
+// GLOBAL EVENTS
+Guideline.prototype.selectmenuChanged = function (menuID) {
+    switch (menuID) {
+        case Guideline.ID_editor_select_indications:
+            this.displayIndication();
+            break;
+        case Indication.ID_editor_select_phases:
+            this.active_Phase().displayPhase();
+            break;
+        case Phase.ID_editor_select_drugs:
+            this.active_Drug().displayDrugs();
+            break;
+        default:
+            break;
+    }
+};
+Guideline.prototype.addSomething = function (whatToAdd) {
+    switch (whatToAdd) {
+        case 'i':
+            this.addIndication();
+            break;
+        case 'p':
+            this.addPhase();
+            break;
+        case 'd':
+            this.addDrug();
+            break;
+        default:
+            break;
+    }
+};
+Guideline.prototype.deleteSomething = function (whatToDelete) {
+    switch (whatToDelete) {
+        case 'i':
+            if (this.indications.length > Guideline.selectedIndicationIndex()) {
+                this.indications.splice(Guideline.selectedIndicationIndex(), 1);
+                this.initialiseIndication();
+            }
+            break;
+        case 'p':
+            if (this.active_Indication()) {
+                this.active_Indication().deletePhase();
+            }
+            break;
+        case 'd':
+            if (this.active_Phase()) {
+                this.active_Phase().deleteDrug();
+            }
+            break;
+        default:
+            break;
+    }
+};
 //    INDICATIONS
 //Display
+Guideline.prototype.initialiseIndication = function () {
+    this.populateIndicationsSelect();
+    this.displayIndication();
+};
 Guideline.prototype.populateIndicationsSelect = function () {
     var jqo_select_indications = jqo(Guideline.ID_editor_select_indications);
     jqo_select_indications.empty();
@@ -157,6 +211,13 @@ Guideline.prototype.populateIndicationsSelect = function () {
     }
     //refresh the selectmenu as created already in markup
     jqo_select_indications.selectmenu('refresh');
+    if (this.indications.length > 0) {
+        jqo(Phase.ID_editor_hanger_phase).show();
+    }
+    else {
+        jqo(Phase.ID_editor_hanger_phase).hide();
+        jqo(Drug.ID_editor_hanger_drug).hide();
+    }
 };
 Guideline.prototype.displayIndication = function () {
     if (this.active_Indication()) {
@@ -172,19 +233,14 @@ Guideline.prototype.displayIndication = function () {
     }
 };
 //Events
-Guideline.prototype.selectIndicationsChanged = function () {
-    this.displayIndication();
-};
 Guideline.prototype.addIndication = function () {
     this.indications.push(new Indication());
     this.populateIndicationsSelect();
     Guideline.selectedIndicationIndex(this.indications.length - 1);
     this.active_Indication().displayIndication();
 };
+
 //    PHASES Events
-Guideline.prototype.selectPhasesChanged = function () {
-    this.active_Phase().displayPhase();
-};
 Guideline.prototype.addPhase = function () {
     if (this.active_Indication()) {
         this.active_Indication().addPhase();
@@ -192,9 +248,6 @@ Guideline.prototype.addPhase = function () {
 };
 
 //    DRUGS Events
-Guideline.prototype.selectDrugsChanged = function () {
-    this.active_Drug().displayDrugs();
-};
 Guideline.prototype.addDrug = function () {
 
     if (this.active_Phase()) {
