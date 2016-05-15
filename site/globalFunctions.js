@@ -30,6 +30,13 @@ function createSelectLabelAndSelectMenuWithTheseOptions(id, options, labeltext, 
 function appendLabelAndTextValueTo(fieldContain, id, labeltext, texttext) {
     var localFC = $(document.createElement("div")).addClass("ui-field-contain").appendTo(fieldContain);
 
+    /*
+     jQuery('#some_text_box').on('input propertychange paste', function() {
+     // do your stuff
+     });
+     */
+
+
     $(document.createElement("label"))
         .attr('for', id)
         .text(labeltext)
@@ -42,6 +49,28 @@ function appendLabelAndTextValueTo(fieldContain, id, labeltext, texttext) {
             'placeholder': labeltext
         })
         .prop('value', texttext)
+        .on('input propertychange paste', function () {
+            gActiveGuideline.someTextChanged(id.charAt(0))
+        })
+        .appendTo(localFC);
+}
+function appendLabelAndTextAreaValueTo(fieldContain, id, labeltext, texttext) {
+    var localFC = $(document.createElement("div")).addClass("ui-field-contain").appendTo(fieldContain);
+
+    $(document.createElement("label"))
+        .attr('for', id)
+        .text(labeltext)
+        .appendTo(localFC);
+    $(document.createElement("textarea"))
+        .attr({
+            'id': id,
+            'name': id,
+            'placeholder': labeltext
+        })
+        .prop('value', texttext)
+        .on('input propertychange paste', function () {
+            gActiveGuideline.someTextChanged(id.charAt(0))
+        })
         .appendTo(localFC);
 }
 function emptyThisHangerWithID(id) {

@@ -5,13 +5,19 @@
 function Guideline(name) {
     this.name = name || "Untitled";
     this.indications = [];
+    this.dirtyTexts = 0;
 }
 //   STATICS
 //   IDs
-Guideline.ID_editor_text_guideline_editor_name = "editor_textguidelinename";
-Guideline.ID_editor_hanger_guideline_editor_texts = "editor_hangerguidelineeditortexts";
-Guideline.ID_editor_hanger_guideline_editor_texts_Editor = "editor-guideline-hanger";
-Guideline.ID_editor_select_indications = "editor_selectindication";
+Guideline.ID_editor_text_guideline_editor_name = "Geditor_textguidelinename";
+Guideline.ID_editor_hanger_guideline_editor_texts = "Geditor_hangerguidelineeditortexts";
+Guideline.ID_editor_hanger_guideline_editor_texts_Editor = "Geditor-guideline-hanger";
+Guideline.ID_editor_select_indications = "Geditor_selectindication";
+//dirty texts keys
+Guideline.dirty_G = 1;
+Guideline.dirty_I = 2;
+Guideline.dirty_P = 4;
+Guideline.dirty_D = 8;
 
 //STATICS
 Guideline.selectedIndicationIndex = function (newIndex) {
@@ -142,6 +148,23 @@ Guideline.prototype.enterGuidelineSpecificData = function () {
     this.name = jqo(Guideline.ID_editor_text_guideline_editor_name).val();
 };
 // GLOBAL EVENTS
+Guideline.prototype.someTextChanged = function (textID) {
+    switch (textID) {
+        case 'G':
+            this.dirtyTexts |= Guideline.dirty_G;
+            break;
+        case 'I':
+            this.dirtyTexts |= Guideline.dirty_I;
+            break;
+        case 'P':
+            this.dirtyTexts |= Guideline.dirty_P;
+            break;
+        case 'D':
+            this.dirtyTexts |= Guideline.dirty_D;
+            break;
+    }
+    console.log(this.dirtyTexts);
+};
 Guideline.prototype.selectmenuChanged = function (menuID) {
     switch (menuID) {
         case Guideline.ID_editor_select_indications:
@@ -173,25 +196,27 @@ Guideline.prototype.addSomething = function (whatToAdd) {
     }
 };
 Guideline.prototype.deleteSomething = function (whatToDelete) {
-    switch (whatToDelete) {
-        case 'i':
-            if (this.indications.length > Guideline.selectedIndicationIndex()) {
-                this.indications.splice(Guideline.selectedIndicationIndex(), 1);
-                this.initialiseIndication();
-            }
-            break;
-        case 'p':
-            if (this.active_Indication()) {
-                this.active_Indication().deletePhase();
-            }
-            break;
-        case 'd':
-            if (this.active_Phase()) {
-                this.active_Phase().deleteDrug();
-            }
-            break;
-        default:
-            break;
+    if (window.confirm("Are you sure?")) {
+        switch (whatToDelete) {
+            case 'i':
+                if (this.indications.length > Guideline.selectedIndicationIndex()) {
+                    this.indications.splice(Guideline.selectedIndicationIndex(), 1);
+                    this.initialiseIndication();
+                }
+                break;
+            case 'p':
+                if (this.active_Indication()) {
+                    this.active_Indication().deletePhase();
+                }
+                break;
+            case 'd':
+                if (this.active_Phase()) {
+                    this.active_Phase().deleteDrug();
+                }
+                break;
+            default:
+                break;
+        }
     }
 };
 //    INDICATIONS

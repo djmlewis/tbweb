@@ -11,14 +11,14 @@ function Drug(name, acronym, howDoseCalc, units, notes) {
     this.notes = notes || "No notes";
 }
 // STATICS 
-Drug.ID_editor_hanger_drug = "editor_hangerdrug";
-Drug.ID_editor_hanger_drug_texts = "editor_hangerdrugtexts";
-Drug.ID_editor_text_drug_name = "editor_textdrugname";
-Drug.ID_editor_text_drug_acronym = "editor_textdrugacronym";
-Drug.ID_editor_text_drug_howDoseCalc = "editor_textdrughowDoseCalc";
-Drug.ID_editor_text_drug_units = "editor_textdrugunits";
-Drug.ID_editor_text_drug_notes = "editor_textdrugnotes";
-Drug.ID_editor_select_drugHowDoseCalc = "editor_selectdrugtype";
+Drug.ID_editor_hanger_drug = "Deditor_hangerdrug";
+Drug.ID_editor_hanger_drug_texts = "Deditor_hangerdrugtexts";
+Drug.ID_editor_text_drug_name = "Deditor_textdrugname";
+Drug.ID_editor_text_drug_acronym = "Deditor_textdrugacronym";
+Drug.ID_editor_text_drug_howDoseCalc = "Deditor_textdrughowDoseCalc";
+Drug.ID_editor_text_drug_units = "Deditor_textdrugunits";
+Drug.ID_editor_text_drug_notes = "Deditor_textdrugnotes";
+Drug.ID_editor_select_drugHowDoseCalc = "Deditor_selectdrugtype";
 Drug.howDoseCalculatedOptions = ["mg/Kg", "Thresholds", "Directed"];
 // STATIC FUNCTS 
 Drug.addElementsToThisHangerForGuideline_editor = function (baseElement, guideline) {
@@ -45,7 +45,6 @@ Drug.addElementsToThisHangerForGuideline_editor = function (baseElement, guideli
             .addClass("ui-btn ui-icon-check ui-btn-icon-notext")
             .text('Save')
             .click(function () {
-                guideline.updateDrugSpecificData()
             }))
         .append//+ BUTTON
         ($(document.createElement("button"))
@@ -94,10 +93,9 @@ Drug.prototype.displayDrugs_As_Drug = function () {
     appendLabelAndTextValueTo(fieldContain, Drug.ID_editor_text_drug_name, "Name", this.name);
     appendLabelAndTextValueTo(fieldContain, Drug.ID_editor_text_drug_acronym, "Acronym", this.acronym);
     appendLabelAndTextValueTo(fieldContain, Drug.ID_editor_text_drug_units, "Units", this.units);
-    appendLabelAndTextValueTo(fieldContain, Drug.ID_editor_text_drug_notes, "Notes", this.notes);
+    appendLabelAndTextAreaValueTo(fieldContain, Drug.ID_editor_text_drug_notes, "Notes", this.notes);
     baseElement.append(fieldContain);
     $(document.createElement("h5")).addClass("ui-bar ui-bar-a").text("Calculation Method: " + this.howDoseCalc).appendTo(baseElement);
-
 };
 Drug.prototype.doseWarningsCommentsArrayForWeight = function (weight) {
     return {instructionsString: "Undefined for '+weight" + " Kg", warningArray: [], infoArray: []};

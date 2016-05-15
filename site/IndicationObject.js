@@ -10,10 +10,10 @@ function Indication(name) {
 Indication.prototype.constructor = Indication;
 
 // STATICS */
-Indication.ID_editor_hanger_indication = "editor_hangerIndication";
-Indication.ID_editor_hanger_indication_texts = "editor_hangerIndicationtexts";
-Indication.ID_editor_text_indication_name = "editor_textindicationname";
-Indication.ID_editor_select_phases = "editor_selectphases";
+Indication.ID_editor_hanger_indication = "Ieditor_hangerIndication";
+Indication.ID_editor_hanger_indication_texts = "Ieditor_hangerIndicationtexts";
+Indication.ID_editor_text_indication_name = "Ieditor_textindicationname";
+Indication.ID_editor_select_phases = "Ieditor_selectphases";
 
 // STATIC FUNCTS
 Indication.selectedPhaseIndex = function (newIndex) {
@@ -52,7 +52,6 @@ Indication.addElementsToThisHangerForGuideline_editor = function (baseElement, g
             .addClass("ui-btn ui-icon-check ui-btn-icon-notext")
             .text('Save')
             .click(function () {
-                guideline.updateIndicationSpecificData()
             }))
         .append//+ BUTTON
         ($(document.createElement("button"))

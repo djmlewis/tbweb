@@ -9,12 +9,12 @@ function Phase(name, duration, drugsAcronym) {
     this.drugs = [];
 }
 // STATICS
-Phase.ID_editor_hanger_phase = "editor_hangerphase";
-Phase.ID_editor_hanger_phase_texts = "editor_hangerphasetexts";
-Phase.ID_editor_text_phase_name = "editor_textphasename";
-Phase.ID_editor_text_phase_duration = "editor_textphaseduration";
-Phase.ID_editor_text_phase_acronym = "editor_textphaseacronym";
-Phase.ID_editor_select_drugs = "editor_selectdrugs";
+Phase.ID_editor_hanger_phase = "Peditor_hangerphase";
+Phase.ID_editor_hanger_phase_texts = "Peditor_hangerphasetexts";
+Phase.ID_editor_text_phase_name = "Peditor_textphasename";
+Phase.ID_editor_text_phase_duration = "Peditor_textphaseduration";
+Phase.ID_editor_text_phase_acronym = "Peditor_textphaseacronym";
+Phase.ID_editor_select_drugs = "Peditor_selectdrugs";
 // STATIC FUNCTS
 Phase.selectedDrugIndex = function (newIndex) {
     if (newIndex) {
@@ -60,7 +60,6 @@ Phase.addElementsToThisHangerForGuideline_editor = function (baseElement, guidel
             .addClass("ui-btn ui-icon-check ui-btn-icon-notext")
             .text('Save')
             .click(function () {
-                guideline.updatePhaseSpecificData()
             }))
         .append//+ BUTTON
         ($(document.createElement("button"))
