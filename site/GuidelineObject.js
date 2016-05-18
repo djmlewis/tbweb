@@ -190,7 +190,8 @@ Guideline.prototype.addSomething = function (whatToAdd) {
     }
 };
 Guideline.prototype.deleteSomething = function (whatToDelete) {
-    if (window.confirm("Are you sure?")) {
+    //if (window.confirm("Are you sure?")) 
+    {
         switch (whatToDelete) {
             case 'i':
                 if (this.indications.length > Guideline.selectedIndicationIndex_editor()) {
@@ -212,6 +213,39 @@ Guideline.prototype.deleteSomething = function (whatToDelete) {
                 break;
         }
     }
+};
+
+Guideline.prototype.confirmDelete = function (whatToDelete) {
+    var myself = this;
+    var popupQ = $(document.createElement("div")).attr({
+        'data-role': "popup",
+        'data-theme': 'a',
+        'data-overlay-theme': "b"
+    });
+    var content = $(document.createElement("div"))
+        .attr({'data-role': "main"})
+        .addClass("ui-content")
+        .appendTo(popupQ);
+    $(document.createElement("h3"))
+        .text("Warning: delete cannot be undone.")
+        .appendTo(content);
+    $(document.createElement("a"))
+        .attr({'href': "#", 'data-rel': "back"})
+        .addClass("ui-btn ui-corner-all ui-shadow ui-btn-inline ui-btn-b ui-icon-back ui-btn-icon-left")
+        .text("Cancel")
+        .appendTo(content);
+    $(document.createElement("a"))
+        .attr({'href': "#", 'data-rel': "back"})
+        .addClass("ui-btn ui-corner-all ui-shadow ui-btn-inline ui-btn-a ui-icon-delete ui-btn-icon-left")
+        .text("Delete")
+        .click(function () {
+            myself.deleteSomething(whatToDelete)
+        })
+        .appendTo(content);
+
+    popupQ.popup();
+    popupQ.popup('open');
+
 };
 //    INDICATIONS
 //Display

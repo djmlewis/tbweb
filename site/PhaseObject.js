@@ -73,7 +73,7 @@ Phase.addElementsToThisHangerForGuideline_editor = function (baseElement, guidel
             .addClass("ui-btn ui-icon-minus ui-btn-icon-notext")
             .text('Delete')
             .click(function () {
-                guideline.deleteSomething('p')
+                guideline.confirmDelete('p')
             }));
 
 

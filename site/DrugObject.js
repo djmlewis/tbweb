@@ -43,20 +43,6 @@ Drug.addElementsToThisHangerForGuideline_editor = function (baseElement, guideli
             .text('Save')
             .click(function () {
             }))
-        /*
-        .append//+ BUTTON
-        ($(document.createElement("button"))
-            .addClass("ui-btn ui-icon-plus ui-btn-icon-notext")
-            .text('Add')
-         .click(function () {guideline.addSomething('d')}))
-         .append(labelAndSelectDrugTypes.label_)
-         .append(labelAndSelectDrugTypes.select_)
-        .append//- BUTTON
-        ($(document.createElement("button"))
-            .addClass("ui-btn ui-icon-minus ui-btn-icon-notext")
-            .text('Delete')
-         .click(function () {guideline.deleteSomething('d')}))
-         */
         .appendTo(drugsHanger);
 
     $(document.createElement("div"))
@@ -75,7 +61,7 @@ Drug.addElementsToThisHangerForGuideline_editor = function (baseElement, guideli
             .addClass("ui-btn ui-icon-minus ui-btn-icon-notext")
             .text('Delete')
             .click(function () {
-                guideline.deleteSomething('d')
+                guideline.confirmDelete('d')
             }))
         .appendTo(drugsHanger);
 

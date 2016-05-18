@@ -72,7 +72,7 @@ Indication.addElementsToThisHangerForGuideline_editor = function (baseElement, g
             .addClass("ui-btn ui-icon-minus ui-btn-icon-notext")
             .text('Delete')
             .click(function () {
-                guideline.deleteSomething('i')
+                guideline.confirmDelete('i')
             }));
 
     //Texts Hanger
