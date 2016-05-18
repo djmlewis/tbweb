@@ -1,19 +1,26 @@
 /**
  * Created by davidlewis on 11/05/2016.
  */
-function Indication(name) {
+function Indication(name, guideline) {
     this.name = name || "Untitled";
+    this.minWeight = 30;
+    this.startWeight = 60;
+    this.maxWeight = 100;
+    this.weight = this.startWeight;
     this.phases = [];
-
+    this.guideline = guideline;
 }
 
 Indication.prototype.constructor = Indication;
 
 // STATICS */
-Indication.ID_editor_hanger_indication = "Ieditor_hangerIndication";
-Indication.ID_editor_hanger_indication_texts = "Ieditor_hangerIndicationtexts";
-Indication.ID_editor_text_indication_name = "Ieditor_textindicationname";
-Indication.ID_editor_select_phases = "Ieditor_selectphases";
+Indication.ID_editor_hanger_indication = "2editor_hangerIndication";
+Indication.ID_editor_hanger_indication_texts = "2editor_hangerIndicationtexts";
+Indication.ID_editor_text_indication_name = "2editor_textindicationname";
+Indication.ID_editor_select_phases = "2editor_selectphases";
+Indication.ID_prescribe_menus_weight_hanger = "2prescribe_menus_weight_hanger";
+Indication.ID_prescribe_select_weight = "2prescribe_select_weight";
+Indication.ID_prescribe_drugs_hanger = "2ui-field-contain-drugs-prescribe";
 
 // STATIC FUNCTS
 Indication.selectedPhaseIndex = function (newIndex) {
@@ -79,11 +86,11 @@ Indication.addElementsToThisHangerForGuideline_editor = function (baseElement, g
 // INSTANCE
 Indication.prototype.constructor = Indication;
 //ACTIVES
-Indication.prototype.active_Phase = function () {
+Indication.prototype.active_Phase_editor = function () {
     return this.phases[jqo(Indication.ID_editor_select_phases).val()];
 };
-Indication.prototype.active_Drug = function () {
-    return this.active_Phase() ? this.active_Phase().active_Drug() : false;
+Indication.prototype.active_Drug_editor = function () {
+    return this.active_Phase_editor() ? this.active_Phase_editor().active_Drug_editor() : false;
 };
 
 //DISPLAY INDIC
@@ -128,8 +135,8 @@ Indication.prototype.populatePhasesSelect = function () {
 
 };
 Indication.prototype.displayPhase = function () {
-    if (this.active_Phase()) {
-        this.active_Phase().displayPhase();
+    if (this.active_Phase_editor()) {
+        this.active_Phase_editor().displayPhase();
     }
     else {
         emptyThisHangerWithID(Phase.ID_editor_hanger_phase_texts);
@@ -144,11 +151,100 @@ Indication.prototype.addPhase = function () {
     this.phases.push(new Phase());
     this.populatePhasesSelect();
     Indication.selectedPhaseIndex(this.phases.length - 1);
-    this.active_Phase().displayPhase();
+    this.active_Phase_editor().displayPhase();
 };
 Indication.prototype.deletePhase = function () {
     if (this.phases.length > Indication.selectedPhaseIndex()) {
         this.phases.splice(Indication.selectedPhaseIndex(), 1);
         this.initialisePhase();
     }
+};
+// PRESCRIBE
+Indication.prototype.createSelectMenuWeight = function () {
+    var hanger = jqo(Indication.ID_prescribe_menus_weight_hanger);
+    hanger.empty();
+    appendSelectMenuWithTheseOptions(hanger, Indication.ID_prescribe_select_weight, integerArrayFromTo(this.minWeight, this.maxWeight), "Weight", false, this.guideline);
+
+    //create the selectmenu as created already in markup
+    hanger.trigger('create');
+    jqo(Indication.ID_prescribe_select_weight).val(this.weight - this.minWeight).selectmenu('refresh');
+};
+Indication.prototype.displayWeightAndIndication = function () {
+    this.createSelectMenuWeight();
+    this.buildDrugsListsScaffoldAndDrugsLists();
+    this.buildDrugsListsForPhases();
+};
+Indication.prototype.buildDrugsListsScaffoldAndDrugsLists = function () {
+    var jqo_fieldcontain_drugs = jqo(Indication.ID_prescribe_drugs_hanger);
+    jqo_fieldcontain_drugs.empty();
+
+    //make a collapsible set for phases to hang on to
+    var phasesTopSet = $(document.createElement("div"))
+        .attr('data-role', 'collapsible-set')
+        .attr('data-collapsed-icon', 'false')
+        .attr('data-expanded-icon', 'false');
+    //cycle thru the phases
+    var numPhases = this.phases.length;
+    for (var ph = 0; ph < numPhases; ph++) {
+        var header = $(document.createElement("h3")).text(this.phases[ph].name);
+        header.append(acronymSpanForString(this.phases[ph].drugsAcronym));
+        //add a collapsible to hang the drugs set on
+        $(document.createElement("div"))
+            .attr('data-role', 'collapsible')
+            // .attr('data-theme',themeLetter)
+            .attr('data-collapsed', (ph == 0 ? "false" : "true"))
+            .append(header)
+            //make and add collapsible set for drugs in the phase, mark with unique ID so we can find it later for the drugs themselves
+            .append
+            (
+                $(document.createElement("div"))
+                    .attr('id', uniqueIDforDrugHangerDivInPhase(ph))
+                    .attr('data-role', 'collapsible-set')
+                    .attr('data-collapsed-icon', 'false')
+                    .attr('data-expanded-icon', 'false')
+                // .attr('data-theme',themeLetter)
+            )
+            //add the drugs collapsible to the drugs top set
+            .appendTo(phasesTopSet);
+    }
+    // add the top set to the container
+    phasesTopSet.appendTo(jqo_fieldcontain_drugs);
+    //activate the collapsible set components
+    jqo_fieldcontain_drugs.trigger("create");
+};
+Indication.prototype.buildDrugsListsForPhases = function () {
+    //cycle thru the phases
+    var jqo_fieldcontain_drugs = jqo(Indication.ID_prescribe_drugs_hanger);
+    var numPhases = this.phases.length;
+    for (var ph = 0; ph < numPhases; ph++) {
+        var phaseDrugsCollSet = jqo(uniqueIDforDrugHangerDivInPhase(ph));
+        // var themeLetter =  GLOBALS.themesForIndex(ph);
+        phaseDrugsCollSet.empty();
+        var numDrugs = this.phases[ph].drugs.length;
+        for (var drug = 0; drug < numDrugs; drug++) {
+            var aDrugDiv = $(document.createElement("div"))
+                .attr('data-role', 'collapsible');
+            var drugObj = this.phases[ph].drugs[drug];
+            // Add warnings
+            var drugsInstructionsWarningsInfos = drugObj.doseWarningsCommentsArrayForWeight(this.weight);
+            var header = $(document.createElement("h3")).text(drugsInstructionsWarningsInfos.instructionsString);
+            header.append(acronymSpanForString(drugObj.acronym));
+
+            aDrugDiv.append(header);
+
+            addAlertsOrInfosToCollapsible(drugsInstructionsWarningsInfos.warningArray, true, aDrugDiv);
+            addAlertsOrInfosToCollapsible(drugsInstructionsWarningsInfos.infoArray, false, aDrugDiv);
+            //Add drug notes
+            aDrugDiv.append($(document.createElement("p")).text(drugObj.notes));
+            //Append to drug hanger
+            aDrugDiv.appendTo(phaseDrugsCollSet);
+        }
+    }
+    jqo_fieldcontain_drugs.trigger("create");
+    jqo_fieldcontain_drugs.fieldcontain("refresh");
+};
+
+Indication.prototype.selectWeightChanged = function () {
+    this.weight = parseInt($('#' + Indication.ID_prescribe_select_weight + ' option:selected').text());
+    this.buildDrugsListsForPhases();
 };

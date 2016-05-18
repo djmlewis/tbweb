@@ -9,12 +9,12 @@ function Phase(name, duration, drugsAcronym) {
     this.drugs = [];
 }
 // STATICS
-Phase.ID_editor_hanger_phase = "Peditor_hangerphase";
-Phase.ID_editor_hanger_phase_texts = "Peditor_hangerphasetexts";
-Phase.ID_editor_text_phase_name = "Peditor_textphasename";
-Phase.ID_editor_text_phase_duration = "Peditor_textphaseduration";
-Phase.ID_editor_text_phase_acronym = "Peditor_textphaseacronym";
-Phase.ID_editor_select_drugs = "Peditor_selectdrugs";
+Phase.ID_editor_hanger_phase = "4editor_hangerphase";
+Phase.ID_editor_hanger_phase_texts = "4editor_hangerphasetexts";
+Phase.ID_editor_text_phase_name = "4editor_textphasename";
+Phase.ID_editor_text_phase_duration = "4editor_textphaseduration";
+Phase.ID_editor_text_phase_acronym = "4editor_textphaseacronym";
+Phase.ID_editor_select_drugs = "4editor_selectdrugs";
 // STATIC FUNCTS
 Phase.selectedDrugIndex = function (newIndex) {
     if (newIndex) {
@@ -25,7 +25,7 @@ Phase.selectedDrugIndex = function (newIndex) {
 };
 
 // Actives
-Phase.prototype.active_Drug = function () {
+Phase.prototype.active_Drug_editor = function () {
     return this.drugs[Phase.selectedDrugIndex()];
 };
 
@@ -120,8 +120,8 @@ Phase.prototype.populateDrugsSelect = function () {
     jqo_select_drugs.selectmenu('refresh');
 };
 Phase.prototype.displayDrugs = function () {
-    if (this.active_Drug()) {
-        this.active_Drug().displayDrugs();
+    if (this.active_Drug_editor()) {
+        this.active_Drug_editor().displayDrugs();
     }
     else {
         emptyThisHangerWithID(Drug.ID_editor_hanger_drug_texts);
@@ -140,7 +140,7 @@ Phase.prototype.addDrug = function () {
     }
     this.populateDrugsSelect();
     Phase.selectedDrugIndex(this.drugs.length - 1);
-    this.active_Drug().displayDrugs();
+    this.active_Drug_editor().displayDrugs();
 };
 Phase.prototype.deleteDrug = function () {
     if (this.drugs.length > Phase.selectedDrugIndex()) {

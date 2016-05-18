@@ -46,11 +46,6 @@ function loadSettingsAndGlobals()
 
 }
 
-function selectWeightChanged()
-{
-    GLOBALS.weight = $(this).val();
-    buildDrugsListsForPhases();
-}
 
 function buildSelectMenuWeight()
 {
@@ -69,11 +64,6 @@ function buildSelectMenuWeight()
     jqo_select_weight.selectmenu('refresh');
 }
 
-function selectIndicationsChanged()
-{
-    GLOBALS.indicationIndex = ($(this).val());
-    buildDrugsListsScaffoldAndDrugsLists();
-}
 
 function buildSelectMenuIndications()
 {
@@ -90,66 +80,10 @@ function buildSelectMenuIndications()
     jqo_select_indications.selectmenu('refresh');
 }
 
-function acronymSpanForString(acronym)
-{
-    return $(document.createElement("span")).text(" acronym").addClass("phaseAcronym")
-}
-
-function addAlertsOrInfosToCollapsible(arrayToParse, addAlertIcon, collapsibleDiv)
-{
-    //Objects are Passed by Reference, so aDiv passed in gets updated. Arguments by Value
-    var numAlerts = arrayToParse.length;
-    if (numAlerts > 0)
-    {
-        collapsibleDiv.attr('data-collapsed-icon',(collapsibleDiv.attr('data-collapsed-icon') == 'alert' || addAlertIcon ? 'alert' : 'false'));
-        collapsibleDiv.attr('data-expanded-icon', (collapsibleDiv.attr('data-collapsed-icon') == 'alert' || addAlertIcon ? 'alert' : 'false'));
-
-        for (var w=0; w<numAlerts; w++)
-        {
-            collapsibleDiv.append($(document.createElement("p")).text((addAlertIcon ? '⚠ ' : '')+arrayToParse[w]))
-        }
-    }
-}
 
 
-function uniqueIDforDrugHangerDivInPhase(phaseIndex)
-{
-    return kPhaseDiv_Stem+phaseIndex;
-}
 
-function buildDrugsListsForPhases()
-{
-    //cycle thru the phases
-    var numPhases = GLOBALS.guideline.indications[GLOBALS.indicationIndex].phases.length;
-    for (var ph=0;ph<numPhases;ph++)
-    {
-        var phaseDrugsCollSet = $('#'+uniqueIDforDrugHangerDivInPhase(ph));
-        // var themeLetter =  GLOBALS.themesForIndex(ph);
-        phaseDrugsCollSet.empty();
-        var numDrugs = GLOBALS.guideline.indications[GLOBALS.indicationIndex].phases[ph].drugs.length;
-        for(var drug=0; drug<numDrugs; drug++)
-        {
-            var aDrugDiv = $(document.createElement("div"))
-                .attr('data-role','collapsible');
-            var drugObj = GLOBALS.guideline.indications[GLOBALS.indicationIndex].phases[ph].drugs[drug];
-            // Add warnings
-            var drugsInstructionsWarningsInfos = drugObj.doseWarningsCommentsArrayForWeight(GLOBALS.weight);
-            var header = $(document.createElement("h3")).text(drugsInstructionsWarningsInfos.instructionsString);
-            header.append(acronymSpanForString(drugObj.acronym));
 
-            aDrugDiv.append(header);
-
-            addAlertsOrInfosToCollapsible(drugsInstructionsWarningsInfos.warningArray,true, aDrugDiv);
-            addAlertsOrInfosToCollapsible(drugsInstructionsWarningsInfos.infoArray,false, aDrugDiv);
-            //Add drug notes
-            aDrugDiv.append($(document.createElement("p")).text(drugObj.notes));
-            //Append to drug hanger
-            aDrugDiv.appendTo(phaseDrugsCollSet);
-        }
-    }
-    $(OBJECT_IDs.fieldsetDrugs).trigger("create");
-    $(OBJECT_IDs.fieldsetDrugs).fieldcontain("refresh");
-}
 
 function buildDrugsListsScaffoldAndDrugsLists()
 {
@@ -198,7 +132,6 @@ function buildDrugsListsScaffoldAndDrugsLists()
 
 function setupPageForIndication()
 {
-    alert("setupPageForIndication");
     loadSettingsAndGlobals();
 
     //now safe to do stuff

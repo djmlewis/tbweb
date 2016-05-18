@@ -11,14 +11,14 @@ function Drug(name, acronym, howDoseCalc, units, notes) {
     this.notes = notes || "No notes";
 }
 // STATICS 
-Drug.ID_editor_hanger_drug = "Deditor_hangerdrug";
-Drug.ID_editor_hanger_drug_texts = "Deditor_hangerdrugtexts";
-Drug.ID_editor_text_drug_name = "Deditor_textdrugname";
-Drug.ID_editor_text_drug_acronym = "Deditor_textdrugacronym";
-Drug.ID_editor_text_drug_howDoseCalc = "Deditor_textdrughowDoseCalc";
-Drug.ID_editor_text_drug_units = "Deditor_textdrugunits";
-Drug.ID_editor_text_drug_notes = "Deditor_textdrugnotes";
-Drug.ID_editor_select_drugHowDoseCalc = "Deditor_selectdrugtype";
+Drug.ID_editor_hanger_drug = "8editor_hangerdrug";
+Drug.ID_editor_hanger_drug_texts = "8editor_hangerdrugtexts";
+Drug.ID_editor_text_drug_name = "8editor_textdrugname";
+Drug.ID_editor_text_drug_acronym = "8editor_textdrugacronym";
+Drug.ID_editor_text_drug_howDoseCalc = "8editor_textdrughowDoseCalc";
+Drug.ID_editor_text_drug_units = "8editor_textdrugunits";
+Drug.ID_editor_text_drug_notes = "8editor_textdrugnotes";
+Drug.ID_editor_select_drugHowDoseCalc = "8editor_selectdrugtype";
 Drug.howDoseCalculatedOptions = ["mg/Kg", "Thresholds", "Directed"];
 // STATIC FUNCTS 
 Drug.addElementsToThisHangerForGuideline_editor = function (baseElement, guideline) {
@@ -30,22 +30,37 @@ Drug.addElementsToThisHangerForGuideline_editor = function (baseElement, guideli
     $(document.createElement("h4")).addClass("ui-bar ui-bar-b ").text('Drugs').appendTo(drugsHanger);
 
     //drugs Select &  buttons group
-    var labelAndSelectDrugs = createSelectLabelAndSelectMenuWithTheseOptions(Phase.ID_editor_select_drugs, [], "Drugs", false);
-    var labelAndSelectDrugTypes = createSelectLabelAndSelectMenuWithTheseOptions(Drug.ID_editor_select_drugHowDoseCalc, Drug.howDoseCalculatedOptions, "Dose Calculation", false);
+    var labelAndSelectDrugs = createSelectLabelAndSelectMenuWithTheseOptions(Phase.ID_editor_select_drugs, [], "Drugs", false, guideline);
+    var labelAndSelectDrugTypes = createSelectLabelAndSelectMenuWithTheseOptions(Drug.ID_editor_select_drugHowDoseCalc, Drug.howDoseCalculatedOptions, "Dose Calculation", false, guideline);
 
     $(document.createElement("div"))
         .attr({'data-role': "controlgroup", 'data-type': "horizontal"})
-        .appendTo(drugsHanger)
-        .append(labelAndSelectDrugs.label_)//LABEL for drug Select
-        .append(labelAndSelectDrugs.select_.change(function () {
-            guideline.selectmenuChanged(Phase.ID_editor_select_drugs)
-        }))
+        .append(labelAndSelectDrugs.label_)
+        .append(labelAndSelectDrugs.select_)
         .append//SAVE BUTTON
         ($(document.createElement("button"))
             .addClass("ui-btn ui-icon-check ui-btn-icon-notext")
             .text('Save')
             .click(function () {
             }))
+        /*
+        .append//+ BUTTON
+        ($(document.createElement("button"))
+            .addClass("ui-btn ui-icon-plus ui-btn-icon-notext")
+            .text('Add')
+         .click(function () {guideline.addSomething('d')}))
+         .append(labelAndSelectDrugTypes.label_)
+         .append(labelAndSelectDrugTypes.select_)
+        .append//- BUTTON
+        ($(document.createElement("button"))
+            .addClass("ui-btn ui-icon-minus ui-btn-icon-notext")
+            .text('Delete')
+         .click(function () {guideline.deleteSomething('d')}))
+         */
+        .appendTo(drugsHanger);
+
+    $(document.createElement("div"))
+        .attr({'data-role': "controlgroup", 'data-type': "horizontal"})
         .append//+ BUTTON
         ($(document.createElement("button"))
             .addClass("ui-btn ui-icon-plus ui-btn-icon-notext")
@@ -53,18 +68,16 @@ Drug.addElementsToThisHangerForGuideline_editor = function (baseElement, guideli
             .click(function () {
                 guideline.addSomething('d')
             }))
-        .append//LABEL for drug type
-        (labelAndSelectDrugTypes.label_)
-        .append// Indications Select
-        (labelAndSelectDrugTypes.select_)
+        .append(labelAndSelectDrugTypes.label_)
+        .append(labelAndSelectDrugTypes.select_)
         .append//- BUTTON
         ($(document.createElement("button"))
             .addClass("ui-btn ui-icon-minus ui-btn-icon-notext")
             .text('Delete')
             .click(function () {
                 guideline.deleteSomething('d')
-            }));
-
+            }))
+        .appendTo(drugsHanger);
 
     /* Drugs Texts Hanger */
     $(document.createElement("div")).attr('id', Drug.ID_editor_hanger_drug_texts).appendTo(drugsHanger);

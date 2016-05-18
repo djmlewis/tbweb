@@ -9,18 +9,17 @@ function Guideline(name) {
 }
 //   STATICS
 //   IDs
-Guideline.ID_editor_text_guideline_editor_name = "Geditor_textguidelinename";
-Guideline.ID_editor_hanger_guideline_editor_texts = "Geditor_hangerguidelineeditortexts";
-Guideline.ID_editor_hanger_guideline_editor_texts_Editor = "Geditor-guideline-hanger";
-Guideline.ID_editor_select_indications = "Geditor_selectindication";
-//dirty texts keys
-Guideline.dirty_G = 1;
-Guideline.dirty_I = 2;
-Guideline.dirty_P = 4;
-Guideline.dirty_D = 8;
+Guideline.ID_editor_text_guideline_editor_name = "1editor_textguidelinename";
+Guideline.ID_editor_hanger_guideline_editor_texts = "1editor_hangerguidelineeditortexts";
+Guideline.ID_editor_hanger_guideline_editor_texts_Editor = "1editor-guideline-hanger";
+Guideline.ID_editor_select_indications = "1editor_selectindication";
+
+
+Guideline.ID_prescribe_menus_indications_hanger = "1prescribe_menus_indications_hanger";
+Guideline.ID_prescribe_select_indications = "1prescribe_select_indications";
 
 //STATICS
-Guideline.selectedIndicationIndex = function (newIndex) {
+Guideline.selectedIndicationIndex_editor = function (newIndex) {
     if (newIndex) {
         jqo(Guideline.ID_editor_select_indications).val(newIndex).selectmenu('refresh');
     } else {
@@ -38,7 +37,7 @@ Guideline.prototype.initFromJSONstring = function (jasonString) {
         //this.indications is initialised in constructor
         for (var i = 0; i < g.indications.length; i++) // wont run if no indics
         {
-            var indic = new Indication(g.indications[i].name);
+            var indic = new Indication(g.indications[i].name, this);
             for (var p = 0; p < g.indications[i].phases.length; p++) {
                 var phse = new Phase(g.indications[i].phases[p].name);
                 for (var d = 0; d < g.indications[i].phases[p].drugs.length; d++) {
@@ -51,7 +50,7 @@ Guideline.prototype.initFromJSONstring = function (jasonString) {
                         g.indications[i].phases[p].drugs[d].mgkg_max,
                         g.indications[i].phases[p].drugs[d].rounval,
                         g.indications[i].phases[p].drugs[d].roundirect,
-                        "Notes"
+                        g.indications[i].phases[p].drugs[d].notes
                     );
                     phse.drugs.push(drug);
                 }
@@ -69,21 +68,21 @@ Guideline.prototype.exportGuideline = function () {
     window.open().document.write(JSON.stringify(this));
 };
 //    ACTIVES
-Guideline.prototype.active_Indication = function () {
-    return this.indications[Guideline.selectedIndicationIndex()];
+Guideline.prototype.active_Indication_editor = function () {
+    return this.indications[Guideline.selectedIndicationIndex_editor()];
 };
-Guideline.prototype.active_Phase = function () {
-    return this.active_Indication() ? this.active_Indication().active_Phase() : false;
+Guideline.prototype.active_Phase_editor = function () {
+    return this.active_Indication_editor() ? this.active_Indication_editor().active_Phase_editor() : false;
 };
-Guideline.prototype.active_Drug = function () {
-    return this.active_Phase() ? this.active_Phase().active_Drug() : false;
+Guideline.prototype.active_Drug_editor = function () {
+    return this.active_Phase_editor() ? this.active_Phase_editor().active_Drug_editor() : false;
 };
 //    CREATE HTML
-Guideline.prototype.createPagesAndDisplay = function () {
+Guideline.prototype.createPagesAndDisplay_editing = function () {
     /*create structure*/
     gActiveGuideline.createPage_Editor();
     /*update display*/
-    gActiveGuideline.displayGuideline();
+    gActiveGuideline.displayGuideline_editing();
 
 };
 Guideline.prototype.createPage_Editor = function () {
@@ -130,7 +129,7 @@ Guideline.prototype.createPage_Editor = function () {
     baseElement.trigger("create");
 };
 //    Display GL
-Guideline.prototype.displayGuideline = function () {
+Guideline.prototype.displayGuideline_editing = function () {
     this.displayTextsForGuideLine();
     //cascade down
     this.initialiseIndication();
@@ -149,34 +148,29 @@ Guideline.prototype.enterGuidelineSpecificData = function () {
 };
 // GLOBAL EVENTS
 Guideline.prototype.someTextChanged = function (textID) {
-    switch (textID) {
-        case 'G':
-            this.dirtyTexts |= Guideline.dirty_G;
-            break;
-        case 'I':
-            this.dirtyTexts |= Guideline.dirty_I;
-            break;
-        case 'P':
-            this.dirtyTexts |= Guideline.dirty_P;
-            break;
-        case 'D':
-            this.dirtyTexts |= Guideline.dirty_D;
-            break;
-    }
-    console.log(this.dirtyTexts);
+    this.dirtyTexts |= textID;
 };
-Guideline.prototype.selectmenuChanged = function (menuID) {
+Guideline.prototype.selectmenuChanged = function (menuID, menuIndex) {
     switch (menuID) {
         case Guideline.ID_editor_select_indications:
             this.displayIndication();
             break;
         case Indication.ID_editor_select_phases:
-            this.active_Phase().displayPhase();
+            this.active_Phase_editor().displayPhase();
             break;
         case Phase.ID_editor_select_drugs:
-            this.active_Drug().displayDrugs();
+            this.active_Drug_editor().displayDrugs();
+            break;
+        case Indication.ID_prescribe_select_weight:
+            if (this.activeIndication_prescribe()) {
+                this.activeIndication_prescribe().selectWeightChanged();
+            }
+            break;
+        case Guideline.ID_prescribe_select_indications:
+            this.selectIndicationsChanged(menuIndex);
             break;
         default:
+            console.log('Not handled: ' + menuID);
             break;
     }
 };
@@ -199,19 +193,19 @@ Guideline.prototype.deleteSomething = function (whatToDelete) {
     if (window.confirm("Are you sure?")) {
         switch (whatToDelete) {
             case 'i':
-                if (this.indications.length > Guideline.selectedIndicationIndex()) {
-                    this.indications.splice(Guideline.selectedIndicationIndex(), 1);
+                if (this.indications.length > Guideline.selectedIndicationIndex_editor()) {
+                    this.indications.splice(Guideline.selectedIndicationIndex_editor(), 1);
                     this.initialiseIndication();
                 }
                 break;
             case 'p':
-                if (this.active_Indication()) {
-                    this.active_Indication().deletePhase();
+                if (this.active_Indication_editor()) {
+                    this.active_Indication_editor().deletePhase();
                 }
                 break;
             case 'd':
-                if (this.active_Phase()) {
-                    this.active_Phase().deleteDrug();
+                if (this.active_Phase_editor()) {
+                    this.active_Phase_editor().deleteDrug();
                 }
                 break;
             default:
@@ -245,8 +239,8 @@ Guideline.prototype.populateIndicationsSelect = function () {
     }
 };
 Guideline.prototype.displayIndication = function () {
-    if (this.active_Indication()) {
-        this.active_Indication().displayIndication();
+    if (this.active_Indication_editor()) {
+        this.active_Indication_editor().displayIndication();
     }
     else {
         emptyThisHangerWithID(Indication.ID_editor_hanger_indication_texts);
@@ -259,23 +253,70 @@ Guideline.prototype.displayIndication = function () {
 };
 //Events
 Guideline.prototype.addIndication = function () {
-    this.indications.push(new Indication());
+    this.indications.push(new Indication("Untitled", this));
     this.populateIndicationsSelect();
-    Guideline.selectedIndicationIndex(this.indications.length - 1);
-    this.active_Indication().displayIndication();
+    Guideline.selectedIndicationIndex_editor(this.indications.length - 1);
+    this.active_Indication_editor().displayIndication();
 };
 
 //    PHASES Events
 Guideline.prototype.addPhase = function () {
-    if (this.active_Indication()) {
-        this.active_Indication().addPhase();
+    if (this.active_Indication_editor()) {
+        this.active_Indication_editor().addPhase();
     }
 };
 
 //    DRUGS Events
 Guideline.prototype.addDrug = function () {
 
-    if (this.active_Phase()) {
-        this.active_Phase().addDrug();
+    if (this.active_Phase_editor()) {
+        this.active_Phase_editor().addDrug();
     }
 };
+
+// PRESCRIBE
+//Statics
+Guideline.selectedIndicationIndex_prescribe = function (newIndex) {
+    if (newIndex) {
+        jqo(Guideline.ID_prescribe_select_indications).val(newIndex).selectmenu('refresh');
+    } else {
+        return jqo(Guideline.ID_prescribe_select_indications).val();
+    }
+};
+//INSTANCE
+Guideline.prototype.activeIndication_prescribe = function () {
+    return this.indications[Guideline.selectedIndicationIndex_prescribe()];
+};
+Guideline.prototype.indicationsNames = function () {
+    var namesArray = [];
+    for (var i = 0; i < this.indications.length; i++) {
+        namesArray.push(this.indications[i].name)
+    }
+    return namesArray;
+};
+Guideline.prototype.createPage_Prescribe = function () {
+    // closure over this via myself to give access to self, as when the anonymous mini function is called,  this->element_calling.
+    // When that calls the prototype function this reverts to the Object again, so no need to pass this parameter
+    this.createSelectMenuIndications();
+    if (this.activeIndication_prescribe) {
+        this.activeIndication_prescribe().displayWeightAndIndication();
+    }
+    //Refresh
+};
+
+Guideline.prototype.createSelectMenuIndications = function () {
+    var myself = this;
+    var hanger = jqo(Guideline.ID_prescribe_menus_indications_hanger);
+    hanger.empty();
+    appendSelectMenuWithTheseOptions(hanger, Guideline.ID_prescribe_select_indications, this.indicationsNames(), "Indication", false, myself);
+
+    //create the selectmenu as created already in markup
+    hanger.trigger('create');
+};
+// EVents
+Guideline.prototype.selectIndicationsChanged = function (index) {
+    if (this.activeIndication_prescribe()) {
+        this.activeIndication_prescribe().displayWeightAndIndication();
+    }
+};
+
