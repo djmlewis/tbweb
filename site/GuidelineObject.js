@@ -231,20 +231,19 @@ Guideline.prototype.confirmDelete = function (whatToDelete) {
         .appendTo(content);
     $(document.createElement("a"))
         .attr({'href': "#", 'data-rel': "back"})
-        .addClass("ui-btn ui-corner-all ui-shadow ui-btn-inline ui-btn-b ui-icon-back ui-btn-icon-left")
+        .addClass("ui-btn ui-corner-all ui-shadow ui-btn-inline ui-btn-a ui-icon-back ui-btn-icon-left")
         .text("Cancel")
         .appendTo(content);
     $(document.createElement("a"))
         .attr({'href': "#", 'data-rel': "back"})
-        .addClass("ui-btn ui-corner-all ui-shadow ui-btn-inline ui-btn-a ui-icon-delete ui-btn-icon-left")
+        .addClass("ui-btn ui-corner-all ui-shadow ui-btn-inline ui-btn-b ui-icon-delete ui-btn-icon-left")
         .text("Delete")
         .click(function () {
             myself.deleteSomething(whatToDelete)
         })
         .appendTo(content);
 
-    popupQ.popup();
-    popupQ.popup('open');
+    popupQ.popup().popup('open');
 
 };
 //    INDICATIONS
