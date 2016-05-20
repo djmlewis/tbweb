@@ -3,12 +3,14 @@
  */
 
 // ********** DRUG ************
-function Drug(name, acronym, howDoseCalc, units, notes) {
+function Drug(guideline, name, acronym, howDoseCalc, units, notes) {
     this.name = name || "Untitled";
     this.acronym = acronym || "";
     this.howDoseCalc = howDoseCalc || "Undefined";
     this.units = units || "Undefined";
     this.notes = notes || "No notes";
+    this.guideline = guideline;
+
 }
 // STATICS 
 Drug.ID_editor_hanger_drug = "8editor_hangerdrug";
@@ -101,9 +103,9 @@ Drug.prototype.doseWarningsCommentsArrayForWeight = function (weight) {
 };
 
 // ********** DRUG MGKG  ************
-function Drug_mgKg(name, acronym, maxDose, mgkg_initial, mgkg_min, mgkg_max, rounval, roundirect, notes) {
+function Drug_mgKg(guideline, name, acronym, maxDose, mgkg_initial, mgkg_min, mgkg_max, rounval, roundirect, notes) {
     //super init
-    Drug.call(this, name, acronym, "mg/Kg", "mg", notes);
+    Drug.call(guideline, name, acronym, "mg/Kg", "mg", notes);
     // subclass init
     this.maxDose = maxDose;
     this.mgkg_initial = mgkg_initial;

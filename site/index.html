@@ -2,23 +2,11 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>Page Title</title>
+    <title>Prescribe</title>
 
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <!--
-        <link rel="stylesheet" href="https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css"/>
-           <script src="https://code.jquery.com/jquery-1.12.0.min.js"></script>
-           <script src="https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
-    -->
     <!--CSS -->
-    <link rel="stylesheet" href="css/jquery.mobile-1.4.5.css">
-    <!--
-        <link rel="stylesheet" href="css/myStyles.css" />
-        <link rel="stylesheet" href="css/themes/phases.css" />
-        <link rel="stylesheet" href="css/themes/jquery.mobile.icons.min.css" />
-        <link rel="stylesheet" href="css/jquery.mobile.structure-1.4.5.min.css" />
-    -->
-
+    <link rel="stylesheet" href="jquery.mobile-1.4.5.css">
     <!-- JQM JS -->
     <script src="jquery-1.12.3.js"></script>
     <script src="jquery.mobile-1.4.5.js"></script>
@@ -29,44 +17,16 @@
     <script src="PhaseObject.js"></script>
     <script src="IndicationObject.js"></script>
     <script src="globalFunctions.js"></script>
-    <script src="startup-script-editor.js"></script>
+    <script src="startup-script-globals.js"></script>
+    <!--this page-->
 
 </head>
 
 <body>
-
-<div data-role="page" id="page_editor"><!-- /page -->
-    <div data-role="navbar">
-        <ul>
-            <li><a href="#page_prescribe">Prescribe</a></li>
-            <li><a href="#page_editor" class="ui-btn-active">Edit</a></li>
-        </ul>
-    </div><!-- /navbar -->
-    <div role="main" class="ui-content" id="ui-content-editor"><!-- /content -->
-        <div id="1editor-guideline-hanger"></div>
-
-        <!--
-                <div data-role="popup" id="popupconfirmdelete" >
-                    <div data-role="header"><h1>Confirm Delete</h1></div>
-                    <div data-role="main" class="ui-content">
-                        <h4>Delete cannot be undone. Press Delete to confirm</h4>
-                        <a href="#" class="ui-btn ui-corner-all ui-shadow ui-btn-inline ui-btn-b ui-icon-back ui-btn-icon-left" data-rel="back">Cancel</a>
-                        <a href="#" class="ui-btn ui-corner-all ui-shadow ui-btn-inline ui-btn-b ui-icon-delete ui-btn-icon-left" >Cancel</a>
-                    </div>
-                    </div>
-        -->
-
-    </div><!-- /content -->
-</div><!-- /page -->
-
 <div data-role="page" id="page_prescribe"><!-- /page -->
-    <div data-role="navbar">
-        <ul>
-            <li><a href="#page_prescribe" class="ui-btn-active">Prescribe</a></li>
-            <li><a href="#page_editor">Edit</a></li>
-        </ul>
-    </div><!-- /navbar -->
     <div role="main" class="ui-content" id="ui-content-prescribe"><!-- /content -->
+        <a href="#page_editor">Edit</a>
+
         <!--  Indications Hanger -->
         <div id="1prescribe_menus_indications_hanger"></div>
         <!--  Weight Hanger -->
@@ -76,6 +36,13 @@
     </div><!-- /content -->
 </div><!-- /page -->
 
+<div data-role="page" id="page_editor"><!-- /page -->
+    <div role="main" class="ui-content" id="ui-content-editor"><!-- /content -->
+        <a href="#page_prescribe">Rx</a>
+
+        <div id="1editor-guideline-hanger"></div>
+    </div><!-- /content -->
+</div><!-- /page -->
 
 </body>
 </html>

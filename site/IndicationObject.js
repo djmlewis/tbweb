@@ -1,14 +1,14 @@
 /**
  * Created by davidlewis on 11/05/2016.
  */
-function Indication(name, guideline) {
+function Indication(guideline, name) {
     this.name = name || "Untitled";
     this.minWeight = 30;
     this.startWeight = 60;
     this.maxWeight = 100;
     this.weight = this.startWeight;
     this.phases = [];
-    this.guideline = guideline;
+    this.guideline = guideline || undefined;
 }
 
 Indication.prototype.constructor = Indication;
@@ -148,7 +148,7 @@ Indication.prototype.displayPhase = function () {
 };
 //Events
 Indication.prototype.addPhase = function () {
-    this.phases.push(new Phase());
+    this.phases.push(new Phase(this));
     this.populatePhasesSelect();
     Indication.selectedPhaseIndex(this.phases.length - 1);
     this.active_Phase_editor().displayPhase();

@@ -82,7 +82,7 @@ function appendLabelAndTextValueTo(fieldContain, id, labeltext, texttext) {
         })
         .prop('value', texttext)
         .on('input propertychange paste', function () {
-            gActiveGuideline.someTextChanged(id.charAt(0))
+            window.gActiveGuideline.someTextChanged(id.charAt(0))
         })
         .appendTo(localFC);
 }
@@ -101,7 +101,7 @@ function appendLabelAndTextAreaValueTo(fieldContain, id, labeltext, texttext) {
         })
         .prop('value', texttext)
         .on('input propertychange paste', function () {
-            gActiveGuideline.someTextChanged(id.charAt(0))
+            window.gActiveGuideline.someTextChanged(id.charAt(0))
         })
         .appendTo(localFC);
 }
