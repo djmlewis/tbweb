@@ -1,5 +1,7 @@
 //Created by davidlewis on 09/05/2016.
 
+// the global guideline
+window.gActiveGuideline = undefined;
 
 //    Objects for guidelines
 function Guideline(name) {
@@ -16,10 +18,14 @@ Guideline.ID_editor_text_guideline_editor_name = "1editor_textguidelinename";
 Guideline.ID_editor_hanger_guideline_editor_texts = "1editor_hangerguidelineeditortexts";
 Guideline.ID_editor_hanger_guideline_editor_texts_Editor = "1editor-guideline-hanger";
 Guideline.ID_editor_select_indications = "1editor_selectindication";
+Guideline.ID_editor_header = "1page_header_editor";
+Guideline.ID_editor_headertitle = "1page_headertitle_editor";
 
 
 Guideline.ID_prescribe_menus_indications_hanger = "1prescribe_menus_indications_hanger";
 Guideline.ID_prescribe_select_indications = "1prescribe_select_indications";
+Guideline.ID_prescribe_header = "1page_header_prescribe";
+Guideline.ID_editor_headertitle = "1page_headertitle_prescribe";
 
 //STATICS
 Guideline.selectedIndicationIndex_editor = function (newIndex) {
@@ -29,25 +35,25 @@ Guideline.selectedIndicationIndex_editor = function (newIndex) {
         return jqo(Guideline.ID_editor_select_indications).val();
     }
 };
-
+Guideline.createGlobalIfRequired = function () {
+    if (window.gActiveGuideline == undefined) {
+        window.gActiveGuideline = new Guideline("Untitled");
+        window.gActiveGuideline.loadSettingsAndGlobals();
+    }
+};
 //  INSTANCE
 Guideline.prototype.constructor = Guideline;
 //    IN OUTs
 Guideline.prototype.loadSettingsAndGlobals = function () {
-    console.log("loadSettingsAndGlobals");
-
     this.initFromJSONstring(Guideline.jstring);
 
     if (typeof(Storage) !== "undefined") {
         // Code for localStorage/sessionStorage.
-
-
     } else {
         // Sorry! No Web Storage support..
         console.log("Sorry! No Web Storage support");
     }
-
-}
+};
 Guideline.prototype.initFromJSONstring = function (jasonString) {
     if (jasonString) {
         var g = JSON.parse(jasonString);
@@ -55,12 +61,11 @@ Guideline.prototype.initFromJSONstring = function (jasonString) {
         //this.indications is initialised in constructor
         for (var i = 0; i < g.indications.length; i++) // wont run if no indics
         {
-            var indic = new Indication(this, g.indications[i].name);
+            var indic = new Indication(g.indications[i].name);
             for (var p = 0; p < g.indications[i].phases.length; p++) {
-                var phse = new Phase(this, g.indications[i].phases[p].name);
+                var phse = new Phase(g.indications[i].phases[p].name);
                 for (var d = 0; d < g.indications[i].phases[p].drugs.length; d++) {
                     var drug = new Drug_mgKg(
-                        this,
                         g.indications[i].phases[p].drugs[d].name,
                         g.indications[i].phases[p].drugs[d].acronym,
                         g.indications[i].phases[p].drugs[d].maxDose,
@@ -71,6 +76,7 @@ Guideline.prototype.initFromJSONstring = function (jasonString) {
                         g.indications[i].phases[p].drugs[d].roundirect,
                         g.indications[i].phases[p].drugs[d].notes
                     );
+                    console.log(g.indications[i].phases[p].drugs[d]);
                     phse.drugs.push(drug);
                 }
                 indic.phases.push(phse);
@@ -83,8 +89,20 @@ Guideline.prototype.initFromJSONstring = function (jasonString) {
         this.indications = [];
     }
 };
+Guideline.prototype.addExportButtonToHeader = function (headerID) {
+    //EXPORT BUTTON
+    var myself = this;
+    $(document.createElement("button"))
+        .addClass('ui-btn ui-btn-right ui-corner-all ui-icon-action ui-btn-icon-notext')
+        .text('Export')
+        .click(function () {
+            myself.exportGuideline()
+        })
+        .appendTo(jqo(headerID));
+};
 Guideline.prototype.exportGuideline = function () {
     window.open().document.write(JSON.stringify(this));
+
 };
 //    ACTIVES
 Guideline.prototype.active_Indication_editor = function () {
@@ -111,8 +129,13 @@ Guideline.prototype.createPage_Editor = function () {
     var baseElement = jqo(Guideline.ID_editor_hanger_guideline_editor_texts_Editor);
     baseElement.empty();
 
-    //GUIDELINE BAR
-    $(document.createElement("h3")).addClass("ui-bar ui-bar-b").text('Guideline').appendTo(baseElement);
+    //back button
+    $(document.createElement("a"))
+        .addClass("ui-btn ui-btn-left ui-corner-all ui-icon-bullets ui-btn-icon-notext")
+        .attr('href', '#page_prescribe')
+        .text('View')
+        .appendTo(jqo(Guideline.ID_editor_header));
+    this.addExportButtonToHeader(Guideline.ID_editor_header);
 
     //Guideline buttons group
     $(document.createElement("div"))
@@ -124,13 +147,6 @@ Guideline.prototype.createPage_Editor = function () {
             .text('Save')
             .click(function () {
                 myself.enterGuidelineSpecificData()
-            }))
-        .append//EXPORT BUTTON
-        ($(document.createElement("button"))
-            .addClass("ui-btn ui-icon-action ui-btn-icon-notext")
-            .text('Export')
-            .click(function () {
-                myself.exportGuideline()
             }));
 
     //GUIDELINE Texts Hanger
@@ -169,7 +185,7 @@ Guideline.prototype.enterGuidelineSpecificData = function () {
 Guideline.prototype.someTextChanged = function (textID) {
     this.dirtyTexts = this.dirtyTexts | textID;
 };
-Guideline.prototype.selectmenuChanged = function (menuID, menuIndex) {
+Guideline.prototype.selectmenuChanged = function (menuID) {
     switch (menuID) {
         case Guideline.ID_editor_select_indications:
             this.displayIndication();
@@ -186,7 +202,7 @@ Guideline.prototype.selectmenuChanged = function (menuID, menuIndex) {
             }
             break;
         case Guideline.ID_prescribe_select_indications:
-            this.selectIndicationsChanged(menuIndex);
+            this.selectIndicationsChanged();
             break;
         default:
             console.log('Not handled: ' + menuID);
@@ -305,7 +321,7 @@ Guideline.prototype.displayIndication = function () {
 };
 //Events
 Guideline.prototype.addIndication = function () {
-    this.indications.push(new Indication(this, "Untitled"));
+    this.indications.push(new Indication("Untitled"));
     this.populateIndicationsSelect();
     Guideline.selectedIndicationIndex_editor(this.indications.length - 1);
     this.active_Indication_editor().displayIndication();
@@ -349,6 +365,13 @@ Guideline.prototype.indicationsNames = function () {
 Guideline.prototype.createPage_Prescribe = function () {
     // closure over this via myself to give access to self, as when the anonymous mini function is called,  this->element_calling.
     // When that calls the prototype function this reverts to the Object again, so no need to pass this parameter
+    $(document.createElement("a"))
+        .addClass("ui-btn ui-btn-left ui-corner-all ui-icon-edit ui-btn-icon-notext")
+        .text('Edit')
+        .attr('href', '#page_editor')
+        .appendTo(jqo(Guideline.ID_prescribe_header));
+    this.addExportButtonToHeader(Guideline.ID_prescribe_header);
+
     this.createSelectMenuIndications();
     if (this.activeIndication_prescribe) {
         this.activeIndication_prescribe().displayWeightAndIndication();
@@ -357,16 +380,15 @@ Guideline.prototype.createPage_Prescribe = function () {
 };
 
 Guideline.prototype.createSelectMenuIndications = function () {
-    var myself = this;
     var hanger = jqo(Guideline.ID_prescribe_menus_indications_hanger);
     hanger.empty();
-    appendSelectMenuWithTheseOptions(hanger, Guideline.ID_prescribe_select_indications, this.indicationsNames(), "Indication", false, myself);
+    appendSelectMenuWithTheseOptions(hanger, Guideline.ID_prescribe_select_indications, this.indicationsNames(), "Indication", false);
 
     //create the selectmenu as created already in markup
     hanger.trigger('create');
 };
 // EVents
-Guideline.prototype.selectIndicationsChanged = function (index) {
+Guideline.prototype.selectIndicationsChanged = function () {
     if (this.activeIndication_prescribe()) {
         this.activeIndication_prescribe().displayWeightAndIndication();
     }

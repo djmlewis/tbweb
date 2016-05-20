@@ -1,14 +1,13 @@
 /**
  * Created by davidlewis on 11/05/2016.
  */
-function Indication(guideline, name) {
+function Indication(name) {
     this.name = name || "Untitled";
     this.minWeight = 30;
     this.startWeight = 60;
     this.maxWeight = 100;
     this.weight = this.startWeight;
     this.phases = [];
-    this.guideline = guideline || undefined;
 }
 
 Indication.prototype.constructor = Indication;
@@ -148,7 +147,7 @@ Indication.prototype.displayPhase = function () {
 };
 //Events
 Indication.prototype.addPhase = function () {
-    this.phases.push(new Phase(this));
+    this.phases.push(new Phase());
     this.populatePhasesSelect();
     Indication.selectedPhaseIndex(this.phases.length - 1);
     this.active_Phase_editor().displayPhase();
@@ -163,7 +162,7 @@ Indication.prototype.deletePhase = function () {
 Indication.prototype.createSelectMenuWeight = function () {
     var hanger = jqo(Indication.ID_prescribe_menus_weight_hanger);
     hanger.empty();
-    appendSelectMenuWithTheseOptions(hanger, Indication.ID_prescribe_select_weight, integerArrayFromTo(this.minWeight, this.maxWeight), "Weight", false, this.guideline);
+    appendSelectMenuWithTheseOptions(hanger, Indication.ID_prescribe_select_weight, integerArrayFromTo(this.minWeight, this.maxWeight), "Weight", false);
 
     //create the selectmenu as created already in markup
     hanger.trigger('create');
@@ -181,6 +180,7 @@ Indication.prototype.buildDrugsListsScaffoldAndDrugsLists = function () {
     //make a collapsible set for phases to hang on to
     var phasesTopSet = $(document.createElement("div"))
         .attr('data-role', 'collapsible-set')
+        .attr('data-inset', 'false')
         .attr('data-collapsed-icon', 'false')
         .attr('data-expanded-icon', 'false');
     //cycle thru the phases
@@ -191,6 +191,7 @@ Indication.prototype.buildDrugsListsScaffoldAndDrugsLists = function () {
         //add a collapsible to hang the drugs set on
         $(document.createElement("div"))
             .attr('data-role', 'collapsible')
+            .attr('data-inset', 'false')
             // .attr('data-theme',themeLetter)
             .attr('data-collapsed', (ph == 0 ? "false" : "true"))
             .append(header)
@@ -200,6 +201,7 @@ Indication.prototype.buildDrugsListsScaffoldAndDrugsLists = function () {
                 $(document.createElement("div"))
                     .attr('id', uniqueIDforDrugHangerDivInPhase(ph))
                     .attr('data-role', 'collapsible-set')
+                    .attr('data-inset', 'false')
                     .attr('data-collapsed-icon', 'false')
                     .attr('data-expanded-icon', 'false')
                 // .attr('data-theme',themeLetter)
@@ -223,12 +225,13 @@ Indication.prototype.buildDrugsListsForPhases = function () {
         var numDrugs = this.phases[ph].drugs.length;
         for (var drug = 0; drug < numDrugs; drug++) {
             var aDrugDiv = $(document.createElement("div"))
+                .attr('data-inset', 'false')
                 .attr('data-role', 'collapsible');
             var drugObj = this.phases[ph].drugs[drug];
             // Add warnings
             var drugsInstructionsWarningsInfos = drugObj.doseWarningsCommentsArrayForWeight(this.weight);
             var header = $(document.createElement("h3")).text(drugsInstructionsWarningsInfos.instructionsString);
-            header.append(acronymSpanForString(drugObj.acronym));
+            //header.append(acronymSpanForString(drugObj.acronym));
 
             aDrugDiv.append(header);
 

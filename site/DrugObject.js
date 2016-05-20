@@ -3,13 +3,12 @@
  */
 
 // ********** DRUG ************
-function Drug(guideline, name, acronym, howDoseCalc, units, notes) {
+function Drug(name, acronym, howDoseCalc, units, notes) {
     this.name = name || "Untitled";
     this.acronym = acronym || "";
     this.howDoseCalc = howDoseCalc || "Undefined";
     this.units = units || "Undefined";
     this.notes = notes || "No notes";
-    this.guideline = guideline;
 
 }
 // STATICS 
@@ -103,9 +102,9 @@ Drug.prototype.doseWarningsCommentsArrayForWeight = function (weight) {
 };
 
 // ********** DRUG MGKG  ************
-function Drug_mgKg(guideline, name, acronym, maxDose, mgkg_initial, mgkg_min, mgkg_max, rounval, roundirect, notes) {
+function Drug_mgKg(name, acronym, maxDose, mgkg_initial, mgkg_min, mgkg_max, rounval, roundirect, notes, frequency) {
     //super init
-    Drug.call(guideline, name, acronym, "mg/Kg", "mg", notes);
+    Drug.call(this, name, acronym, "mg/Kg", "mg", notes);
     // subclass init
     this.maxDose = maxDose;
     this.mgkg_initial = mgkg_initial;
@@ -113,6 +112,7 @@ function Drug_mgKg(guideline, name, acronym, maxDose, mgkg_initial, mgkg_min, mg
     this.mgkg_max = mgkg_max;
     this.rounval = rounval;
     this.roundirect = roundirect;
+    this.frequency = frequency || "OD";
 }
 // STATICS
 Drug_mgKg.ID_editor_text_drug_maxDose = "textdrugmaxDose";
@@ -122,6 +122,8 @@ Drug_mgKg.ID_editor_text_drug_mgkg_max = "textdrugmgkg_max";
 Drug_mgKg.ID_editor_text_drug_rounval = "textdrugrounval";
 Drug_mgKg.ID_editor_select_drug_roundirect = "selectdrugroundirect";
 Drug_mgKg.options_rounding = ["None", "Up", "Down"];
+Drug_mgKg.ID_editor_text_drug_frequency = "textdrugfrequency";
+
 // INSTANCE 
 Drug_mgKg.prototype = Object.create(Drug.prototype);
 Drug_mgKg.prototype.constructor = Drug_mgKg;
@@ -137,6 +139,7 @@ Drug_mgKg.prototype.displayDrugs = function () {
 Drug_mgKg.prototype.displayDrugs_As_Drug_mgKg = function () {
     var baseElement = jqo(Drug.ID_editor_hanger_drug_texts);
     // Drug TEXTS
+    appendLabelAndTextValueTo(baseElement, Drug.ID_editor_text_drug_frequency, "Frequency", this.frequency);
     appendLabelAndTextValueTo(baseElement, Drug.ID_editor_text_drug_maxDose, "Max Dose", this.maxDose);
     appendLabelAndTextValueTo(baseElement, Drug.ID_editor_text_drug_mgkg_initial, "Preferred mg/Kg", this.mgkg_initial);
     appendLabelAndTextValueTo(baseElement, Drug.ID_editor_text_drug_mgkg_min, "Min mg/Kg", this.mgkg_min);
@@ -177,7 +180,7 @@ Drug_mgKg.prototype.doseWarningsCommentsArrayForWeight = function (weight) {
 
 
 //create the instruction
-    var instructionsstring = [this.name, correctedDose.toString(), this.units].join(" ");
+    var instructionsstring = [this.name, correctedDose.toString(), this.units, this.frequency].join(" ");
 
 //add info on calculated,lower and higher doses
     var weightStrX = weight.toString() + " Kg @";

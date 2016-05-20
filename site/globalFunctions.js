@@ -32,20 +32,20 @@ function uniqueIDforDrugHangerDivInPhase(phaseIndex) {
     return 'ph_' + phaseIndex;
 }
 
-function appendSelectMenuWithTheseOptions(fieldContain, id, options, labeltext, mini, guideline) {
-    var labelAndSelect = createSelectLabelAndSelectMenuWithTheseOptions(id, options, labeltext, mini, guideline);
+function appendSelectMenuWithTheseOptions(fieldContain, id, options, labeltext, mini) {
+    var labelAndSelect = createSelectLabelAndSelectMenuWithTheseOptions(id, options, labeltext, mini);
     $(document.createElement("div")).addClass("ui-field-contain")
         .append(labelAndSelect.label_)
         .append(labelAndSelect.select_)
         .appendTo(fieldContain);
 }
-function createSelectLabelAndSelectMenuWithTheseOptions(id, options, labeltext, mini, guideline) {
-
+function createSelectLabelAndSelectMenuWithTheseOptions(id, options, labeltext, mini) {
+    var guideline = window.gActiveGuideline;
     var select = $(document.createElement("select"))
         .attr({'id': id, 'name': id, 'data-mini': mini})
         .attr({'id': id, 'name': id})
         .change(function () {
-            guideline.selectmenuChanged(id, $(this).val());
+            guideline.selectmenuChanged(id);
         });
 
     for (var i = 0; i < options.length; i++) {

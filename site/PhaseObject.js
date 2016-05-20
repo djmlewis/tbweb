@@ -2,12 +2,11 @@
  * Created by davidlewis on 11/05/2016.
  */
 
-function Phase(guideline, name, duration, drugsAcronym) {
+function Phase(name, duration, drugsAcronym) {
     this.name = name || "Untitled";
     this.duration = duration || "";
     this.drugsAcronym = drugsAcronym || "";
     this.drugs = [];
-    this.guideline = guideline || undefined;
 
 }
 // STATICS
@@ -134,10 +133,10 @@ Phase.prototype.displayDrugs = function () {
 Phase.prototype.addDrug = function () {
     switch (Drug.selectedHowDoseCalculatedString()) {
         case "mg/Kg":
-            this.drugs.push(new Drug_mgKg(this));
+            this.drugs.push(new Drug_mgKg());
             break;
         default:
-            this.drugs.push(new Drug(this));
+            this.drugs.push(new Drug());
             break;
     }
     this.populateDrugsSelect();
