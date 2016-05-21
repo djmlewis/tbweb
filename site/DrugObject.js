@@ -6,7 +6,7 @@
 function Drug(name, acronym, howDoseCalc, units, notes) {
     this.name = name || "Untitled";
     this.acronym = acronym || "";
-    this.howDoseCalc = howDoseCalc || "Undefined";
+    this.howDoseCalc = howDoseCalc || 0;
     this.units = units || "Undefined";
     this.notes = notes || "No notes";
 
@@ -16,7 +16,6 @@ Drug.ID_editor_hanger_drug = "8editor_hangerdrug";
 Drug.ID_editor_hanger_drug_texts = "8editor_hangerdrugtexts";
 Drug.ID_editor_text_drug_name = "8editor_textdrugname";
 Drug.ID_editor_text_drug_acronym = "8editor_textdrugacronym";
-Drug.ID_editor_text_drug_howDoseCalc = "8editor_textdrughowDoseCalc";
 Drug.ID_editor_text_drug_units = "8editor_textdrugunits";
 Drug.ID_editor_text_drug_notes = "8editor_textdrugnotes";
 Drug.ID_editor_select_drugHowDoseCalc = "8editor_selectdrugtype";
@@ -31,8 +30,8 @@ Drug.addElementsToThisHangerForGuideline_editor = function (baseElement, guideli
     $(document.createElement("h4")).addClass("ui-bar ui-bar-b ").text('Drugs').appendTo(drugsHanger);
 
     //drugs Select &  buttons group
-    var labelAndSelectDrugs = createSelectLabelAndSelectMenuWithTheseOptions(Phase.ID_editor_select_drugs, [], "Drugs", false, guideline);
-    var labelAndSelectDrugTypes = createSelectLabelAndSelectMenuWithTheseOptions(Drug.ID_editor_select_drugHowDoseCalc, Drug.howDoseCalculatedOptions, "Dose Calculation", false, guideline);
+    var labelAndSelectDrugs = createSelectLabelAndSelectMenuWithTheseOptions(Phase.ID_editor_select_drugs, [], "", "Drugs", false, guideline);
+    var labelAndSelectDrugTypes = createSelectLabelAndSelectMenuWithTheseOptions(Drug.ID_editor_select_drugHowDoseCalc, Drug.howDoseCalculatedOptions, "", "Dose Calculation", false, guideline);
 
     $(document.createElement("div"))
         .attr({'data-role': "controlgroup", 'data-type': "horizontal"})
@@ -43,6 +42,7 @@ Drug.addElementsToThisHangerForGuideline_editor = function (baseElement, guideli
             .addClass("ui-btn ui-icon-check ui-btn-icon-notext")
             .text('Save')
             .click(function () {
+                guideline.saveSomething('d')
             }))
         .appendTo(drugsHanger);
 
@@ -75,18 +75,30 @@ Drug.addElementsToThisHangerForGuideline_editor = function (baseElement, guideli
 Drug.selectedHowDoseCalculatedString = function () {
     return Drug.howDoseCalculatedOptions[jqo(Drug.ID_editor_select_drugHowDoseCalc).val()];
 };
+Drug.addAlertsOrInfosToCollapsible = function (arrayToParse, addAlertIcon, collapsibleDiv) {
+    //Objects are Passed by Reference, so aDiv passed in gets updated. Arguments by Value
+    var numAlerts = arrayToParse.length;
+    if (numAlerts > 0) {
+        collapsibleDiv.attr('data-collapsed-icon', (collapsibleDiv.attr('data-collapsed-icon') == 'alert' || addAlertIcon ? 'alert' : 'false'));
+        collapsibleDiv.attr('data-expanded-icon', (collapsibleDiv.attr('data-collapsed-icon') == 'alert' || addAlertIcon ? 'alert' : 'false'));
+
+        for (var w = 0; w < numAlerts; w++) {
+            collapsibleDiv.append($(document.createElement("p")).text((addAlertIcon ? '⚠ ' : '') + arrayToParse[w]))
+        }
+    }
+};
 
 // INSTANCE 
 Drug.prototype.constructor = Drug;
-Drug.prototype.displayDrugs = function () {
+Drug.prototype.displayDrugsEditor = function () {
     //over ridden in all subclasses that then call each parent _Drug version in turn
     emptyThisHangerWithID(Drug.ID_editor_hanger_drug_texts);
-    this.displayDrugs_As_Drug();
+    this.displayDrugsEditor_As_Drug();
     //Refresh
     triggerCreateElementsOnThisHangerWithID(Drug.ID_editor_hanger_drug_texts);
 
 };
-Drug.prototype.displayDrugs_As_Drug = function () {
+Drug.prototype.displayDrugsEditor_As_Drug = function () {
     var baseElement = $('#' + Drug.ID_editor_hanger_drug_texts);
     // Drug TEXTS
     var fieldContain = $(document.createElement("div")).addClass("ui-field-contain");
@@ -99,6 +111,15 @@ Drug.prototype.displayDrugs_As_Drug = function () {
 };
 Drug.prototype.doseWarningsCommentsArrayForWeight = function (weight) {
     return {instructionsString: "Undefined for '+weight" + " Kg", warningArray: [], infoArray: []};
+};
+// Save
+Drug.prototype.saveObjectSpecificData = function () {
+    this.name = jqo(Drug.ID_editor_text_drug_name).val() || '???';
+    this.acronym = jqo(Drug.ID_editor_text_drug_acronym).val() || '???';
+    this.units = jqo(Drug.ID_editor_text_drug_units).val() || '???';
+    this.notes = jqo(Drug.ID_editor_text_drug_notes).val() || '???';
+    this.howDoseCalc = jqo(Drug.ID_editor_select_drugHowDoseCalc).val() || '???';
+
 };
 
 // ********** DRUG MGKG  ************
@@ -115,6 +136,7 @@ function Drug_mgKg(name, acronym, maxDose, mgkg_initial, mgkg_min, mgkg_max, rou
     this.frequency = frequency || "OD";
 }
 // STATICS
+Drug_mgKg.ID_editor_text_drug_frequency = "textdrugfrequency";
 Drug_mgKg.ID_editor_text_drug_maxDose = "textdrugmaxDose";
 Drug_mgKg.ID_editor_text_drug_mgkg_initial = "textdrugmgkg_initial";
 Drug_mgKg.ID_editor_text_drug_mgkg_min = "textdrugmgkg_min";
@@ -122,30 +144,45 @@ Drug_mgKg.ID_editor_text_drug_mgkg_max = "textdrugmgkg_max";
 Drug_mgKg.ID_editor_text_drug_rounval = "textdrugrounval";
 Drug_mgKg.ID_editor_select_drug_roundirect = "selectdrugroundirect";
 Drug_mgKg.options_rounding = ["None", "Up", "Down"];
-Drug_mgKg.ID_editor_text_drug_frequency = "textdrugfrequency";
 
 // INSTANCE 
 Drug_mgKg.prototype = Object.create(Drug.prototype);
 Drug_mgKg.prototype.constructor = Drug_mgKg;
+// Save
+Drug_mgKg.prototype.saveObjectSpecificData = function () {
+    this.name = jqo(Drug.ID_editor_text_drug_name).val() || '???';
+    this.acronym = jqo(Drug.ID_editor_text_drug_acronym).val() || '???';
+    this.units = jqo(Drug.ID_editor_text_drug_units).val() || '???';
+    this.notes = jqo(Drug.ID_editor_text_drug_notes).val() || '???';
+    this.howDoseCalc = jqo(Drug.ID_editor_select_drugHowDoseCalc).val() || '???';
+    this.maxDose = jqo(Drug_mgKg.ID_editor_text_drug_maxDose).val() || '???';
+    this.mgkg_initial = jqo(Drug_mgKg.ID_editor_text_drug_mgkg_initial).val() || '???';
+    this.mgkg_min = jqo(Drug_mgKg.ID_editor_text_drug_mgkg_min).val() || '???';
+    this.mgkg_max = jqo(Drug_mgKg.ID_editor_text_drug_mgkg_max).val() || '???';
+    this.rounval = jqo(Drug_mgKg.ID_editor_text_drug_rounval).val() || '???';
+    this.roundirect = jqo(Drug_mgKg.ID_editor_select_drug_roundirect).val() || '???';
+    this.frequency = jqo(Drug_mgKg.ID_editor_text_drug_frequency).val() || '???';
 
-Drug_mgKg.prototype.displayDrugs = function () {
+};
+
+Drug_mgKg.prototype.displayDrugsEditor = function () {
     emptyThisHangerWithID(Drug.ID_editor_hanger_drug_texts);
     //now call each generation
-    this.displayDrugs_As_Drug();
-    this.displayDrugs_As_Drug_mgKg();
+    this.displayDrugsEditor_As_Drug();
+    this.displayDrugsEditor_As_Drug_mgKg();
     //Refresh
     triggerCreateElementsOnThisHangerWithID(Drug.ID_editor_hanger_drug_texts);
 };
-Drug_mgKg.prototype.displayDrugs_As_Drug_mgKg = function () {
+Drug_mgKg.prototype.displayDrugsEditor_As_Drug_mgKg = function () {
     var baseElement = jqo(Drug.ID_editor_hanger_drug_texts);
     // Drug TEXTS
-    appendLabelAndTextValueTo(baseElement, Drug.ID_editor_text_drug_frequency, "Frequency", this.frequency);
-    appendLabelAndTextValueTo(baseElement, Drug.ID_editor_text_drug_maxDose, "Max Dose", this.maxDose);
-    appendLabelAndTextValueTo(baseElement, Drug.ID_editor_text_drug_mgkg_initial, "Preferred mg/Kg", this.mgkg_initial);
-    appendLabelAndTextValueTo(baseElement, Drug.ID_editor_text_drug_mgkg_min, "Min mg/Kg", this.mgkg_min);
-    appendLabelAndTextValueTo(baseElement, Drug.ID_editor_text_drug_mgkg_max, "Max mg/Kg", this.mgkg_max);
-    appendLabelAndTextValueTo(baseElement, Drug.ID_editor_text_drug_rounval, "Round dose by", this.rounval);
-    appendSelectMenuWithTheseOptions(baseElement, Drug_mgKg.ID_editor_select_drug_roundirect, Drug_mgKg.options_rounding, "Rounding", true);
+    appendLabelAndTextValueTo(baseElement, Drug_mgKg.ID_editor_text_drug_frequency, "Frequency", this.frequency);
+    appendLabelAndTextValueTo(baseElement, Drug_mgKg.ID_editor_text_drug_maxDose, "Max Dose", this.maxDose, 'number');
+    appendLabelAndTextValueTo(baseElement, Drug_mgKg.ID_editor_text_drug_mgkg_initial, "Preferred mg/Kg", this.mgkg_initial, 'number');
+    appendLabelAndTextValueTo(baseElement, Drug_mgKg.ID_editor_text_drug_mgkg_min, "Min mg/Kg", this.mgkg_min, 'number');
+    appendLabelAndTextValueTo(baseElement, Drug_mgKg.ID_editor_text_drug_mgkg_max, "Max mg/Kg", this.mgkg_max, 'number');
+    appendLabelAndTextValueTo(baseElement, Drug_mgKg.ID_editor_text_drug_rounval, "Round dose by", this.rounval, 'number');
+    appendSelectMenuWithTheseOptions(baseElement, Drug_mgKg.ID_editor_select_drug_roundirect, Drug_mgKg.options_rounding, "", "Rounding", true);
 
 };
 

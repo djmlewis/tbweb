@@ -1,11 +1,12 @@
 /**
  * Created by davidlewis on 11/05/2016.
  */
-function Indication(name) {
+function Indication(name, wtUnits, minWt, maxWt) {
     this.name = name || "Untitled";
-    this.minWeight = 30;
-    this.startWeight = 60;
-    this.maxWeight = 100;
+    this.weightUnits = 'Kg';
+    this.minWeight = wtUnits || 30;
+    this.startWeight = minWt || 60;
+    this.maxWeight = maxWt || 100;
     this.weight = this.startWeight;
     this.phases = [];
 }
@@ -17,7 +18,6 @@ Indication.ID_editor_hanger_indication = "2editor_hangerIndication";
 Indication.ID_editor_hanger_indication_texts = "2editor_hangerIndicationtexts";
 Indication.ID_editor_text_indication_name = "2editor_textindicationname";
 Indication.ID_editor_select_phases = "2editor_selectphases";
-Indication.ID_prescribe_menus_weight_hanger = "2prescribe_menus_weight_hanger";
 Indication.ID_prescribe_select_weight = "2prescribe_select_weight";
 Indication.ID_prescribe_drugs_hanger = "2ui-field-contain-drugs-prescribe";
 
@@ -58,6 +58,7 @@ Indication.addElementsToThisHangerForGuideline_editor = function (baseElement, g
             .addClass("ui-btn ui-icon-check ui-btn-icon-notext")
             .text('Save')
             .click(function () {
+                guideline.saveObjectSpecificData('i')
             }))
         .append//+ BUTTON
         ($(document.createElement("button"))
@@ -90,6 +91,11 @@ Indication.prototype.active_Phase_editor = function () {
 };
 Indication.prototype.active_Drug_editor = function () {
     return this.active_Phase_editor() ? this.active_Phase_editor().active_Drug_editor() : false;
+};
+// Save
+Indication.prototype.saveObjectSpecificData = function () {
+    this.name = jqo(Indication.ID_editor_text_indication_name).val() || '???';
+
 };
 
 //DISPLAY INDIC
@@ -159,17 +165,18 @@ Indication.prototype.deletePhase = function () {
     }
 };
 // PRESCRIBE
-Indication.prototype.createSelectMenuWeight = function () {
-    var hanger = jqo(Indication.ID_prescribe_menus_weight_hanger);
-    hanger.empty();
-    appendSelectMenuWithTheseOptions(hanger, Indication.ID_prescribe_select_weight, integerArrayFromTo(this.minWeight, this.maxWeight), "Weight", false);
-
-    //create the selectmenu as created already in markup
-    hanger.trigger('create');
+Indication.prototype.populateSelectMenuWeight = function () {
+    populateSelectWithTheseOptions(jqo(Indication.ID_prescribe_select_weight), integerArrayFromTo(this.minWeight, this.maxWeight), this.weightUnits);
     jqo(Indication.ID_prescribe_select_weight).val(this.weight - this.minWeight).selectmenu('refresh');
+
+    //var hanger = jqo(Indication.ID_prescribe_menus_weight_hanger);
+    //hanger.empty();
+    //appendSelectMenuWithTheseOptions(hanger, Indication.ID_prescribe_select_weight, integerArrayFromTo(this.minWeight, this.maxWeight), "", "Weight", false);
+    //create the selectmenu as created already in markup
+    //hanger.trigger('create');
 };
 Indication.prototype.displayWeightAndIndication = function () {
-    this.createSelectMenuWeight();
+    this.populateSelectMenuWeight();
     this.buildDrugsListsScaffoldAndDrugsLists();
     this.buildDrugsListsForPhases();
 };
@@ -232,11 +239,10 @@ Indication.prototype.buildDrugsListsForPhases = function () {
             var drugsInstructionsWarningsInfos = drugObj.doseWarningsCommentsArrayForWeight(this.weight);
             var header = $(document.createElement("h3")).text(drugsInstructionsWarningsInfos.instructionsString);
             //header.append(acronymSpanForString(drugObj.acronym));
-
             aDrugDiv.append(header);
 
-            addAlertsOrInfosToCollapsible(drugsInstructionsWarningsInfos.warningArray, true, aDrugDiv);
-            addAlertsOrInfosToCollapsible(drugsInstructionsWarningsInfos.infoArray, false, aDrugDiv);
+            Drug.addAlertsOrInfosToCollapsible(drugsInstructionsWarningsInfos.warningArray, true, aDrugDiv);
+            Drug.addAlertsOrInfosToCollapsible(drugsInstructionsWarningsInfos.infoArray, false, aDrugDiv);
             //Add drug notes
             aDrugDiv.append($(document.createElement("p")).text(drugObj.notes));
             //Append to drug hanger

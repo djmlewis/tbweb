@@ -35,7 +35,6 @@ Phase.prototype.active_Drug_editor = function () {
 Phase.prototype.constructor = Phase;
 // Create HTML
 Phase.addElementsToThisHangerForGuideline_editor = function (baseElement, guideline) {
-
     var phasesHanger = $(document.createElement("div"))
         .attr('id', Phase.ID_editor_hanger_phase)
         .appendTo(baseElement);
@@ -61,6 +60,7 @@ Phase.addElementsToThisHangerForGuideline_editor = function (baseElement, guidel
             .addClass("ui-btn ui-icon-check ui-btn-icon-notext")
             .text('Save')
             .click(function () {
+                guideline.saveSomething('p')
             }))
         .append//+ BUTTON
         ($(document.createElement("button"))
@@ -85,6 +85,14 @@ Phase.addElementsToThisHangerForGuideline_editor = function (baseElement, guidel
     //Refresh
     phasesHanger.trigger('create');
 };
+// Save
+Phase.prototype.saveObjectSpecificData = function () {
+    this.name = jqo(Phase.ID_editor_text_phase_name).val() || '???';
+    this.duration = jqo(Phase.ID_editor_text_phase_duration).val() || '???';
+    this.drugsAcronym = jqo(Phase.ID_editor_text_phase_acronym).val() || '???';
+
+};
+
 // Display
 Phase.prototype.displayPhase = function () {
     this.displayTextsForPhase();
@@ -93,7 +101,7 @@ Phase.prototype.displayPhase = function () {
 };
 Phase.prototype.initialiseDrugs = function () {
     this.populateDrugsSelect();
-    this.displayDrugs();
+    this.displayDrugsEditor();
 };
 Phase.prototype.displayTextsForPhase = function () {
     var baseElement = jqo(Phase.ID_editor_hanger_phase_texts);
@@ -120,9 +128,9 @@ Phase.prototype.populateDrugsSelect = function () {
     //refresh the selectmenu as created already in markup
     jqo_select_drugs.selectmenu('refresh');
 };
-Phase.prototype.displayDrugs = function () {
+Phase.prototype.displayDrugsEditor = function () {
     if (this.active_Drug_editor()) {
-        this.active_Drug_editor().displayDrugs();
+        this.active_Drug_editor().displayDrugsEditor();
     }
     else {
         emptyThisHangerWithID(Drug.ID_editor_hanger_drug_texts);
@@ -141,7 +149,7 @@ Phase.prototype.addDrug = function () {
     }
     this.populateDrugsSelect();
     Phase.selectedDrugIndex(this.drugs.length - 1);
-    this.active_Drug_editor().displayDrugs();
+    this.active_Drug_editor().displayDrugsEditor();
 };
 Phase.prototype.deleteDrug = function () {
     if (this.drugs.length > Phase.selectedDrugIndex()) {

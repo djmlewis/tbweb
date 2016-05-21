@@ -16,50 +16,52 @@ function integerArrayFromTo(from, to) {
 function acronymSpanForString(acronym) {
     return $(document.createElement("span")).text(" acronym").addClass("phaseAcronym")
 }
-function addAlertsOrInfosToCollapsible(arrayToParse, addAlertIcon, collapsibleDiv) {
-    //Objects are Passed by Reference, so aDiv passed in gets updated. Arguments by Value
-    var numAlerts = arrayToParse.length;
-    if (numAlerts > 0) {
-        collapsibleDiv.attr('data-collapsed-icon', (collapsibleDiv.attr('data-collapsed-icon') == 'alert' || addAlertIcon ? 'alert' : 'false'));
-        collapsibleDiv.attr('data-expanded-icon', (collapsibleDiv.attr('data-collapsed-icon') == 'alert' || addAlertIcon ? 'alert' : 'false'));
-
-        for (var w = 0; w < numAlerts; w++) {
-            collapsibleDiv.append($(document.createElement("p")).text((addAlertIcon ? '⚠ ' : '') + arrayToParse[w]))
-        }
-    }
-}
 function uniqueIDforDrugHangerDivInPhase(phaseIndex) {
     return 'ph_' + phaseIndex;
 }
 
-function appendSelectMenuWithTheseOptions(fieldContain, id, options, labeltext, mini) {
-    var labelAndSelect = createSelectLabelAndSelectMenuWithTheseOptions(id, options, labeltext, mini);
+function appendSelectMenuWithTheseOptions(fieldContain, id, options, optionsSuffix, labeltext, mini) {
+    var labelAndSelect = createSelectLabelAndSelectMenuWithTheseOptions(id, options, optionsSuffix, labeltext, mini);
     $(document.createElement("div")).addClass("ui-field-contain")
         .append(labelAndSelect.label_)
         .append(labelAndSelect.select_)
         .appendTo(fieldContain);
 }
-function createSelectLabelAndSelectMenuWithTheseOptions(id, options, labeltext, mini) {
+function createSelectLabelAndSelectMenuWithTheseOptions(id, options, optionsSuffix, labeltext, mini) {
     var guideline = window.gActiveGuideline;
     var select = $(document.createElement("select"))
         .attr({'id': id, 'name': id, 'data-mini': mini})
         .attr({'id': id, 'name': id})
         .change(function () {
             guideline.selectmenuChanged(id);
-        });
-
+        })
+        .trigger('create');
+    /*
     for (var i = 0; i < options.length; i++) {
         $(document.createElement("option"))
             .prop('value', i)
             .text(options[i])
             .appendTo(select);
     }
+     */
+    populateSelectWithTheseOptions(select, options, optionsSuffix);
+
     var label = $(document.createElement("label"))
         .attr('for', id)
         .text(labeltext);
     return {label_: label, select_: select};
 }
-function appendLabelAndTextValueTo(fieldContain, id, labeltext, texttext) {
+function populateSelectWithTheseOptions(select, options, suffix) {
+    select.empty();
+    for (var i = 0; i < options.length; i++) {
+        $(document.createElement("option"))
+            .prop('value', i)
+            .text([options[i], (suffix || "")].join(" "))
+            .appendTo(select);
+    }
+}
+
+function appendLabelAndTextValueTo(fieldContain, id, labeltext, texttext, inputType) {
     var localFC = $(document.createElement("div")).addClass("ui-field-contain").appendTo(fieldContain);
 
     /*
@@ -75,7 +77,7 @@ function appendLabelAndTextValueTo(fieldContain, id, labeltext, texttext) {
         .appendTo(localFC);
     $(document.createElement("input"))
         .attr({
-            'type': "text",
+            'type': inputType || "text",
             'id': id,
             'name': id,
             'placeholder': labeltext

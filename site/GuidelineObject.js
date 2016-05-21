@@ -1,4 +1,5 @@
 //Created by davidlewis on 09/05/2016.
+var useStored = false;
 
 // the global guideline
 window.gActiveGuideline = undefined;
@@ -22,10 +23,13 @@ Guideline.ID_editor_header = "1page_header_editor";
 Guideline.ID_editor_headertitle = "1page_headertitle_editor";
 
 
-Guideline.ID_prescribe_menus_indications_hanger = "1prescribe_menus_indications_hanger";
+Guideline.ID_prescribe_menus_indications_weight_hanger = "1prescribe_menus_indications_weight_hanger";
 Guideline.ID_prescribe_select_indications = "1prescribe_select_indications";
 Guideline.ID_prescribe_header = "1page_header_prescribe";
 Guideline.ID_editor_headertitle = "1page_headertitle_prescribe";
+
+// Keys
+Guideline.keys_storage_guideline = 'guideline_webtbrx';
 
 //STATICS
 Guideline.selectedIndicationIndex_editor = function (newIndex) {
@@ -41,17 +45,27 @@ Guideline.createGlobalIfRequired = function () {
         window.gActiveGuideline.loadSettingsAndGlobals();
     }
 };
+
 //  INSTANCE
 Guideline.prototype.constructor = Guideline;
 //    IN OUTs
 Guideline.prototype.loadSettingsAndGlobals = function () {
-    this.initFromJSONstring(Guideline.jstring);
 
-    if (typeof(Storage) !== "undefined") {
-        // Code for localStorage/sessionStorage.
-    } else {
-        // Sorry! No Web Storage support..
-        console.log("Sorry! No Web Storage support");
+    if (window.localStorage && useStored) {
+        var storedGuidelineString = localStorage.getItem(Guideline.keys_storage_guideline);
+        if (storedGuidelineString === null) {
+            console.log("initiated from JS and stored");
+            this.initFromJSONstring(Guideline.jstring);
+            this.saveGuidelineInLocalStorage();
+        }
+        else {
+            console.log("initiated from stored");
+            this.initFromJSONstring(storedGuidelineString);
+        }
+    }
+    else {
+        this.initFromJSONstring(Guideline.jstring);
+        console.log("initiated from JS without storage");
     }
 };
 Guideline.prototype.initFromJSONstring = function (jasonString) {
@@ -76,7 +90,6 @@ Guideline.prototype.initFromJSONstring = function (jasonString) {
                         g.indications[i].phases[p].drugs[d].roundirect,
                         g.indications[i].phases[p].drugs[d].notes
                     );
-                    console.log(g.indications[i].phases[p].drugs[d]);
                     phse.drugs.push(drug);
                 }
                 indic.phases.push(phse);
@@ -103,6 +116,12 @@ Guideline.prototype.addExportButtonToHeader = function (headerID) {
 Guideline.prototype.exportGuideline = function () {
     window.open().document.write(JSON.stringify(this));
 
+};
+Guideline.prototype.saveGuidelineInLocalStorage = function () {
+    if (window.localStorage) {
+        localStorage.setItem(Guideline.keys_storage_guideline, JSON.stringify(this));
+        console.log('saved to storage');
+    }
 };
 //    ACTIVES
 Guideline.prototype.active_Indication_editor = function () {
@@ -146,7 +165,7 @@ Guideline.prototype.createPage_Editor = function () {
             .addClass("ui-btn ui-icon-check ui-btn-icon-notext")
             .text('Save')
             .click(function () {
-                myself.enterGuidelineSpecificData()
+                myself.saveSomething('g')
             }));
 
     //GUIDELINE Texts Hanger
@@ -178,8 +197,8 @@ Guideline.prototype.displayTextsForGuideLine = function () {
     triggerCreateElementsOnThisHangerWithID(Guideline.ID_editor_hanger_guideline_editor_texts);
 };
 //    Save
-Guideline.prototype.enterGuidelineSpecificData = function () {
-    this.name = jqo(Guideline.ID_editor_text_guideline_editor_name).val();
+Guideline.prototype.saveObjectSpecificData = function () {
+    this.name = jqo(Guideline.ID_editor_text_guideline_editor_name).val() || '???';
 };
 // GLOBAL EVENTS
 Guideline.prototype.someTextChanged = function (textID) {
@@ -194,7 +213,7 @@ Guideline.prototype.selectmenuChanged = function (menuID) {
             this.active_Phase_editor().displayPhase();
             break;
         case Phase.ID_editor_select_drugs:
-            this.active_Drug_editor().displayDrugs();
+            this.active_Drug_editor().displayDrugsEditor();
             break;
         case Indication.ID_prescribe_select_weight:
             if (this.activeIndication_prescribe()) {
@@ -208,6 +227,31 @@ Guideline.prototype.selectmenuChanged = function (menuID) {
             console.log('Not handled: ' + menuID);
             break;
     }
+};
+Guideline.prototype.saveSomething = function (whoWantsToSave) {
+    switch (whoWantsToSave) {
+        case 'g':
+            this.saveObjectSpecificData();
+            break;
+        case 'i':
+            if (this.active_Indication_editor()) {
+                this.active_Indication_editor().saveObjectSpecificData();
+            }
+            break;
+        case 'p':
+            if (this.active_Phase_editor()) {
+                this.active_Phase_editor().saveObjectSpecificData();
+            }
+            break;
+        case 'd':
+            if (this.active_Drug_editor()) {
+                this.active_Drug_editor().saveObjectSpecificData();
+            }
+            break;
+        default:
+            break;
+    }
+    this.saveGuidelineInLocalStorage();
 };
 Guideline.prototype.addSomething = function (whatToAdd) {
     switch (whatToAdd) {
@@ -249,7 +293,6 @@ Guideline.prototype.deleteSomething = function (whatToDelete) {
         }
     }
 };
-
 Guideline.prototype.confirmDelete = function (whatToDelete) {
     var myself = this;
     var popupQ = $(document.createElement("div")).attr({
@@ -373,17 +416,29 @@ Guideline.prototype.createPage_Prescribe = function () {
     this.addExportButtonToHeader(Guideline.ID_prescribe_header);
 
     this.createSelectMenuIndications();
-    if (this.activeIndication_prescribe) {
+    if (this.activeIndication_prescribe()) {
         this.activeIndication_prescribe().displayWeightAndIndication();
     }
     //Refresh
 };
 
 Guideline.prototype.createSelectMenuIndications = function () {
-    var hanger = jqo(Guideline.ID_prescribe_menus_indications_hanger);
-    hanger.empty();
-    appendSelectMenuWithTheseOptions(hanger, Guideline.ID_prescribe_select_indications, this.indicationsNames(), "Indication", false);
 
+    console.log(this);
+    
+    var hanger = jqo(Guideline.ID_prescribe_menus_indications_weight_hanger);
+    hanger.empty();
+
+    var labelAndSelect = createSelectLabelAndSelectMenuWithTheseOptions(Guideline.ID_prescribe_select_indications, this.indicationsNames(), "", "Indication", false);
+    var labelAndSelectI = createSelectLabelAndSelectMenuWithTheseOptions(Indication.ID_prescribe_select_weight, [], "", "Weight", false);//integerArrayFromTo(this.minWeight, this.maxWeight)
+    $(document.createElement("div"))
+        .attr({'data-role': "controlgroup", 'data-type': "horizontal"})
+        .append(labelAndSelect.label_)
+        .append(labelAndSelect.select_)
+        .append(labelAndSelectI.label_)
+        .append(labelAndSelectI.select_)
+        .appendTo(hanger);
+    
     //create the selectmenu as created already in markup
     hanger.trigger('create');
 };
