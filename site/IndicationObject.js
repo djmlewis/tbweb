@@ -36,7 +36,6 @@ Indication.addElementsToThisHangerForGuideline_editor = function (baseElement, g
         .attr('id', Indication.ID_editor_hanger_indication)
         .appendTo(baseElement);
 
-
     $(document.createElement("h4")).addClass("ui-bar ui-bar-b ").text('Indications').appendTo(indicationHanger);
 
     //Indications Select &  buttons group
@@ -82,6 +81,7 @@ Indication.addElementsToThisHangerForGuideline_editor = function (baseElement, g
     //Refresh
     indicationHanger.trigger('create');
 };
+
 
 // INSTANCE
 Indication.prototype.constructor = Indication;
