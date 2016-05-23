@@ -41,7 +41,24 @@ Indication.addElementsToThisHangerForGuideline_editor = function (baseElement, g
     //Indications Select &  buttons group
     $(document.createElement("div"))
         .attr({'data-role': "controlgroup", 'data-type': "horizontal"})
-        .appendTo(indicationHanger)
+        .append//+ BUTTON
+        ($(document.createElement("button"))
+            .addClass("ui-btn ui-icon-plus ui-btn-icon-left")
+            .text('Add Indication')
+            .click(function () {
+                guideline.addSomething('i')
+            }))
+        .appendTo(indicationHanger);
+
+    $(document.createElement("div"))
+        .attr({'data-role': "controlgroup", 'data-type': "horizontal"})
+        .append//- BUTTON
+        ($(document.createElement("button"))
+            .addClass("ui-btn ui-icon-minus ui-btn-icon-notext")
+            .text('Delete')
+            .click(function () {
+                guideline.confirmDelete('i')
+            }))
         .append//LABEL for Indications Select
         ($(document.createElement("label"))
             .attr('for', Guideline.ID_editor_select_indications)
@@ -59,21 +76,8 @@ Indication.addElementsToThisHangerForGuideline_editor = function (baseElement, g
             .click(function () {
                 guideline.saveObjectSpecificData('i')
             }))
-        .append//+ BUTTON
-        ($(document.createElement("button"))
-            .addClass("ui-btn ui-icon-plus ui-btn-icon-notext")
-            .text('Add')
-            .click(function () {
-                guideline.addSomething('i')
-            }))
-        .append//- BUTTON
-        ($(document.createElement("button"))
-            .addClass("ui-btn ui-icon-minus ui-btn-icon-notext")
-            .text('Delete')
-            .click(function () {
-                guideline.confirmDelete('i')
-            }));
-
+        .appendTo(indicationHanger);
+    
     //Texts Hanger
     $(document.createElement("div")).attr('id', Indication.ID_editor_hanger_indication_texts).appendTo(indicationHanger);
 
@@ -92,6 +96,18 @@ Indication.prototype.active_Phase_editor = function () {
 Indication.prototype.active_Drug_editor = function () {
     return this.active_Phase_editor() ? this.active_Phase_editor().active_Drug_editor() : false;
 };
+//Acceptable weight ranges
+Indication.prototype.arrayOfAcceptableWeights = function () {
+    return integerArrayFromTo(this.minWeight, this.maxWeight);
+};
+Indication.prototype.weightCorrectedAsIndexForMenu = function (weight) {
+    if (weight) {
+        return weight - this.minWeight;
+    } else {
+        return this.weight - this.minWeight;
+    }
+};
+
 // Save
 Indication.prototype.saveObjectSpecificData = function () {
     this.name = jqo(Indication.ID_editor_text_indication_name).val() || '???';
@@ -166,8 +182,8 @@ Indication.prototype.deletePhase = function () {
 };
 // PRESCRIBE
 Indication.prototype.populateSelectMenuWeight = function () {
-    populateSelectWithTheseOptions(jqo(Indication.ID_prescribe_select_weight), integerArrayFromTo(this.minWeight, this.maxWeight), this.weightUnits);
-    jqo(Indication.ID_prescribe_select_weight).val(this.weight - this.minWeight).selectmenu('refresh');
+    populateSelectWithTheseOptions(jqo(Indication.ID_prescribe_select_weight), this.arrayOfAcceptableWeights(), this.weightUnits);
+    jqo(Indication.ID_prescribe_select_weight).val(this.weightCorrectedAsIndexForMenu()).selectmenu('refresh');
 
     //var hanger = jqo(Indication.ID_prescribe_menus_weight_hanger);
     //hanger.empty();

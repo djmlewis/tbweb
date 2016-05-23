@@ -44,7 +44,24 @@ Phase.addElementsToThisHangerForGuideline_editor = function (baseElement, guidel
     //Phases Select &  buttons group
     $(document.createElement("div"))
         .attr({'data-role': "controlgroup", 'data-type': "horizontal"})
-        .appendTo(phasesHanger)
+        .append//+ BUTTON
+        ($(document.createElement("button"))
+            .addClass("ui-btn ui-icon-plus ui-btn-icon-left")
+            .text('Add Phase')
+            .click(function () {
+                guideline.addSomething('p')
+            }))
+        .appendTo(phasesHanger);
+
+    $(document.createElement("div"))
+        .attr({'data-role': "controlgroup", 'data-type': "horizontal"})
+        .append//- BUTTON
+        ($(document.createElement("button"))
+            .addClass("ui-btn ui-icon-minus ui-btn-icon-notext")
+            .text('Delete')
+            .click(function () {
+                guideline.confirmDelete('p')
+            }))
         .append//LABEL for Indications Select
         ($(document.createElement("label"))
             .attr('for', Indication.ID_editor_select_phases)
@@ -62,20 +79,8 @@ Phase.addElementsToThisHangerForGuideline_editor = function (baseElement, guidel
             .click(function () {
                 guideline.saveSomething('p')
             }))
-        .append//+ BUTTON
-        ($(document.createElement("button"))
-            .addClass("ui-btn ui-icon-plus ui-btn-icon-notext")
-            .text('Add')
-            .click(function () {
-                guideline.addSomething('p')
-            }))
-        .append//- BUTTON
-        ($(document.createElement("button"))
-            .addClass("ui-btn ui-icon-minus ui-btn-icon-notext")
-            .text('Delete')
-            .click(function () {
-                guideline.confirmDelete('p')
-            }));
+        .appendTo(phasesHanger);
+
 
 
     //Texts Hanger
@@ -139,13 +144,18 @@ Phase.prototype.displayDrugsEditor = function () {
 
 };
 Phase.prototype.addDrug = function () {
-    switch (Drug.selectedHowDoseCalculatedString()) {
-        case "mg/Kg":
+    switch (Drug.selectedHowDoseCalculatedIndex()) {
+        case Drug.howDoseCalculatedOptionsIndex_Drug_mgKg:
             this.drugs.push(new Drug_mgKg());
             break;
-        default:
+        case Drug.howDoseCalculatedOptionsIndex_Drug_threshold:
+            this.drugs.push(new Drug_threshold());
+            break;
+        case Drug.howDoseCalculatedOptionsIndex_Drug:
             this.drugs.push(new Drug());
             break;
+        default:
+            console.log('no drug');
     }
     this.populateDrugsSelect();
     Phase.selectedDrugIndex(this.drugs.length - 1);

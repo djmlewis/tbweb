@@ -36,14 +36,6 @@ function createSelectLabelAndSelectMenuWithTheseOptions(id, options, optionsSuff
             guideline.selectmenuChanged(id);
         })
         .trigger('create');
-    /*
-    for (var i = 0; i < options.length; i++) {
-        $(document.createElement("option"))
-            .prop('value', i)
-            .text(options[i])
-            .appendTo(select);
-    }
-     */
     populateSelectWithTheseOptions(select, options, optionsSuffix);
 
     var label = $(document.createElement("label"))
@@ -63,13 +55,6 @@ function populateSelectWithTheseOptions(select, options, suffix) {
 
 function appendLabelAndTextValueTo(fieldContain, id, labeltext, texttext, inputType) {
     var localFC = $(document.createElement("div")).addClass("ui-field-contain").appendTo(fieldContain);
-
-    /*
-     jQuery('#some_text_box').on('input propertychange paste', function() {
-     // do your stuff
-     });
-     */
-
 
     $(document.createElement("label"))
         .attr('for', id)
@@ -108,7 +93,7 @@ function appendLabelAndTextAreaValueTo(fieldContain, id, labeltext, texttext) {
         .appendTo(localFC);
 }
 function emptyThisHangerWithID(id) {
-    $('#' + id).empty();
+    jqo(id).empty();
 }
 function triggerCreateElementsOnThisHangerWithID(id) {
     $('#' + id).trigger("create");
