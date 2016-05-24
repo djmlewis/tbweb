@@ -24,6 +24,59 @@
 
 <body>
 
+<div data-role="page" id="page_editor"><!-- Page -->
+    <div data-role="header" id="page_header_editor"><!-- Header -->
+        <h2 id="page_headertitle_editor"></h2>
+        <!-- VIEW button -->
+        <a href="#page_prescribe" class="ui-btn ui-btn-left ui-corner-all ui-icon-bullets ui-btn-icon-notext">View</a>
+        <!-- EXPORT button -->
+        <a id="editor_header_button_export" href="#"
+           class="ui-btn ui-btn-right ui-corner-all ui-icon-action ui-btn-icon-notext">Export</a>
+    </div>
+    <div role="main" class="ui-content" id="ui-content-editor"><!-- Content -->
+        <div id="editor-top-hanger">
+            <!-- Guideline buttons group -->
+            <div data-role="controlgroup" data-type="horizontal">
+                <button id="editor_button_saveguideline" class="ui-btn ui-icon-check ui-btn-icon-notext">Save
+                    Guideline
+                </button>
+            </div>
+            <!-- GUIDELINE Texts Hanger -->
+            <div id="editor_hanger_guideline_texts">
+                <!-- Name -->
+                <label for="editor_text_guideline_editor_name">Name</label>
+                <input id="editor_text_guideline_editor_name" name="editor_text_guideline_editor_name" type="text"
+                       placeholder="Name">
+            </div>
+
+            <!-- INDICATION top Hanger -->
+            <div id="editor_hanger_indication_top">
+                <!-- INDICATION heading Bar -->
+                <h4 class="ui-bar ui-bar-b">Indications</h4>
+                <!-- INDICATION Select &  buttons group -->
+                <div data-role="controlgroup" data-type="horizontal"><!-- Add -->
+                    <button id="ID_editor_indication_button_add" class="ui-btn ui-icon-plus ui-btn-icon-left">Add
+                        Indication
+                    </button>
+                </div>
+                <div data-role="controlgroup" data-type="horizontal"><!-- Delete, Select and Save -->
+                    <button id="editor_indication_button_delete" class="ui-btn ui-icon-minus ui-btn-icon-notext">
+                        Delete
+                    </button>
+                    <label for="editor_select_indications">Indications</label>
+                    <select id="editor_select_indications" name="editor_select_indications"></select>
+                    <button id="editor_indication_button_save" class="ui-btn ui-icon-check ui-btn-icon-notext">Save
+                    </button>
+                </div>
+                <!-- INDICATION texts Hanger -->
+                <div id="editor_hanger_indication_top_texts"></div>
+
+
+            </div>
+        </div><!-- Guideline.ID_editor_hanger_top -->
+    </div><!-- /content -->
+</div><!-- /page -->
+
 <div data-role="page" id="page_prescribe"><!-- /page -->
     <div data-role="header" id="1page_header_prescribe">
         <h2 id="1page_headertitle_prescribe"></h2>
@@ -36,14 +89,6 @@
     </div><!-- /content -->
 </div><!-- /page -->
 
-<div data-role="page" id="page_editor"><!-- /page -->
-    <div data-role="header" id="1page_header_editor">
-        <h2 id="1page_headertitle_editor"></h2>
-    </div>
-    <div role="main" class="ui-content" id="ui-content-editor"><!-- /content -->
-        <div id="1editor-guideline-hanger"></div>
-    </div><!-- /content -->
-</div><!-- /page -->
 
 </body>
 </html>

@@ -13,14 +13,21 @@ function Guideline(name) {
 //   STATICS
 Guideline.jstring =
     '{"name":"WHO","indications":[{"name":"Adults Daily","phases":[{"name":"ADInduction Phase","duration":"","drugsAcronym":"","drugs":[{"name":"ADI_Isoniazid","acronym":"","howDoseCalc":"mg/Kg","units":"mg","notes":"Notes","maxDose":300,"mgkg_initial":5,"mgkg_min":4,"mgkg_max":6,"rounval":50,"roundirect":1},{"name":"ADI_Rifampicin","acronym":"","howDoseCalc":"mg/Kg","units":"mg","notes":"Notes","maxDose":600,"mgkg_initial":10,"mgkg_min":8,"mgkg_max":12,"rounval":150,"roundirect":1},{"name":"ADI_Pyrazinamide","acronym":"","howDoseCalc":"mg/Kg","units":"mg","notes":"Notes","maxDose":2000,"mgkg_initial":25,"mgkg_min":20,"mgkg_max":30,"rounval":100,"roundirect":1},{"name":"ADI_Ethambutol","acronym":"","howDoseCalc":"mg/Kg","units":"mg","notes":"Notes","maxDose":1600,"mgkg_initial":15,"mgkg_min":15,"mgkg_max":20,"rounval":100,"roundirect":1}]},{"name":"ADContinuation Phase","duration":"","drugsAcronym":"","drugs":[{"name":"ADC_Isoniazid","acronym":"","howDoseCalc":"mg/Kg","units":"mg","notes":"Notes","maxDose":300,"mgkg_initial":5,"mgkg_min":4,"mgkg_max":6,"rounval":50,"roundirect":1},{"name":"ADC_Rifampicin","acronym":"","howDoseCalc":"mg/Kg","units":"mg","notes":"Notes","maxDose":600,"mgkg_initial":10,"mgkg_min":8,"mgkg_max":12,"rounval":150,"roundirect":1}]}]},{"name":"DOTs","phases":[{"name":"D_Induction Phase","duration":"","drugsAcronym":"","drugs":[{"name":"DI_Ethambutol","acronym":"","howDoseCalc":"mg/Kg","units":"mg","notes":"Notes","maxDose":1600,"mgkg_initial":15,"mgkg_min":15,"mgkg_max":20,"rounval":100,"roundirect":1}]},{"name":"D_Continuation Phase","duration":"","drugsAcronym":"","drugs":[{"name":"DC_Rifampicin","acronym":"","howDoseCalc":"mg/Kg","units":"mg","notes":"Notes","maxDose":600,"mgkg_initial":10,"mgkg_min":8,"mgkg_max":12,"rounval":150,"roundirect":1}]}]}]}';
+// Dirty texts
+Guideline.changed_g = 1;
+Guideline.changed_i = 2;
+Guideline.changed_p = 4;
+Guideline.changed_d = 8;
 
 //   IDs
-Guideline.ID_editor_text_guideline_editor_name = "1editor_textguidelinename";
-Guideline.ID_editor_hanger_guideline_editor_texts = "1editor_hangerguidelineeditortexts";
-Guideline.ID_editor_hanger_guideline_editor_texts_Editor = "1editor-guideline-hanger";
-Guideline.ID_editor_select_indications = "1editor_selectindication";
-Guideline.ID_editor_header = "1page_header_editor";
-Guideline.ID_editor_headertitle = "1page_headertitle_editor";
+Guideline.ID_editor_hanger_top = "editor-top-hanger";
+Guideline.ID_editor_button_saveguideline = "editor_button_saveguideline";
+Guideline.ID_editor_hanger_guideline_editor_texts = "editor_hanger_guideline_texts";
+Guideline.ID_editor_text_guideline_editor_name = "editor_text_guideline_editor_name";
+Guideline.ID_editor_select_indications = "editor_select_indications";
+Guideline.ID_editor_header = "page_header_editor";
+Guideline.ID_editor_headertitle = "page_headertitle_editor";
+Guideline.ID_editor_header_button_export = "editor_header_button_export";
 
 
 Guideline.ID_prescribe_menus_indications_weight_hanger = "1prescribe_menus_indications_weight_hanger";
@@ -142,36 +149,15 @@ Guideline.prototype.createPagesAndDisplay_editing = function () {
 
 };
 Guideline.prototype.createPage_Editor = function () {
-    // closure over this via myself to give access to self, as when the anonymous mini function is called,  this->element_calling.
-    // When that calls the prototype function this reverts to the Object again, so no need to pass this parameter
     var myself = this;
-    var baseElement = jqo(Guideline.ID_editor_hanger_guideline_editor_texts_Editor);
-    baseElement.empty();
-
-    //back button
-    $(document.createElement("a"))
-        .addClass("ui-btn ui-btn-left ui-corner-all ui-icon-bullets ui-btn-icon-notext")
-        .attr('href', '#page_prescribe')
-        .text('View')
-        .appendTo(jqo(Guideline.ID_editor_header));
-    this.addExportButtonToHeader(Guideline.ID_editor_header);
-
-    //Guideline buttons group
-    $(document.createElement("div"))
-        .attr({'data-role': "controlgroup", 'data-type': "horizontal"})
-        .appendTo(baseElement)
-        .append//SAVE BUTTON
-        ($(document.createElement("button"))
-            .addClass("ui-btn ui-icon-check ui-btn-icon-notext")
-            .text('Save')
-            .click(function () {
-                myself.saveSomething('g')
-            }));
-
-    //GUIDELINE Texts Hanger
-    $(document.createElement("div")).attr('id', Guideline.ID_editor_hanger_guideline_editor_texts).appendTo(baseElement);
-
-
+    var baseElement = jqo(Guideline.ID_editor_hanger_top);
+    jqo(Guideline.ID_editor_header_button_export).click(function () {
+        myself.exportGuideline()
+    });
+    jqo(Guideline.ID_editor_button_saveguideline).click(function () {
+        myself.saveSomething('g')
+    });
+    addChangeEventToThisID(Guideline.ID_editor_text_guideline_editor_name, Guideline.changed_g);
     //    INDCATIONS
     Indication.addElementsToThisHangerForGuideline_editor(baseElement, this);
     <!--PHASES-->
@@ -189,12 +175,7 @@ Guideline.prototype.displayGuideline_editing = function () {
     this.initialiseIndication();
 };
 Guideline.prototype.displayTextsForGuideLine = function () {
-    var baseElement = jqo(Guideline.ID_editor_hanger_guideline_editor_texts);
-    emptyThisHangerWithID(Guideline.ID_editor_hanger_guideline_editor_texts);
-//Guideline Texts
-    appendLabelAndTextValueTo(baseElement, Guideline.ID_editor_text_guideline_editor_name, "Name", this.name);
-    //Refresh
-    triggerCreateElementsOnThisHangerWithID(Guideline.ID_editor_hanger_guideline_editor_texts);
+    jqo(Guideline.ID_editor_text_guideline_editor_name).val(this.name);
 };
 //    Save
 Guideline.prototype.saveObjectSpecificData = function () {
@@ -202,6 +183,7 @@ Guideline.prototype.saveObjectSpecificData = function () {
 };
 // GLOBAL EVENTS
 Guideline.prototype.someTextChanged = function (textID) {
+    console.log(textID);
     this.dirtyTexts = this.dirtyTexts | textID;
 };
 Guideline.prototype.selectmenuChanged = function (menuID) {
@@ -354,7 +336,7 @@ Guideline.prototype.displayIndication = function () {
         this.active_Indication_editor().displayIndication();
     }
     else {
-        emptyThisHangerWithID(Indication.ID_editor_hanger_indication_texts);
+        emptyThisHangerWithID(Indication.ID_editor_hanger_indication_top_texts);
         emptyThisHangerWithID(Phase.ID_editor_hanger_phase_texts);
         emptyThisHangerWithID(Drug.ID_editor_hanger_drug_texts);
         jqo(Guideline.ID_editor_select_indications).empty().selectmenu('refresh');

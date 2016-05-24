@@ -14,8 +14,11 @@ function Indication(name, wtUnits, minWt, maxWt) {
 Indication.prototype.constructor = Indication;
 
 // STATICS */
-Indication.ID_editor_hanger_indication = "2editor_hangerIndication";
-Indication.ID_editor_hanger_indication_texts = "2editor_hangerIndicationtexts";
+Indication.ID_editor_hanger_indication_top = "editor_hanger_indication_top";
+Indication.ID_editor_indication_button_add = "editor_indication_button_add";
+Indication.ID_editor_indication_button_delete = "editor_indication_button_delete";
+Indication.ID_editor_indication_button_save = "editor_indication_button_save";
+Indication.ID_editor_hanger_indication_top_texts = "editor_hanger_indication_top_texts";
 Indication.ID_editor_text_indication_name = "2editor_textindicationname";
 Indication.ID_editor_select_phases = "2editor_selectphases";
 Indication.ID_prescribe_select_weight = "2prescribe_select_weight";
@@ -32,58 +35,19 @@ Indication.selectedPhaseIndex = function (newIndex) {
 
 // Create HTML
 Indication.addElementsToThisHangerForGuideline_editor = function (baseElement, guideline) {
-    var indicationHanger = $(document.createElement("div"))
-        .attr('id', Indication.ID_editor_hanger_indication)
-        .appendTo(baseElement);
-
-    $(document.createElement("h4")).addClass("ui-bar ui-bar-b ").text('Indications').appendTo(indicationHanger);
-
     //Indications Select &  buttons group
-    $(document.createElement("div"))
-        .attr({'data-role': "controlgroup", 'data-type': "horizontal"})
-        .append//+ BUTTON
-        ($(document.createElement("button"))
-            .addClass("ui-btn ui-icon-plus ui-btn-icon-left")
-            .text('Add Indication')
-            .click(function () {
-                guideline.addSomething('i')
-            }))
-        .appendTo(indicationHanger);
-
-    $(document.createElement("div"))
-        .attr({'data-role': "controlgroup", 'data-type': "horizontal"})
-        .append//- BUTTON
-        ($(document.createElement("button"))
-            .addClass("ui-btn ui-icon-minus ui-btn-icon-notext")
-            .text('Delete')
-            .click(function () {
-                guideline.confirmDelete('i')
-            }))
-        .append//LABEL for Indications Select
-        ($(document.createElement("label"))
-            .attr('for', Guideline.ID_editor_select_indications)
-            .text('Indications'))
-        .append// Indications Select
-        ($(document.createElement("select"))
-            .change(function () {
-                guideline.selectmenuChanged(Guideline.ID_editor_select_indications)
-            })
-            .attr({'id': Guideline.ID_editor_select_indications, 'name': Guideline.ID_editor_select_indications}))
-        .append//SAVE BUTTON
-        ($(document.createElement("button"))
-            .addClass("ui-btn ui-icon-check ui-btn-icon-notext")
-            .text('Save')
-            .click(function () {
-                guideline.saveObjectSpecificData('i')
-            }))
-        .appendTo(indicationHanger);
-    
-    //Texts Hanger
-    $(document.createElement("div")).attr('id', Indication.ID_editor_hanger_indication_texts).appendTo(indicationHanger);
-
-
-    //Refresh
-    indicationHanger.trigger('create');
+    jqo(Indication.ID_editor_indication_button_add).click(function () {
+        guideline.addSomething('i')
+    });
+    jqo(Indication.ID_editor_indication_button_delete).click(function () {
+        guideline.confirmDelete('i')
+    });
+    jqo(Guideline.ID_editor_select_indications).change(function () {
+        guideline.selectmenuChanged(Guideline.ID_editor_select_indications)
+    });
+    jqo(Indication.ID_editor_indication_button_save).click(function () {
+        guideline.saveObjectSpecificData('i')
+    });
 };
 
 
@@ -125,13 +89,13 @@ Indication.prototype.displayIndication = function () {
     this.initialisePhase();
 };
 Indication.prototype.displayTextsForIndication = function () {
-    var baseElement = jqo(Indication.ID_editor_hanger_indication_texts);
-    emptyThisHangerWithID(Indication.ID_editor_hanger_indication_texts);
+    var baseElement = jqo(Indication.ID_editor_hanger_indication_top_texts);
+    emptyThisHangerWithID(Indication.ID_editor_hanger_indication_top_texts);
 //Indications Texts
     appendLabelAndTextValueTo(baseElement, Indication.ID_editor_text_indication_name, "Name", this.name);
 
     //Refresh
-    triggerCreateElementsOnThisHangerWithID(Indication.ID_editor_hanger_indication_texts);
+    triggerCreateElementsOnThisHangerWithID(Indication.ID_editor_hanger_indication_top_texts);
 
 };
 

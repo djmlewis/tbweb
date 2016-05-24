@@ -16,80 +16,12 @@ Threshold.comparator_equal = 2;
 Threshold.comparator_equalgreater = 3;
 Threshold.comparator_greater = 4;
 // IDs
-Threshold.ID_editor_select_threshold_triggerWeight = "ID_editor_select_threshold_triggerWeight";
-Threshold.ID_editor_select_threshold_comparator = "ID_editor_select_threshold_comparator";
-Threshold.ID_editor_text_threshold_dose = "ID_editor_text_threshold_dose";
-//Actives
-Threshold.prototype.active_Indication_editor = function () {
-    return window.gActiveGuideline.active_Indication_editor();
-};
 // INSTANCE
 Threshold.prototype.constructor = Threshold;
 Threshold.prototype.instructionString = function () {
     return [Threshold.comparatorStrings[this.comparator], this.triggerWeight, this.dose].join(" ");
 };
 // Display
-Threshold.prototype.displayThresholdsTexts = function () {
-    var hanger = jqo(Drug_threshold.ID_editor_texts_threshold_hanger);
-    hanger.empty();
-    // threshold TEXTS
-    var selC = $(document.createElement("select"))
-        .change(function () {
-        })
-        .attr({
-            'id': Drug_threshold.ID_editor_select_threshold_comparator,
-            'name': Drug_threshold.ID_editor_select_threshold_comparator,
-            'data-mini': true
-        });
-    for (var i = 0; i < Threshold.comparatorStrings.length; i++) {
-        $(document.createElement("option"))
-            .prop('value', i)
-            .prop('selected', i == this.comparator)
-            .text(Threshold.comparatorStrings[i])
-            .appendTo(selC);
-    }
-
-    var indication = this.active_Indication_editor();
-    var selW = $(document.createElement("select"))
-        .change(function () {
-        })
-        .attr({
-            'id': Drug_threshold.ID_editor_select_threshold_triggerWeight,
-            'name': Drug_threshold.ID_editor_select_threshold_triggerWeight,
-            'data-mini': true
-        });
-    var weightsArray = indication.arrayOfAcceptableWeights();
-    var correctedWeight = indication.weightCorrectedAsIndexForMenu(this.triggerWeight);
-    for (var ii = 0; ii < weightsArray.length; ii++) {
-        $(document.createElement("option"))
-            .prop('value', ii)
-            .prop('selected', ii == correctedWeight)
-            .text([weightsArray[ii], indication.weightUnits].join(" "))
-            .appendTo(selW);
-    }
-
-    var fc = $(document.createElement("div")).addClass("ui-field-contain");
-    fc.append
-    (
-        $(document.createElement("label"))
-            .attr('for', Drug_threshold.ID_editor_select_threshold_comparator)
-            .text('Comparison')
-    );
-    fc.append(selC);
-    fc.append
-    (
-        $(document.createElement("label"))
-            .attr('for', Drug_threshold.ID_editor_select_threshold_triggerWeight)
-            .text('Weight')
-    );
-    fc.append(selW);
-    fc.appendTo(hanger);
-    fc.trigger('create');
-    appendLabelAndTextValueTo(hanger, Threshold.ID_editor_text_threshold_dose, "Dose", this.dose);
-
-    //Refresh
-    hanger.trigger('create');
-};
 
 
 // ********** DRUG Threshold  ************
@@ -105,6 +37,10 @@ function Drug_threshold(name, acronym, notes, units, frequency) {
 Drug_threshold.ID_editor_text_drug_threshold_frequency = "ID_editor_text_drug_threshold_frequency";
 Drug_threshold.ID_editor_select_thresholds = "ID_editor_select_thresholds";
 Drug_threshold.ID_editor_texts_threshold_hanger = "ID_editor_texts_threshold_hanger";
+// threshold
+Drug_threshold.ID_editor_select_threshold_triggerWeight = "ID_editor_select_threshold_triggerWeight";
+Drug_threshold.ID_editor_select_threshold_comparator = "ID_editor_select_threshold_comparator";
+Drug_threshold.ID_editor_text_threshold_dose = "ID_editor_text_threshold_dose";
 
 // INSTANCE
 Drug_threshold.prototype = Object.create(Drug.prototype);
@@ -208,7 +144,63 @@ Drug_threshold.prototype.displayThresholdsTexts = function () {
     var hanger = jqo(Drug_threshold.ID_editor_texts_threshold_hanger);
     hanger.empty();
     if (this.activeThreshold()) {
-        this.activeThreshold().displayThresholdsTexts();
+        // threshold TEXTS
+        var selC = $(document.createElement("select"))
+            .change(function () {
+            })
+            .attr({
+                'id': Drug_Drug_threshold.ID_editor_select_threshold_comparator,
+                'name': Drug_Drug_threshold.ID_editor_select_threshold_comparator,
+                'data-mini': true
+            });
+        for (var i = 0; i < Threshold.comparatorStrings.length; i++) {
+            $(document.createElement("option"))
+                .prop('value', i)
+                .prop('selected', i == this.comparator)
+                .text(Threshold.comparatorStrings[i])
+                .appendTo(selC);
+        }
+
+        var indication = this.active_Indication_editor();
+        var selW = $(document.createElement("select"))
+            .change(function () {
+            })
+            .attr({
+                'id': Drug_Drug_threshold.ID_editor_select_threshold_triggerWeight,
+                'name': Drug_Drug_threshold.ID_editor_select_threshold_triggerWeight,
+                'data-mini': true
+            });
+        var weightsArray = indication.arrayOfAcceptableWeights();
+        var correctedWeight = indication.weightCorrectedAsIndexForMenu(this.activeThreshold.triggerWeight);
+        for (var ii = 0; ii < weightsArray.length; ii++) {
+            $(document.createElement("option"))
+                .prop('value', ii)
+                .prop('selected', ii == correctedWeight)
+                .text([weightsArray[ii], indication.weightUnits].join(" "))
+                .appendTo(selW);
+        }
+
+        var fc = $(document.createElement("div")).addClass("ui-field-contain");
+        fc.append
+        (
+            $(document.createElement("label"))
+                .attr('for', Drug_Drug_threshold.ID_editor_select_threshold_comparator)
+                .text('Comparison')
+        );
+        fc.append(selC);
+        fc.append
+        (
+            $(document.createElement("label"))
+                .attr('for', Drug_Drug_threshold.ID_editor_select_threshold_triggerWeight)
+                .text('Weight')
+        );
+        fc.append(selW);
+        fc.appendTo(hanger);
+        fc.trigger('create');
+        appendLabelAndTextValueTo(hanger, Drug_threshold.ID_editor_text_threshold_dose, "Dose", this.activeThreshold.dose);
+
+        //Refresh
+        hanger.trigger('create');
     }
 };
 //Events

@@ -101,3 +101,9 @@ function triggerCreateElementsOnThisHangerWithID(id) {
 function jqo(id) {
     return $('#' + id);
 }
+
+function addChangeEventToThisID(id, objectcode) {
+    jqo(id).on('input propertychange paste', function () {
+        window.gActiveGuideline.someTextChanged(objectcode)
+    });
+}
