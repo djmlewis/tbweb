@@ -19,8 +19,9 @@ Indication.ID_editor_indication_button_add = "editor_indication_button_add";
 Indication.ID_editor_indication_button_delete = "editor_indication_button_delete";
 Indication.ID_editor_indication_button_save = "editor_indication_button_save";
 Indication.ID_editor_hanger_indication_top_texts = "editor_hanger_indication_top_texts";
-Indication.ID_editor_text_indication_name = "2editor_textindicationname";
-Indication.ID_editor_select_phases = "2editor_selectphases";
+Indication.ID_editor_text_indication_name = "editor_text_indication_name";
+Indication.ID_editor_select_phases = "editor_select_phases";
+
 Indication.ID_prescribe_select_weight = "2prescribe_select_weight";
 Indication.ID_prescribe_drugs_hanger = "2ui-field-contain-drugs-prescribe";
 
@@ -34,7 +35,7 @@ Indication.selectedPhaseIndex = function (newIndex) {
 };
 
 // Create HTML
-Indication.addElementsToThisHangerForGuideline_editor = function (baseElement, guideline) {
+Indication.addEvents_ForGuideline_editor = function (baseElement, guideline) {
     //Indications Select &  buttons group
     jqo(Indication.ID_editor_indication_button_add).click(function () {
         guideline.addSomething('i')
@@ -124,7 +125,7 @@ Indication.prototype.displayPhase = function () {
         this.active_Phase_editor().displayPhase();
     }
     else {
-        emptyThisHangerWithID(Phase.ID_editor_hanger_phase_texts);
+        emptyThisHangerWithID(Phase.ID_editor_hanger_phase_top_texts);
         emptyThisHangerWithID(Drug.ID_editor_hanger_drug_texts);
         jqo(Indication.ID_editor_select_phases).empty().selectmenu('refresh');
         jqo(Phase.ID_editor_select_drugs).empty().selectmenu('refresh');

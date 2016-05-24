@@ -29,11 +29,9 @@ Guideline.ID_editor_header = "page_header_editor";
 Guideline.ID_editor_headertitle = "page_headertitle_editor";
 Guideline.ID_editor_header_button_export = "editor_header_button_export";
 
-
 Guideline.ID_prescribe_menus_indications_weight_hanger = "1prescribe_menus_indications_weight_hanger";
 Guideline.ID_prescribe_select_indications = "1prescribe_select_indications";
 Guideline.ID_prescribe_header = "1page_header_prescribe";
-Guideline.ID_editor_headertitle = "1page_headertitle_prescribe";
 
 // Keys
 Guideline.keys_storage_guideline = 'guideline_webtbrx';
@@ -159,11 +157,11 @@ Guideline.prototype.createPage_Editor = function () {
     });
     addChangeEventToThisID(Guideline.ID_editor_text_guideline_editor_name, Guideline.changed_g);
     //    INDCATIONS
-    Indication.addElementsToThisHangerForGuideline_editor(baseElement, this);
+    Indication.addEvents_ForGuideline_editor(baseElement, this);
     <!--PHASES-->
-    Phase.addElementsToThisHangerForGuideline_editor(baseElement, this);
+    Phase.addEvents_ForGuideline_editor(baseElement, this);
     <!--DRUGS-->
-    Drug.addElementsToThisHangerForGuideline_editor(baseElement, this);
+    Drug.addEvents_ForGuideline_editor(baseElement, this);
 
     //Refresh
     baseElement.trigger("create");
@@ -324,10 +322,10 @@ Guideline.prototype.populateIndicationsSelect = function () {
     //refresh the selectmenu as created already in markup
     jqo_select_indications.selectmenu('refresh');
     if (this.indications.length > 0) {
-        jqo(Phase.ID_editor_hanger_phase).show();
+        jqo(Phase.ID_editor_hanger_phase_top).show();
     }
     else {
-        jqo(Phase.ID_editor_hanger_phase).hide();
+        jqo(Phase.ID_editor_hanger_phase_top).hide();
         jqo(Drug.ID_editor_hanger_drug).hide();
     }
 };
@@ -337,7 +335,7 @@ Guideline.prototype.displayIndication = function () {
     }
     else {
         emptyThisHangerWithID(Indication.ID_editor_hanger_indication_top_texts);
-        emptyThisHangerWithID(Phase.ID_editor_hanger_phase_texts);
+        emptyThisHangerWithID(Phase.ID_editor_hanger_phase_top_texts);
         emptyThisHangerWithID(Drug.ID_editor_hanger_drug_texts);
         jqo(Guideline.ID_editor_select_indications).empty().selectmenu('refresh');
         jqo(Indication.ID_editor_select_phases).empty().selectmenu('refresh');

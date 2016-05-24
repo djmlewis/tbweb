@@ -24,7 +24,7 @@ Drug.howDoseCalculatedOptionsIndex_Drug = 0;
 Drug.howDoseCalculatedOptionsIndex_Drug_mgKg = 1;
 Drug.howDoseCalculatedOptionsIndex_Drug_threshold = 2;
 // STATIC FUNCTS
-Drug.addElementsToThisHangerForGuideline_editor = function (baseElement, guideline) {
+Drug.addEvents_ForGuideline_editor = function (baseElement, guideline) {
     var drugsHanger = $(document.createElement("div"))
         .attr('id', Drug.ID_editor_hanger_drug)
         .appendTo(baseElement);

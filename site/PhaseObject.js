@@ -10,8 +10,12 @@ function Phase(name, duration, drugsAcronym) {
 
 }
 // STATICS
-Phase.ID_editor_hanger_phase = "4editor_hangerphase";
-Phase.ID_editor_hanger_phase_texts = "4editor_hangerphasetexts";
+Phase.ID_editor_hanger_phase_top = "editor_hanger_phase_top";
+Phase.ID_editor_phase_button_add = "editor_phase_button_add";
+Phase.ID_editor_phase_button_delete = "editor_phase_button_delete";
+Phase.ID_editor_phase_button_save = "editor_phase_button_save";
+
+Phase.ID_editor_hanger_phase_top_texts = "editor_hanger_phase_top_texts";
 Phase.ID_editor_text_phase_name = "4editor_textphasename";
 Phase.ID_editor_text_phase_duration = "4editor_textphaseduration";
 Phase.ID_editor_text_phase_acronym = "4editor_textphaseacronym";
@@ -34,61 +38,22 @@ Phase.prototype.active_Drug_editor = function () {
 // PHASE
 Phase.prototype.constructor = Phase;
 // Create HTML
-Phase.addElementsToThisHangerForGuideline_editor = function (baseElement, guideline) {
-    var phasesHanger = $(document.createElement("div"))
-        .attr('id', Phase.ID_editor_hanger_phase)
-        .appendTo(baseElement);
+Phase.addEvents_ForGuideline_editor = function (baseElement, guideline) {
 
-    $(document.createElement("h4")).addClass("ui-bar ui-bar-b ").text('Phases').appendTo(phasesHanger);
+    //Indications Select &  buttons group
+    jqo(Phase.ID_editor_phase_button_add).click(function () {
+        guideline.addSomething('p')
+    });
+    jqo(Phase.ID_editor_phase_button_delete).click(function () {
+        guideline.confirmDelete('p')
+    });
+    jqo(Indication.ID_editor_select_phases).change(function () {
+        guideline.selectmenuChanged(Indication.ID_editor_select_phases)
+    });
+    jqo(Phase.ID_editor_phase_button_save).click(function () {
+        guideline.saveObjectSpecificData('p')
+    });
 
-    //Phases Select &  buttons group
-    $(document.createElement("div"))
-        .attr({'data-role': "controlgroup", 'data-type': "horizontal"})
-        .append//+ BUTTON
-        ($(document.createElement("button"))
-            .addClass("ui-btn ui-icon-plus ui-btn-icon-left")
-            .text('Add Phase')
-            .click(function () {
-                guideline.addSomething('p')
-            }))
-        .appendTo(phasesHanger);
-
-    $(document.createElement("div"))
-        .attr({'data-role': "controlgroup", 'data-type': "horizontal"})
-        .append//- BUTTON
-        ($(document.createElement("button"))
-            .addClass("ui-btn ui-icon-minus ui-btn-icon-notext")
-            .text('Delete')
-            .click(function () {
-                guideline.confirmDelete('p')
-            }))
-        .append//LABEL for Indications Select
-        ($(document.createElement("label"))
-            .attr('for', Indication.ID_editor_select_phases)
-            .text('Indications'))
-        .append// Indications Select
-        ($(document.createElement("select"))
-            .change(function () {
-                guideline.selectmenuChanged(Indication.ID_editor_select_phases)
-            })
-            .attr({'id': Indication.ID_editor_select_phases, 'name': Indication.ID_editor_select_phases}))
-        .append//SAVE BUTTON
-        ($(document.createElement("button"))
-            .addClass("ui-btn ui-icon-check ui-btn-icon-notext")
-            .text('Save')
-            .click(function () {
-                guideline.saveSomething('p')
-            }))
-        .appendTo(phasesHanger);
-
-
-
-    //Texts Hanger
-    $(document.createElement("div")).attr('id', Phase.ID_editor_hanger_phase_texts).appendTo(phasesHanger);
-
-
-    //Refresh
-    phasesHanger.trigger('create');
 };
 // Save
 Phase.prototype.saveObjectSpecificData = function () {
@@ -109,15 +74,15 @@ Phase.prototype.initialiseDrugs = function () {
     this.displayDrugsEditor();
 };
 Phase.prototype.displayTextsForPhase = function () {
-    var baseElement = jqo(Phase.ID_editor_hanger_phase_texts);
-    emptyThisHangerWithID(Phase.ID_editor_hanger_phase_texts);
+    var baseElement = jqo(Phase.ID_editor_hanger_phase_top_texts);
+    emptyThisHangerWithID(Phase.ID_editor_hanger_phase_top_texts);
 //Indications Texts
     appendLabelAndTextValueTo(baseElement, Phase.ID_editor_text_phase_name, "Name", this.name);
     appendLabelAndTextValueTo(baseElement, Phase.ID_editor_text_phase_duration, "Duration", this.duration);
     appendLabelAndTextValueTo(baseElement, Phase.ID_editor_text_phase_acronym, "Drugs Acronym", this.drugsAcronym);
 
     //Refresh
-    triggerCreateElementsOnThisHangerWithID(Phase.ID_editor_hanger_phase_texts);
+    triggerCreateElementsOnThisHangerWithID(Phase.ID_editor_hanger_phase_top_texts);
 
 };
 // Drugs
