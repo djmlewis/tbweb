@@ -1,12 +1,12 @@
 /**
  * Created by davidlewis on 11/05/2016.
  */
-function Indication(name, wtUnits, minWt, maxWt) {
+function Indication(name, wtUnits, minWt, maxWt, startWeight) {
     this.name = name || "Untitled";
-    this.weightUnits = 'Kg';
-    this.minWeight = wtUnits || 30;
-    this.startWeight = minWt || 60;
+    this.weightUnits = wtUnits || 'Kg';
+    this.minWeight = minWt || 30;
     this.maxWeight = maxWt || 100;
+    this.startWeight = startWeight || 60;
     this.weight = this.startWeight;
     this.phases = [];
 }
@@ -14,16 +14,20 @@ function Indication(name, wtUnits, minWt, maxWt) {
 Indication.prototype.constructor = Indication;
 
 // STATICS */
+// Dirty texts
+Indication.changed = 'I';
+
+
 Indication.ID_editor_hanger_indication_top = "editor_hanger_indication_top";
-Indication.ID_editor_indication_button_add = "editor_indication_button_add";
-Indication.ID_editor_indication_button_delete = "editor_indication_button_delete";
-Indication.ID_editor_indication_button_save = "editor_indication_button_save";
+Indication.ID_editor_indication_button_add = "Ieditor_indication_button_add";
+Indication.ID_editor_indication_button_delete = "Ieditor_indication_button_delete";
+Indication.ID_editor_indication_button_save = "Ieditor_indication_button_save";
 Indication.ID_editor_hanger_indication_top_texts = "editor_hanger_indication_top_texts";
-Indication.ID_editor_text_indication_name = "editor_text_indication_name";
+Indication.ID_editor_text_indication_name = "Ieditor_text_indication_name";
 Indication.ID_editor_select_phases = "editor_select_phases";
 
-Indication.ID_prescribe_select_weight = "2prescribe_select_weight";
-Indication.ID_prescribe_drugs_hanger = "2ui-field-contain-drugs-prescribe";
+Indication.ID_prescribe_select_weight = "Iprescribe_select_weight";
+Indication.ID_prescribe_drugs_hanger = "Iui-field-contain-drugs-prescribe";
 
 // STATIC FUNCTS
 Indication.selectedPhaseIndex = function (newIndex) {
@@ -35,25 +39,40 @@ Indication.selectedPhaseIndex = function (newIndex) {
 };
 
 // Create HTML
-Indication.addEvents_ForGuideline_editor = function (baseElement, guideline) {
-    //Indications Select &  buttons group
-    jqo(Indication.ID_editor_indication_button_add).click(function () {
-        guideline.addSomething('i')
-    });
-    jqo(Indication.ID_editor_indication_button_delete).click(function () {
-        guideline.confirmDelete('i')
-    });
-    jqo(Guideline.ID_editor_select_indications).change(function () {
-        guideline.selectmenuChanged(Guideline.ID_editor_select_indications)
-    });
-    jqo(Indication.ID_editor_indication_button_save).click(function () {
-        guideline.saveObjectSpecificData('i')
-    });
+Indication.completeHTMLsetup = function () {
 };
 
 
 // INSTANCE
 Indication.prototype.constructor = Indication;
+Indication.prototype.initFromJSONstringObject = function (jasonStringObject) {
+    if (jasonStringObject) {
+        if (jasonStringObject.name) {
+            this.name = jasonStringObject.name;
+        }
+        if (jasonStringObject.weightUnits) {
+            this.weightUnits = jasonStringObject.weightUnits;
+        }
+        if (jasonStringObject.minWeight) {
+            this.minWeight = jasonStringObject.minWeight;
+        }
+        if (jasonStringObject.startWeight) {
+            this.name = jasonStringObject.startWeight;
+        }
+        if (jasonStringObject.maxWeight) {
+            this.name = jasonStringObject.maxWeight;
+        }
+        this.weight = this.startWeight;
+        //this.phases is initialised in constructor
+        if (jasonStringObject.phases) {
+            for (var i = 0; i < jasonStringObject.phases.length; i++) {
+                var phse = new Phase();
+                phse.initFromJSONstringObject(jasonStringObject.phases[i]);
+                this.phases.push(phse);
+            }
+        }
+    }
+};
 //ACTIVES
 Indication.prototype.active_Phase_editor = function () {
     return this.phases[jqo(Indication.ID_editor_select_phases).val()];
@@ -90,14 +109,8 @@ Indication.prototype.displayIndication = function () {
     this.initialisePhase();
 };
 Indication.prototype.displayTextsForIndication = function () {
-    var baseElement = jqo(Indication.ID_editor_hanger_indication_top_texts);
-    emptyThisHangerWithID(Indication.ID_editor_hanger_indication_top_texts);
-//Indications Texts
-    appendLabelAndTextValueTo(baseElement, Indication.ID_editor_text_indication_name, "Name", this.name);
-
-    //Refresh
-    triggerCreateElementsOnThisHangerWithID(Indication.ID_editor_hanger_indication_top_texts);
-
+    jqo(Indication.ID_editor_text_indication_name).val(this.name);
+    
 };
 
 // PHASE display
@@ -113,10 +126,10 @@ Indication.prototype.populatePhasesSelect = function () {
     //refresh the selectmenu as created already in markup
     jqo_select_phases.selectmenu('refresh');
     if (this.phases.length > 0) {
-        jqo(Drug.ID_editor_hanger_drug).show();
+        jqo(Drug.ID_editor_hanger_drug_top).show();
     }
     else {
-        jqo(Drug.ID_editor_hanger_drug).hide();
+        jqo(Drug.ID_editor_hanger_drug_top).hide();
     }
 
 };

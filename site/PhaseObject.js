@@ -10,16 +10,19 @@ function Phase(name, duration, drugsAcronym) {
 
 }
 // STATICS
+// Dirty texts
+Phase.changed = 'P';
+
 Phase.ID_editor_hanger_phase_top = "editor_hanger_phase_top";
-Phase.ID_editor_phase_button_add = "editor_phase_button_add";
-Phase.ID_editor_phase_button_delete = "editor_phase_button_delete";
-Phase.ID_editor_phase_button_save = "editor_phase_button_save";
+Phase.ID_editor_phase_button_add = "Peditor_phase_button_add";
+Phase.ID_editor_phase_button_delete = "Peditor_phase_button_delete";
+Phase.ID_editor_phase_button_save = "Peditor_phase_button_save";
 
 Phase.ID_editor_hanger_phase_top_texts = "editor_hanger_phase_top_texts";
-Phase.ID_editor_text_phase_name = "4editor_textphasename";
-Phase.ID_editor_text_phase_duration = "4editor_textphaseduration";
-Phase.ID_editor_text_phase_acronym = "4editor_textphaseacronym";
-Phase.ID_editor_select_drugs = "4editor_selectdrugs";
+Phase.ID_editor_text_phase_name = "Peditor_text_phase_name";
+Phase.ID_editor_text_phase_duration = "Peditor_text_phase_duration";
+Phase.ID_editor_text_phase_acronym = "Peditor_text_phase_acronym";
+Phase.ID_editor_select_drugs = "editor_select_drugs";
 // STATIC FUNCTS
 Phase.selectedDrugIndex = function (newIndex) {
     if (newIndex) {
@@ -37,23 +40,44 @@ Phase.prototype.active_Drug_editor = function () {
 // INSTANCE
 // PHASE
 Phase.prototype.constructor = Phase;
+Phase.prototype.initFromJSONstringObject = function (jasonStringObject) {
+    if (jasonStringObject) {
+        if (jasonStringObject.name) {
+            this.name = jasonStringObject.name;
+        }
+        if (jasonStringObject.duration) {
+            this.duration = jasonStringObject.duration;
+        }
+        if (jasonStringObject.drugsAcronym) {
+            this.drugsAcronym = jasonStringObject.drugsAcronym;
+        }
+        //this.drugs is initialised in constructor
+        if (jasonStringObject.drugs) {
+            for (var i = 0; i < jasonStringObject.drugs.length; i++) {
+                var newdrugOfType;
+                switch (jasonStringObject.drugs[i].doseCalculationMethod) {
+                    case Drug.doseCalculationMethodOptions_Name_Drug_Directed:
+                        newdrugOfType = new Drug();
+                        break;
+                    case Drug.doseCalculationMethodOptions_Name_Drug_mgKg:
+                        newdrugOfType = new Drug_mgKg();
+                        break;
+                    case Drug.doseCalculationMethodOptions_Name_Drug_threshold:
+                        newdrugOfType = new Drug_threshold();
+                        break;
+                    default:
+                        newdrugOfType = new Drug();
+                        break;
+                }
+                newdrugOfType.initFromJSONstringObject(jasonStringObject.drugs[i]);
+                this.drugs.push(newdrugOfType);
+            }
+        }
+    }
+};
+
 // Create HTML
-Phase.addEvents_ForGuideline_editor = function (baseElement, guideline) {
-
-    //Indications Select &  buttons group
-    jqo(Phase.ID_editor_phase_button_add).click(function () {
-        guideline.addSomething('p')
-    });
-    jqo(Phase.ID_editor_phase_button_delete).click(function () {
-        guideline.confirmDelete('p')
-    });
-    jqo(Indication.ID_editor_select_phases).change(function () {
-        guideline.selectmenuChanged(Indication.ID_editor_select_phases)
-    });
-    jqo(Phase.ID_editor_phase_button_save).click(function () {
-        guideline.saveObjectSpecificData('p')
-    });
-
+Phase.completeHTMLsetup = function () {
 };
 // Save
 Phase.prototype.saveObjectSpecificData = function () {
@@ -74,15 +98,9 @@ Phase.prototype.initialiseDrugs = function () {
     this.displayDrugsEditor();
 };
 Phase.prototype.displayTextsForPhase = function () {
-    var baseElement = jqo(Phase.ID_editor_hanger_phase_top_texts);
-    emptyThisHangerWithID(Phase.ID_editor_hanger_phase_top_texts);
-//Indications Texts
-    appendLabelAndTextValueTo(baseElement, Phase.ID_editor_text_phase_name, "Name", this.name);
-    appendLabelAndTextValueTo(baseElement, Phase.ID_editor_text_phase_duration, "Duration", this.duration);
-    appendLabelAndTextValueTo(baseElement, Phase.ID_editor_text_phase_acronym, "Drugs Acronym", this.drugsAcronym);
-
-    //Refresh
-    triggerCreateElementsOnThisHangerWithID(Phase.ID_editor_hanger_phase_top_texts);
+    jqo(Phase.ID_editor_text_phase_name).val(this.name);
+    jqo(Phase.ID_editor_text_phase_duration).val(this.duration);
+    jqo(Phase.ID_editor_text_phase_acronym).val(this.drugsAcronym);
 
 };
 // Drugs
@@ -109,14 +127,14 @@ Phase.prototype.displayDrugsEditor = function () {
 
 };
 Phase.prototype.addDrug = function () {
-    switch (Drug.selectedHowDoseCalculatedIndex()) {
-        case Drug.howDoseCalculatedOptionsIndex_Drug_mgKg:
+    switch (Drug.selecteddoseCalculationMethodIndex()) {
+        case Drug.doseCalculationMethodOptionsIndex_Drug_mgKg:
             this.drugs.push(new Drug_mgKg());
             break;
-        case Drug.howDoseCalculatedOptionsIndex_Drug_threshold:
+        case Drug.doseCalculationMethodOptionsIndex_Drug_threshold:
             this.drugs.push(new Drug_threshold());
             break;
-        case Drug.howDoseCalculatedOptionsIndex_Drug:
+        case Drug.doseCalculationMethodOptionsIndex_Drug:
             this.drugs.push(new Drug());
             break;
         default:

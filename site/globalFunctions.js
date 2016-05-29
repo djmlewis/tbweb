@@ -32,9 +32,9 @@ function createSelectLabelAndSelectMenuWithTheseOptions(id, options, optionsSuff
     var select = $(document.createElement("select"))
         .attr({'id': id, 'name': id, 'data-mini': mini})
         .attr({'id': id, 'name': id})
-        .change(function () {
-            guideline.selectmenuChanged(id);
-        })
+        // .change(function () {
+        //     guideline.selectmenuChanged(id);
+        // })
         .trigger('create');
     populateSelectWithTheseOptions(select, options, optionsSuffix);
 
@@ -53,6 +53,18 @@ function populateSelectWithTheseOptions(select, options, suffix) {
     }
 }
 
+function populateValidSelectIDWithTheseOptions(selectID, options, suffix) {
+    var select = jqo(selectID);
+    select.empty();
+    for (var i = 0; i < options.length; i++) {
+        $(document.createElement("option"))
+            .prop('value', i)
+            .text([options[i], (suffix || "")].join(" "))
+            .appendTo(select);
+    }
+    select.selectmenu('refresh');
+}
+
 function appendLabelAndTextValueTo(fieldContain, id, labeltext, texttext, inputType) {
     var localFC = $(document.createElement("div")).addClass("ui-field-contain").appendTo(fieldContain);
 
@@ -69,7 +81,7 @@ function appendLabelAndTextValueTo(fieldContain, id, labeltext, texttext, inputT
         })
         .prop('value', texttext)
         .on('input propertychange paste', function () {
-            window.gActiveGuideline.someTextChanged(id.charAt(0))
+            window.gActiveGuideline.someTextInputChanged(id.charAt(0))
         })
         .appendTo(localFC);
 }
@@ -88,7 +100,7 @@ function appendLabelAndTextAreaValueTo(fieldContain, id, labeltext, texttext) {
         })
         .prop('value', texttext)
         .on('input propertychange paste', function () {
-            window.gActiveGuideline.someTextChanged(id.charAt(0))
+            window.gActiveGuideline.someTextInputChanged(id.charAt(0))
         })
         .appendTo(localFC);
 }
@@ -102,8 +114,8 @@ function jqo(id) {
     return $('#' + id);
 }
 
-function addChangeEventToThisID(id, objectcode) {
-    jqo(id).on('input propertychange paste', function () {
-        window.gActiveGuideline.someTextChanged(objectcode)
+function addChangeEventToSelects() {
+    $('[type=text], [type=number]').on('input propertychange paste', function () {
+        window.gActiveGuideline.someTextInputChanged($(this).attr('id'));
     });
 }
