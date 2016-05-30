@@ -6,19 +6,29 @@
 /* GLOBALS */
 
 
-jQuery(document).on("pagecreate", "#page_prescribe", setupPageForPrescribing);
-jQuery(document).on("pagecreate", "#page_editor", setupPageForEditing);
+jQuery(document).one("pagecreate", "#page_prescribe", completeHTMLForPrescribing);
+jQuery(document).one("pagebeforeshow", "#page_prescribe", displayGuidelineForPrescribing);
+jQuery(document).one("pagecreate", "#page_editor", completeHTMLForEditing);
+jQuery(document).one("pagebeforeshow", "#page_editor", displayGuidelineForEditing);
 
 
 /* FUNCTIONS */
 
-function setupPageForPrescribing() {
+function completeHTMLForPrescribing() {
     Guideline.createGlobalIfRequired();
-    window.gActiveGuideline.createPage_Prescribe();
+    window.gActiveGuideline.completeHTMLsetup_Prescribe();
 }
 
-function setupPageForEditing() {
+function displayGuidelineForPrescribing() {
+    window.gActiveGuideline.displayGuideline_prescribe();
+}
+
+function completeHTMLForEditing() {
     Guideline.createGlobalIfRequired();
-    window.gActiveGuideline.createPagesAndDisplay_editing();
+    window.gActiveGuideline.completeHTMLsetup_Editor();
+}
+
+function displayGuidelineForEditing() {
+    window.gActiveGuideline.displayGuideline_editing();
 }
 

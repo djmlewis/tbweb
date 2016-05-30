@@ -100,7 +100,7 @@ Drug_threshold.prototype.saveObjectSpecificData = function () {
 
 };
 //display
-Drug_threshold.completeHTMLsetup = function () {
+Drug_threshold.completeHTMLsetup_Editor = function () {
     //populate the drug types select
 
 };

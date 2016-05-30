@@ -77,7 +77,7 @@ Phase.prototype.initFromJSONstringObject = function (jasonStringObject) {
 };
 
 // Create HTML
-Phase.completeHTMLsetup = function () {
+Phase.completeHTMLsetup_Editor = function () {
 };
 // Save
 Phase.prototype.saveObjectSpecificData = function () {

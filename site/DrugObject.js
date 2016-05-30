@@ -36,8 +36,7 @@ Drug.doseCalculationMethodOptions_Name_Drug_threshold = "Thresholds";
 Drug.doseCalculationMethodOptions = [Drug.doseCalculationMethodOptions_Name_Drug_Directed, Drug.doseCalculationMethodOptions_Name_Drug_mgKg, Drug.doseCalculationMethodOptions_Name_Drug_threshold];
 
 // STATIC FUNCTS
-Drug.completeHTMLsetup = function () {
-    //populate the drug types select
+Drug.completeHTMLsetup_Editor = function () {
     populateValidSelectIDWithTheseOptions(Drug.ID_editor_select_drugHowDoseCalc, Drug.doseCalculationMethodOptions);
 };
 Drug.selecteddoseCalculationMethodIndex = function () {
@@ -63,7 +62,6 @@ Drug.addAlertsOrInfosToCollapsible = function (arrayToParse, addAlertIcon, colla
 // INSTANCE 
 Drug.prototype.constructor = Drug;
 Drug.prototype.initFromJSONstringObject = function (jasonStringObject) {
-    console.log("Drug.prototype.initFromJSONstringObject>>>" + jasonStringObject);
     if (jasonStringObject) {
         if (jasonStringObject.name) {
             this.name = jasonStringObject.name;
@@ -132,8 +130,7 @@ Drug_mgKg.ID_editor_text_drug_rounval = "Deditor_text_drug_rounval";
 Drug_mgKg.ID_editor_select_drug_roundirect = "editor_select_drug_roundirect";
 Drug_mgKg.options_rounding = ["None", "Up", "Down"];
 //  Static Functs
-Drug_mgKg.completeHTMLsetup = function () {
-    //populate the drug types select
+Drug_mgKg.completeHTMLsetup_Editor = function () {
     populateValidSelectIDWithTheseOptions(Drug_mgKg.ID_editor_select_drug_roundirect, Drug_mgKg.options_rounding, "");
 };
 
@@ -141,7 +138,6 @@ Drug_mgKg.completeHTMLsetup = function () {
 Drug_mgKg.prototype = Object.create(Drug.prototype);
 Drug_mgKg.prototype.constructor = Drug_mgKg;
 Drug_mgKg.prototype.initFromJSONstringObject = function (jasonStringObject) {
-    console.log("Drug_mgKg.prototype.initFromJSONstringObject>>>" + jasonStringObject);
     Drug.prototype.initFromJSONstringObject.call(this, jasonStringObject);
     if (jasonStringObject) {
         if (jasonStringObject.maxDose) {

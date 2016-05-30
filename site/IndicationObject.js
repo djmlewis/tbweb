@@ -39,7 +39,7 @@ Indication.selectedPhaseIndex = function (newIndex) {
 };
 
 // Create HTML
-Indication.completeHTMLsetup = function () {
+Indication.completeHTMLsetup_Editor = function () {
 };
 
 
@@ -160,14 +160,8 @@ Indication.prototype.deletePhase = function () {
 };
 // PRESCRIBE
 Indication.prototype.populateSelectMenuWeight = function () {
-    populateSelectWithTheseOptions(jqo(Indication.ID_prescribe_select_weight), this.arrayOfAcceptableWeights(), this.weightUnits);
+    populateValidSelectIDWithTheseOptions(Indication.ID_prescribe_select_weight, this.arrayOfAcceptableWeights(), this.weightUnits);
     jqo(Indication.ID_prescribe_select_weight).val(this.weightCorrectedAsIndexForMenu()).selectmenu('refresh');
-
-    //var hanger = jqo(Indication.ID_prescribe_menus_weight_hanger);
-    //hanger.empty();
-    //appendSelectMenuWithTheseOptions(hanger, Indication.ID_prescribe_select_weight, integerArrayFromTo(this.minWeight, this.maxWeight), "", "Weight", false);
-    //create the selectmenu as created already in markup
-    //hanger.trigger('create');
 };
 Indication.prototype.displayWeightAndIndication = function () {
     this.populateSelectMenuWeight();

@@ -1,5 +1,5 @@
 //Created by davidlewis on 09/05/2016.
-var useStored = false;
+var useStored = true;
 
 // the global guideline
 window.gActiveGuideline = undefined;
@@ -29,6 +29,8 @@ Guideline.ID_editor_header_button_export = "Geditor_header_button_export";
 Guideline.ID_prescribe_menus_indications_weight_hanger = "prescribe_menus_indications_weight_hanger";
 Guideline.ID_prescribe_select_indications = "prescribe_select_indications";
 Guideline.ID_prescribe_header = "page_header_prescribe";
+Guideline.ID_prescribe_headertitle = "page_headertitle_prescribe";
+Guideline.ID_prescribe_header_button_export = "Gprescribe_header_button_export";
 
 // Keys
 Guideline.keys_storage_guideline = 'guideline_webtbrx';
@@ -96,17 +98,6 @@ Guideline.prototype.initFromJSONstring = function (jasonString) {
         }
     }
 };
-Guideline.prototype.addExportButtonToHeader = function (headerID) {
-    //EXPORT BUTTON
-    var myself = this;
-    $(document.createElement("button"))
-        .addClass('ui-btn ui-btn-right ui-corner-all ui-icon-action ui-btn-icon-notext')
-        .text('Export')
-        .click(function () {
-            myself.exportGuideline()
-        })
-        .appendTo(jqo(headerID));
-};
 Guideline.prototype.exportGuideline = function () {
     window.open().document.write(JSON.stringify(this));
 
@@ -128,49 +119,37 @@ Guideline.prototype.active_Drug_editor = function () {
     return this.active_Phase_editor() ? this.active_Phase_editor().active_Drug_editor() : false;
 };
 //    CREATE HTML
-Guideline.prototype.createPagesAndDisplay_editing = function () {
-    /*create structure*/
-    window.gActiveGuideline.createPage_Editor();
-    /*update display*/
-    window.gActiveGuideline.displayGuideline_editing();
-
-};
-Guideline.prototype.createPage_Editor = function () {
+Guideline.prototype.completeHTMLsetup_Editor = function () {
     var myself = this;
-    var baseElement = jqo(Guideline.ID_editor_hanger_top);
-    jqo(Guideline.ID_editor_header_button_export).click(function () {
+    //add change events
+    var page_editor_elements = $('#page_editor');
+    page_editor_elements.find('[type=text],[type=number]').on('input propertychange paste', function () {
+        myself.someTextInputChanged($(this).attr('id'));
+    });
+    page_editor_elements.find('select').change(function () {
+        myself.selectmenuChanged($(this).attr('id'));
+    });
+    page_editor_elements.find('.ui-icon-check').click(function () {
+        myself.saveSomething($(this).attr('id').charAt(0))
+    });
+    page_editor_elements.find('.ui-icon-plus').click(function () {
+        myself.addSomething($(this).attr('id').charAt(0))
+    });
+    page_editor_elements.find('.ui-icon-minus').click(function () {
+        myself.confirmDelete($(this).attr('id').charAt(0))
+    });
+    page_editor_elements.find('.ui-icon-action').click(function () {
         myself.exportGuideline()
     });
 
-    //add change events
-    $('[type=text], [type=number]').on('input propertychange paste', function () {
-        myself.someTextInputChanged($(this).attr('id'));
-    });
-    //$('select').on('change', function () {myself.selectmenuChanged($(this).attr('id'));});
-    $('select').change(function () {
-        myself.selectmenuChanged($(this).attr('id'));
-    });
-    $('.ui-icon-check').click(function () {
-        myself.saveSomething($(this).attr('id').charAt(0))
-    });
-    $('.ui-icon-plus').click(function () {
-        myself.addSomething($(this).attr('id').charAt(0))
-    });
-    $('.ui-icon-minus').click(function () {
-        myself.confirmDelete($(this).attr('id').charAt(0))
-    });
-
-
     //    INDCATIONS
-    Indication.completeHTMLsetup();
+    Indication.completeHTMLsetup_Editor();
     <!--PHASES-->
-    Phase.completeHTMLsetup();
+    Phase.completeHTMLsetup_Editor();
     <!--DRUGS-->
-    Drug.completeHTMLsetup();
-    Drug_mgKg.completeHTMLsetup();
+    Drug.completeHTMLsetup_Editor();
+    Drug_mgKg.completeHTMLsetup_Editor();
 
-    //Refresh
-    baseElement.trigger("create");
 };
 //    Display GL
 Guideline.prototype.displayGuideline_editing = function () {
@@ -193,6 +172,8 @@ Guideline.prototype.someTextInputChanged = function (objectID) {
     this.dirtyTexts = this.dirtyTexts | objectIDnum;
 };
 Guideline.prototype.selectmenuChanged = function (menuID) {
+    console.log('handled: >>>' + menuID);
+
     switch (menuID) {
         case Guideline.ID_editor_select_indications:
             this.displayIndication();
@@ -395,42 +376,21 @@ Guideline.prototype.indicationsNames = function () {
     }
     return namesArray;
 };
-Guideline.prototype.createPage_Prescribe = function () {
-    // closure over this via myself to give access to self, as when the anonymous mini function is called,  this->element_calling.
-    // When that calls the prototype function this reverts to the Object again, so no need to pass this parameter
-    $(document.createElement("a"))
-        .addClass("ui-btn ui-btn-left ui-corner-all ui-icon-edit ui-btn-icon-notext")
-        .text('Edit')
-        .attr('href', '#page_editor')
-        .appendTo(jqo(Guideline.ID_prescribe_header));
-    this.addExportButtonToHeader(Guideline.ID_prescribe_header);
+Guideline.prototype.completeHTMLsetup_Prescribe = function () {
+    var myself = this;
+    //add change events
+    var page_prescribe_elements = $('#page_prescribe');
+    page_prescribe_elements.find('select').change(function () {
+        myself.selectmenuChanged($(this).attr('id'));
+    });
 
-    this.createSelectMenuIndications();
+};
+Guideline.prototype.displayGuideline_prescribe = function () {
+    populateValidSelectIDWithTheseOptions(Guideline.ID_prescribe_select_indications, this.indicationsNames(), "");
     if (this.activeIndication_prescribe()) {
         this.activeIndication_prescribe().displayWeightAndIndication();
     }
-    //Refresh
-};
 
-Guideline.prototype.createSelectMenuIndications = function () {
-
-    console.log(this);
-    
-    var hanger = jqo(Guideline.ID_prescribe_menus_indications_weight_hanger);
-    hanger.empty();
-
-    var labelAndSelect = createSelectLabelAndSelectMenuWithTheseOptions(Guideline.ID_prescribe_select_indications, this.indicationsNames(), "", "Indication", false);
-    var labelAndSelectI = createSelectLabelAndSelectMenuWithTheseOptions(Indication.ID_prescribe_select_weight, [], "", "Weight", false);//integerArrayFromTo(this.minWeight, this.maxWeight)
-    $(document.createElement("div"))
-        .attr({'data-role': "controlgroup", 'data-type': "horizontal"})
-        .append(labelAndSelect.label_)
-        .append(labelAndSelect.select_)
-        .append(labelAndSelectI.label_)
-        .append(labelAndSelectI.select_)
-        .appendTo(hanger);
-    
-    //create the selectmenu as created already in markup
-    hanger.trigger('create');
 };
 // EVents
 Guideline.prototype.selectIndicationsChanged = function () {
