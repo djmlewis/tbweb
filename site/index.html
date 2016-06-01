@@ -123,7 +123,7 @@
                     <select id="editor_select_drugs" name="editor_select_drugs"></select>
                 </div>
                 <!-- DRUGS texts Hanger -->
-                <div id="editor_hanger_drug_texts" class="ui-field-contain">
+                <div id="℞editor_hanger_drug_texts" class="ui-field-contain">
                     <label for="Deditor_text_drug_name">Name</label>
                     <input id="Deditor_text_drug_name" name="Deditor_text_drug_name" type="text" placeholder="Name">
                     <label for="Deditor_text_drug_acronym">Acronym</label>
@@ -134,10 +134,10 @@
                     <label for="Deditor_text_drug_notes">Notes</label>
                     <textarea id="Deditor_text_drug_notes" name="Deditor_text_drug_notes"
                               placeholder="Notes"></textarea>
+                    <h5 id="editor_heading_drugHowDoseCalc" class="ui-bar ui-bar-a"></h5>
                 </div><!-- DRUGS texts Hanger -->
-                <h5 id="editor_heading_drugHowDoseCalc" class="ui-bar ui-bar-a"></h5>
                 <!-- MGKG texts Hanger -->
-                <div id="editor_drugmgkg_hanger_texts" class="ui-field-contain">
+                <div id="℞editor_drugmgkg_hanger_texts" class="ui-field-contain">
                     <label for="Deditor_text_drug_frequency">Frequency</label>
                     <input id="Deditor_text_drug_frequency" name="Deditor_text_drug_frequency" type="text"
                            placeholder="Frequency">
@@ -160,11 +160,11 @@
                     <select id="editor_select_drug_roundirect" name="editor_select_drug_roundirect"></select>
                 </div><!-- MGKG texts Hanger -->
                 <!-- Threshold Drug texts Hanger -->
-                <div id="editor_drugthresholds_hanger_texts" class="ui-field-contain">
+                <div id="℞editor_drugthresholds_hanger_texts" class="ui-field-contain ">
                     <label for="Deditor_text_drug_threshold_frequency">Frequency</label>
                     <input id="Deditor_text_drug_threshold_frequency" name="Deditor_text_drug_threshold_frequency"
                            type="text" placeholder="Frequency">
-                    <div data-role="controlgroup" data-type="horizontal"><!-- Add -->
+                    <div data-role="controlgroup" data-type="horizontal"><!-- Add  Delete, Save -->
                         <button id="Deditordrugthreshold_button_add"
                                 class="ui-btn ui-icon-plus ui-btn-icon-left ui-btn-icon-notext">Add
                         </button>
@@ -175,31 +175,24 @@
                             Save
                         </button>
                     </div>
-                    <div data-role="controlgroup" data-type="horizontal"><!-- Delete, Choose, Save -->
+                    <div data-role="controlgroup" data-type="horizontal"><!--  Choose -->
                         <label for="editor_select_thresholds">Thresholds</label>
                         <select id="editor_select_thresholds" name="editor_select_thresholds"></select>
                     </div>
                     <div id="editor_texts_threshold_hanger" class="ui-field-contain">
-                        <div class="ui-grid-a">
-                            <div class="ui-block-a">
-                                <div data-role="controlgroup" data-type="horizontal"><!-- Threshold trigger -->
-                                    <label for="editor_select_threshold_comparator">Comparator</label>
-                                    <select id="editor_select_threshold_comparator"
-                                            name="editor_select_threshold_comparator"></select>
-                                    <label for="editor_select_threshold_triggerWeight">Weight</label>
-                                    <select id="editor_select_threshold_triggerWeight"
-                                            name="editor_select_threshold_triggerWeight"></select>
-                                </div>
-                            </div>
-                            <div class="ui-block-b">
-                                <div class="ui-field-contain">
-                                    <label for="Deditor_text_threshold_dose">Dose</label>
-                                    <input id="Deditor_text_threshold_dose" name="Deditor_text_threshold_dose"
-                                           type="text" placeholder="Dose">
-                                </div>
-                            </div>
-                        </div><!-- /grid-a -->
-
+                        <div data-role="controlgroup" data-type="horizontal"><!-- Threshold trigger -->
+                            <label for="editor_select_threshold_comparator">Comparator</label>
+                            <select id="editor_select_threshold_comparator"
+                                    name="editor_select_threshold_comparator"></select>
+                            <label for="editor_select_threshold_triggerWeight">Weight</label>
+                            <select id="editor_select_threshold_triggerWeight"
+                                    name="editor_select_threshold_triggerWeight"></select>
+                        </div>
+                        <div class="ui-field-contain">
+                            <label for="Deditor_text_threshold_dose">Dose</label>
+                            <input id="Deditor_text_threshold_dose" name="Deditor_text_threshold_dose" type="text"
+                                   placeholder="Dose">
+                        </div>
                     </div>
                 </div><!-- Threshold Drug texts Hanger -->
 

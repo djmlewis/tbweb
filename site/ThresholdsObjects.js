@@ -50,7 +50,7 @@ function Drug_threshold(name, acronym, notes, units, frequency) {
 }
 
 // STATICS
-Drug_threshold.ID_editor_drugthresholds_hanger_texts = "editor_drugthresholds_hanger_texts";
+Drug_threshold.ID_editor_drugthresholds_hanger_texts = "℞editor_drugthresholds_hanger_texts";
 Drug_threshold.ID_editor_text_drug_threshold_frequency = "Deditor_text_drug_threshold_frequency";
 Drug_threshold.ID_editor_select_thresholds = "editor_select_thresholds";
 Drug_threshold.ID_editor_texts_threshold_hanger = "editor_texts_threshold_hanger";
@@ -101,13 +101,14 @@ Drug_threshold.prototype.saveObjectSpecificData = function () {
 };
 //display
 Drug_threshold.completeHTMLsetup_Editor = function () {
-    //populate the drug types select
-
+    //populate the threshold <> select
+    populateValidSelectIDWithTheseOptions(Drug_threshold.ID_editor_select_threshold_comparator, Threshold.comparatorStrings, "");
 };
 Drug_threshold.prototype.displayDrugsEditor = function () {
     //now call super
     Drug.prototype.displayDrugsEditor.call(this);
     // do anything special here
+    jqo(Drug_threshold.ID_editor_drugthresholds_hanger_texts).show();
 
 
     //show texts values
@@ -118,13 +119,12 @@ Drug_threshold.prototype.displayDrugsEditor = function () {
 
 };
 
-Drug_threshold.prototype.populateThresholdsSelect = function () {
-    var select = jqo(Drug_threshold.ID_editor_select_thresholds);
-    populateSelectWithTheseOptions(select, this.instructionStringsArray(), "");
-    select.selectmenu('refresh');
-};
+
 Drug_threshold.prototype.displayThresholdsTexts = function () {
+    populateValidSelectIDWithTheseOptions(Drug_threshold.ID_editor_select_thresholds, this.instructionStringsArray(), "");
+
     if (this.activeThreshold()) {
+        populateValidSelectIDWithTheseOptions(Indication.ID_prescribe_select_weight, this.activeThreshold().arrayOfAcceptableWeights(), this.activeThreshold().weightUnits);
 
     }
 };

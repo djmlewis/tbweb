@@ -13,14 +13,13 @@ function Drug(name, acronym, doseCalculationMethod, units, notes) {
 
 // STATICS
 // Dirty texts
-Drug.changed = 'D';
 
 Drug.ID_editor_hanger_drug_top = "editor_hanger_drug_top";
 Drug.ID_editor_drug_button_add = "Deditordrug_button_add";
 Drug.ID_editor_drug_button_delete = "Deditordrug_button_delete";
 Drug.ID_editor_drug_button_save = "Deditordrug_button_save";
 
-Drug.ID_editor_hanger_drug_texts = "editor_hanger_drug_texts";
+Drug.ID_editor_hanger_drug_texts = "℞editor_hanger_drug_texts";
 Drug.ID_editor_text_drug_name = "Deditor_text_drug_name";
 Drug.ID_editor_text_drug_acronym = "Deditor_text_drug_acronym";
 Drug.ID_editor_text_drug_units = "Deditor_text_drug_units";
@@ -30,10 +29,7 @@ Drug.ID_editor_heading_drugHowDoseCalc = "editor_heading_drugHowDoseCalc";
 Drug.doseCalculationMethodOptionsIndex_Drug = 0;
 Drug.doseCalculationMethodOptionsIndex_Drug_mgKg = 1;
 Drug.doseCalculationMethodOptionsIndex_Drug_threshold = 2;
-Drug.doseCalculationMethodOptions_Name_Drug_Directed = "Directed";
-Drug.doseCalculationMethodOptions_Name_Drug_mgKg = "mg/Kg";
-Drug.doseCalculationMethodOptions_Name_Drug_threshold = "Thresholds";
-Drug.doseCalculationMethodOptions = [Drug.doseCalculationMethodOptions_Name_Drug_Directed, Drug.doseCalculationMethodOptions_Name_Drug_mgKg, Drug.doseCalculationMethodOptions_Name_Drug_threshold];
+Drug.doseCalculationMethodOptions = ["Directed", "mg/Kg", "Thresholds"];
 
 // STATIC FUNCTS
 Drug.completeHTMLsetup_Editor = function () {
@@ -83,6 +79,9 @@ Drug.prototype.initFromJSONstringObject = function (jasonStringObject) {
 
 Drug.prototype.displayDrugsEditor = function () {
     //over ridden in all subclasses that then called by each _Drug version in turn
+    // hide all the hangers first then show ours
+    $('[id *= "℞"]').hide();
+    jqo(Drug.ID_editor_hanger_drug_texts).show();
     jqo(Drug.ID_editor_heading_drugHowDoseCalc).text("Calculation Method: " + Drug.doseCalculationMethodString(this.doseCalculationMethod));
 
 
@@ -120,7 +119,7 @@ function Drug_mgKg(name, acronym, maxDose, mgkg_initial, mgkg_min, mgkg_max, rou
     this.frequency = frequency;
 }
 // STATICS
-Drug_mgKg.ID_editor_drugmgkg_hanger_texts = "editor_drugmgkg_hanger_texts";
+Drug_mgKg.ID_editor_drugmgkg_hanger_texts = "℞editor_drugmgkg_hanger_texts";
 Drug_mgKg.ID_editor_text_drug_frequency = "Deditor_text_drug_frequency";
 Drug_mgKg.ID_editor_text_drug_maxDose = "Deditor_text_drug_maxDose";
 Drug_mgKg.ID_editor_text_drug_mgkg_initial = "Deditor_text_drug_mgkg_initial";
@@ -185,6 +184,7 @@ Drug_mgKg.prototype.displayDrugsEditor = function () {
     //now call super
     Drug.prototype.displayDrugsEditor.call(this);
     // do anything special here
+    jqo(Drug_mgKg.ID_editor_drugmgkg_hanger_texts).show();
 
     //show texts values
     //call super
@@ -238,12 +238,12 @@ Drug_mgKg.prototype.doseWarningsCommentsArrayForWeight = function (weight) {
 
 //add info on calculated,lower and higher doses
     var weightStrX = weight.toString() + " Kg @";
-    infosarray.push(["℞", weightStrX, this.mgkg_initial.toString(), this.doseCalculationMethod, "=", calculatedDose.toString(), this.units].join(" "));
+    infosarray.push(["℞", weightStrX, this.mgkg_initial.toString(), Drug.doseCalculationMethodString(this.doseCalculationMethod), "=", calculatedDose.toString(), this.units].join(" "));
     if (this.mgkg_min) {
-        infosarray.push(["↓", weightStrX, this.mgkg_min.toString(), this.doseCalculationMethod, "=", (weight * this.mgkg_min).toString(), this.units].join(" "));
+        infosarray.push(["↓", weightStrX, this.mgkg_min.toString(), Drug.doseCalculationMethodString(this.doseCalculationMethod), "=", (weight * this.mgkg_min).toString(), this.units].join(" "));
     }
     if (this.mgkg_max) {
-        infosarray.push(["↑", weightStrX, this.mgkg_max.toString(), this.doseCalculationMethod, "=", (weight * this.mgkg_max).toString(), this.units].join(" "));
+        infosarray.push(["↑", weightStrX, this.mgkg_max.toString(), Drug.doseCalculationMethodString(this.doseCalculationMethod), "=", (weight * this.mgkg_max).toString(), this.units].join(" "));
     }
     return {instructionsString: instructionsstring, warningArray: warningsarray, infoArray: infosarray};
 };

@@ -11,7 +11,6 @@ function Phase(name, duration, drugsAcronym) {
 }
 // STATICS
 // Dirty texts
-Phase.changed = 'P';
 
 Phase.ID_editor_hanger_phase_top = "editor_hanger_phase_top";
 Phase.ID_editor_phase_button_add = "Peditor_phase_button_add";
@@ -56,13 +55,13 @@ Phase.prototype.initFromJSONstringObject = function (jasonStringObject) {
             for (var i = 0; i < jasonStringObject.drugs.length; i++) {
                 var newdrugOfType;
                 switch (jasonStringObject.drugs[i].doseCalculationMethod) {
-                    case Drug.doseCalculationMethodOptions_Name_Drug_Directed:
+                    case Drug.doseCalculationMethodOptionsIndex_Drug:
                         newdrugOfType = new Drug();
                         break;
-                    case Drug.doseCalculationMethodOptions_Name_Drug_mgKg:
+                    case Drug.doseCalculationMethodOptionsIndex_Drug_mgKg:
                         newdrugOfType = new Drug_mgKg();
                         break;
-                    case Drug.doseCalculationMethodOptions_Name_Drug_threshold:
+                    case Drug.doseCalculationMethodOptionsIndex_Drug_threshold:
                         newdrugOfType = new Drug_threshold();
                         break;
                     default:

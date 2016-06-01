@@ -15,7 +15,6 @@ Indication.prototype.constructor = Indication;
 
 // STATICS */
 // Dirty texts
-Indication.changed = 'I';
 
 
 Indication.ID_editor_hanger_indication_top = "editor_hanger_indication_top";
