@@ -1,6 +1,15 @@
 /**
  * Created by davidlewis on 11/05/2016.
  */
+//var hideAllTheHangers = false;
+// ********** DRUG ************
+function DrugInstructionsInfosAlerts(name, instructions, infos, alerts) {
+    this.instructions = instructions || "";
+    this.infos = infos || [];
+    this.alerts = alerts || [];
+    this.drugName = name || "Undefined"
+}
+
 
 // ********** DRUG ************
 function Drug(name, acronym, doseCalculationMethod, units, notes) {
@@ -13,7 +22,7 @@ function Drug(name, acronym, doseCalculationMethod, units, notes) {
 
 // STATICS
 // Dirty texts
-
+Drug.SEL_editor_subHangerPrefixSelector = '[id *= "℞"]';
 Drug.ID_editor_hanger_drug_top = "editor_hanger_drug_top";
 Drug.ID_editor_drug_button_add = "Deditordrug_button_add";
 Drug.ID_editor_drug_button_delete = "Deditordrug_button_delete";
@@ -25,7 +34,7 @@ Drug.ID_editor_text_drug_acronym = "Deditor_text_drug_acronym";
 Drug.ID_editor_text_drug_units = "Deditor_text_drug_units";
 Drug.ID_editor_text_drug_notes = "Deditor_text_drug_notes";
 Drug.ID_editor_select_drugHowDoseCalc = "editor_select_drugHowDoseCalc";
-Drug.ID_editor_heading_drugHowDoseCalc = "editor_heading_drugHowDoseCalc";
+//Drug.ID_editor_heading_drugHowDoseCalc = "editor_heading_drugHowDoseCalc";
 Drug.doseCalculationMethodOptionsIndex_Drug = 0;
 Drug.doseCalculationMethodOptionsIndex_Drug_mgKg = 1;
 Drug.doseCalculationMethodOptionsIndex_Drug_threshold = 2;
@@ -33,9 +42,9 @@ Drug.doseCalculationMethodOptions = ["Directed", "mg/Kg", "Thresholds"];
 
 // STATIC FUNCTS
 Drug.completeHTMLsetup_Editor = function () {
-    populateValidSelectIDWithTheseOptions(Drug.ID_editor_select_drugHowDoseCalc, Drug.doseCalculationMethodOptions);
+    populateValidSelectIDWithTheseOptions(Drug.ID_editor_select_drugHowDoseCalc, Drug.doseCalculationMethodOptions, "", Drug.doseCalculationMethodOptionsIndex_Drug_threshold);
 };
-Drug.selecteddoseCalculationMethodIndex = function () {
+Drug.selectedDoseCalculationMethodIndex = function () {
     return parseInt(jqo(Drug.ID_editor_select_drugHowDoseCalc).val());
 };
 Drug.doseCalculationMethodString = function (index) {
@@ -76,32 +85,43 @@ Drug.prototype.initFromJSONstringObject = function (jasonStringObject) {
         }
     }
 };
-
-Drug.prototype.displayDrugsEditor = function () {
+Drug.prototype.active_Indication_editor = function () {
+    return window.gActiveGuideline.active_Indication_editor();
+};
+Drug.prototype.displayDrugs_editor = function () {
     //over ridden in all subclasses that then called by each _Drug version in turn
     // hide all the hangers first then show ours
-    $('[id *= "℞"]').hide();
+    $(Drug.SEL_editor_subHangerPrefixSelector).hide();
+    this.displayTexts_editor();
     jqo(Drug.ID_editor_hanger_drug_texts).show();
-    jqo(Drug.ID_editor_heading_drugHowDoseCalc).text("Calculation Method: " + Drug.doseCalculationMethodString(this.doseCalculationMethod));
-
-
 };
-Drug.prototype.displayTexts = function () {
+Drug.prototype.displayTexts_editor = function () {
     jqo(Drug.ID_editor_text_drug_name).val(this.name);
     jqo(Drug.ID_editor_text_drug_acronym).val(this.acronym);
     jqo(Drug.ID_editor_text_drug_units).val(this.units);
     jqo(Drug.ID_editor_text_drug_notes).val(this.notes);
 };
-
-Drug.prototype.doseWarningsCommentsArrayForWeight = function (weight) {
-    return {instructionsString: "Undefined for '+weight" + " Kg", warningArray: [], infoArray: []};
+/* threshold compatibility
+ Drug.prototype.addThreshold = function () {
+ //does nothings except stop a crash if wrong drug receives it
+ console.log('ERROR: Drug.prototype.addThreshold called');
 };
+ Drug.prototype.saveThreshold = function () {
+ //does nothings except stop a crash if wrong drug receives it
+ console.log('ERROR: Drug.prototype.saveThreshold called');
+ };
+ */
+Drug.prototype.drugInstructionsInfosAlertsForWeight = function (weight) {
+    return new DrugInstructionsInfosAlerts(this.name, "Undefined for '+weight" + " Kg");
+};
+
 // Save
 Drug.prototype.saveObjectSpecificData = function () {
-    this.name = jqo(Drug.ID_editor_text_drug_name).val() || '???';
-    this.acronym = jqo(Drug.ID_editor_text_drug_acronym).val() || '???';
-    this.units = jqo(Drug.ID_editor_text_drug_units).val() || '???';
-    this.notes = jqo(Drug.ID_editor_text_drug_notes).val() || '???';
+    this.name = jqo(Drug.ID_editor_text_drug_name).val() || '';
+    this.acronym = jqo(Drug.ID_editor_text_drug_acronym).val() || '';
+    this.units = jqo(Drug.ID_editor_text_drug_units).val() || '';
+    this.notes = jqo(Drug.ID_editor_text_drug_notes).val() || '';
+    window.gActiveGuideline.saveGuidelineInLocalStorage();
 
 };
 
@@ -165,46 +185,44 @@ Drug_mgKg.prototype.initFromJSONstringObject = function (jasonStringObject) {
 
 // Save
 Drug_mgKg.prototype.saveObjectSpecificData = function () {
-    this.name = jqo(Drug.ID_editor_text_drug_name).val() || '???';
-    this.acronym = jqo(Drug.ID_editor_text_drug_acronym).val() || '???';
-    this.units = jqo(Drug.ID_editor_text_drug_units).val() || '???';
-    this.notes = jqo(Drug.ID_editor_text_drug_notes).val() || '???';
-    // should be fixed at init>>>> this.doseCalculationMethod = jqo(Drug.ID_editor_select_drugHowDoseCalc).val() || '???';
-    this.maxDose = jqo(Drug_mgKg.ID_editor_text_drug_maxDose).val() || '???';
-    this.mgkg_initial = jqo(Drug_mgKg.ID_editor_text_drug_mgkg_initial).val() || '???';
-    this.mgkg_min = jqo(Drug_mgKg.ID_editor_text_drug_mgkg_min).val() || '???';
-    this.mgkg_max = jqo(Drug_mgKg.ID_editor_text_drug_mgkg_max).val() || '???';
-    this.rounval = jqo(Drug_mgKg.ID_editor_text_drug_rounval).val() || '???';
-    this.roundirect = jqo(Drug_mgKg.ID_editor_select_drug_roundirect).val() || '???';
-    this.frequency = jqo(Drug_mgKg.ID_editor_text_drug_frequency).val() || '???';
+    Drug.prototype.saveObjectSpecificData.call(this);
+    // should be fixed at init>>>> this.doseCalculationMethod = jqo(Drug.ID_editor_select_drugHowDoseCalc).val() || '';
+    this.frequency = jqo(Drug_mgKg.ID_editor_text_drug_frequency).val() || '';
+    this.maxDose = jqo(Drug_mgKg.ID_editor_text_drug_maxDose).val() || '';
+    this.mgkg_initial = jqo(Drug_mgKg.ID_editor_text_drug_mgkg_initial).val() || '';
+    this.mgkg_min = jqo(Drug_mgKg.ID_editor_text_drug_mgkg_min).val() || '';
+    this.mgkg_max = jqo(Drug_mgKg.ID_editor_text_drug_mgkg_max).val() || '';
+    this.roundirect = jqo(Drug_mgKg.ID_editor_select_drug_roundirect).val() || '';
+    this.rounval = jqo(Drug_mgKg.ID_editor_text_drug_rounval).val() || '';
+    window.gActiveGuideline.saveGuidelineInLocalStorage();
 
 };
 
-Drug_mgKg.prototype.displayDrugsEditor = function () {
+Drug_mgKg.prototype.displayDrugs_editor = function () {
     //now call super
-    Drug.prototype.displayDrugsEditor.call(this);
+    Drug.prototype.displayDrugs_editor.call(this);
     // do anything special here
     jqo(Drug_mgKg.ID_editor_drugmgkg_hanger_texts).show();
 
     //show texts values
     //call super
-    Drug.prototype.displayTexts.call(this);
-    this.displayTexts();
+    Drug.prototype.displayTexts_editor.call(this);
+    this.displayTexts_editor();
 };
 
-Drug_mgKg.prototype.displayTexts = function () {
+Drug_mgKg.prototype.displayTexts_editor = function () {
     jqo(Drug_mgKg.ID_editor_text_drug_frequency).val(this.frequency);
     jqo(Drug_mgKg.ID_editor_text_drug_maxDose).val(this.maxDose);
     jqo(Drug_mgKg.ID_editor_text_drug_mgkg_initial).val(this.mgkg_initial);
     jqo(Drug_mgKg.ID_editor_text_drug_mgkg_min).val(this.mgkg_min);
     jqo(Drug_mgKg.ID_editor_text_drug_mgkg_max).val(this.mgkg_max);
     jqo(Drug_mgKg.ID_editor_text_drug_rounval).val(this.rounval);
-    jqo(Drug_mgKg.ID_editor_select_drug_roundirect).val(this.roundirect);
+    jqo(Drug_mgKg.ID_editor_select_drug_roundirect).val(this.roundirect).selectmenu('refresh');
 
 };
 
-Drug_mgKg.prototype.doseWarningsCommentsArrayForWeight = function (weight) {
-    var warningsarray = [];
+Drug_mgKg.prototype.drugInstructionsInfosAlertsForWeight = function (weight) {
+    var alertsarray = [];
     var infosarray = [];
     var calculatedDose = weight * this.mgkg_initial;
 
@@ -226,10 +244,10 @@ Drug_mgKg.prototype.doseWarningsCommentsArrayForWeight = function (weight) {
 //apply maximum, use >= so we add a warning when limit reached and when breached by max dose or corrected
     if (correctedDose >= this.maxDose) {
         correctedDose = this.maxDose;
-        warningsarray.push("Maximum Dose is " + this.maxDose + " " + this.units);
+        alertsarray.push("Maximum Dose is " + this.maxDose + " " + this.units);
     }
     else if ((weight * this.mgkg_max) >= this.maxDose) {
-        warningsarray.push("Maximum Dose is " + this.maxDose + " " + this.units);
+        alertsarray.push("Maximum Dose is " + this.maxDose + " " + this.units);
     }
 
 
@@ -245,7 +263,7 @@ Drug_mgKg.prototype.doseWarningsCommentsArrayForWeight = function (weight) {
     if (this.mgkg_max) {
         infosarray.push(["↑", weightStrX, this.mgkg_max.toString(), Drug.doseCalculationMethodString(this.doseCalculationMethod), "=", (weight * this.mgkg_max).toString(), this.units].join(" "));
     }
-    return {instructionsString: instructionsstring, warningArray: warningsarray, infoArray: infosarray};
+    return new DrugInstructionsInfosAlerts(this.name, instructionsstring, infosarray, alertsarray);
 };
 
 

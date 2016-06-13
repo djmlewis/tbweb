@@ -28,6 +28,7 @@ Guideline.KEY_objectType_Guideline = 'G';
 Guideline.KEY_objectType_Indication = 'I';
 Guideline.KEY_objectType_Phase = 'P';
 Guideline.KEY_objectType_Drug = 'D';
+Guideline.KEY_objectType_Threshold = 'T';
 
 Guideline.ID_prescribe_menus_indications_weight_hanger = "prescribe_menus_indications_weight_hanger";
 Guideline.ID_prescribe_select_indications = "prescribe_select_indications";
@@ -35,6 +36,11 @@ Guideline.ID_prescribe_header = "page_header_prescribe";
 Guideline.ID_prescribe_headertitle = "page_headertitle_prescribe";
 Guideline.ID_prescribe_header_button_export = "Gprescribe_header_button_export";
 
+Guideline.ID_export_content_hanger = "export_content_hanger";
+
+Guideline.ID_popup_deletepopup_button_delete = "button_popupdelete";
+Guideline.ID_popup_deletepopup_button_delete_key_ID = "whattodelete";
+Guideline.ID_popup_deletepopup = "page_popupdelete";
 // Keys
 Guideline.keys_storage_guideline = 'guideline_webtbrx';
 
@@ -51,6 +57,16 @@ Guideline.createGlobalIfRequired = function () {
         window.gActiveGuideline = new Guideline("Untitled");
         window.gActiveGuideline.loadSettingsAndGlobals();
     }
+};
+// GLOBALISED  ACTIVES
+Guideline.global_active_Indication_editor = function () {
+    return window.gActiveGuideline.active_Indication_editor();
+};
+Guideline.global_active_Phase_editor = function () {
+    return window.gActiveGuideline.active_Phase_editor();
+};
+Guideline.global_active_Drug_editor = function () {
+    return window.gActiveGuideline.active_Drug_editor();
 };
 
 //  INSTANCE
@@ -102,8 +118,11 @@ Guideline.prototype.initFromJSONstring = function (jasonString) {
     }
 };
 Guideline.prototype.exportGuideline = function () {
-    window.open().document.write(JSON.stringify(this));
-
+    //window.open().document.write(JSON.stringify(this));
+    var content = jqo(Guideline.ID_export_content_hanger);
+    content.empty();
+    content.append(JSON.stringify(this));
+    content.trigger('refresh');
 };
 Guideline.prototype.saveGuidelineInLocalStorage = function () {
     if (window.localStorage) {
@@ -141,9 +160,6 @@ Guideline.prototype.completeHTMLsetup_Editor = function () {
     page_editor_elements.find('.ui-icon-minus').click(function () {
         myself.confirmDelete($(this).attr('id').charAt(0))
     });
-    page_editor_elements.find('.ui-icon-action').click(function () {
-        myself.exportGuideline()
-    });
 
     //    INDCATIONS
     Indication.completeHTMLsetup_Editor();
@@ -166,7 +182,8 @@ Guideline.prototype.displayTextsForGuideLine = function () {
 };
 //    Save
 Guideline.prototype.saveObjectSpecificData = function () {
-    this.name = jqo(Guideline.ID_editor_text_guideline_editor_name).val() || '???';
+    this.name = jqo(Guideline.ID_editor_text_guideline_editor_name).val() || '';
+    this.saveGuidelineInLocalStorage();
 };
 // GLOBAL EVENTS
 Guideline.prototype.someTextInputChanged = function (objectID) {
@@ -176,22 +193,23 @@ Guideline.prototype.someTextInputChanged = function (objectID) {
     this.dirtyTexts = this.dirtyTexts | objectIDnum;
 };
 Guideline.prototype.selectmenuChanged = function (menuID) {
-    console.log('handled: >>>' + menuID);
-
     switch (menuID) {
         case Guideline.ID_editor_select_indications:
-            this.displayIndication();
+            this.displayIndication_editor();
             break;
         case Indication.ID_editor_select_phases:
-            this.active_Phase_editor().displayPhase();
+            this.active_Phase_editor().displayPhase_editor();
             break;
         case Phase.ID_editor_select_drugs:
-            this.active_Drug_editor().displayDrugsEditor();
+            this.active_Drug_editor().displayDrugs_editor();
             break;
         case Indication.ID_prescribe_select_weight:
             if (this.activeIndication_prescribe()) {
-                this.activeIndication_prescribe().selectWeightChanged();
+                this.activeIndication_prescribe().selectWeightChanged_prescribe();
             }
+            break;
+        case Drug_threshold.ID_editor_select_thresholds:
+            this.active_Drug_editor().selectThresholdsChanged();
             break;
         case Guideline.ID_prescribe_select_indications:
             this.selectIndicationsChanged();
@@ -209,19 +227,27 @@ Guideline.prototype.saveSomething = function (whoWantsToSave) {
         case Guideline.KEY_objectType_Indication:
             if (this.active_Indication_editor()) {
                 this.active_Indication_editor().saveObjectSpecificData();
+                this.populateIndicationsSelect_Editor(Guideline.selectedIndicationIndex_editor());
             }
             break;
         case Guideline.KEY_objectType_Phase:
             if (this.active_Phase_editor()) {
                 this.active_Phase_editor().saveObjectSpecificData();
+                this.active_Indication_editor().populatePhasesSelectAndShowHideDrugsHanger_editor(Indication.selectedPhaseIndex());
             }
             break;
         case Guideline.KEY_objectType_Drug:
             if (this.active_Drug_editor()) {
                 this.active_Drug_editor().saveObjectSpecificData();
+                this.active_Phase_editor().populateDrugsSelect_editor(Phase.selectedDrugIndex());
             }
             break;
-
+        case Guideline.KEY_objectType_Threshold:
+            if (this.active_Drug_editor()) {
+                this.active_Drug_editor().saveThreshold();
+                this.active_Drug_editor().populateThresholdsSelect(Drug_threshold.selectedThresholdIndex_editor());
+            }
+            break;
         default:
             break;
     }
@@ -238,12 +264,14 @@ Guideline.prototype.addSomething = function (whatToAdd) {
         case Guideline.KEY_objectType_Drug:
             this.addDrug();
             break;
+        case Guideline.KEY_objectType_Threshold:
+            this.addThreshold();
+            break;
         default:
             break;
     }
 };
 Guideline.prototype.deleteSomething = function (whatToDelete) {
-    //if (window.confirm("Are you sure?")) 
     {
         switch (whatToDelete) {
             case Guideline.KEY_objectType_Indication:
@@ -262,6 +290,11 @@ Guideline.prototype.deleteSomething = function (whatToDelete) {
                     this.active_Phase_editor().deleteDrug();
                 }
                 break;
+            case Guideline.KEY_objectType_Threshold:
+                if (this.active_Drug_editor()) {
+                    this.active_Drug_editor().deleteThreshold();
+                }
+                break;
             default:
                 break;
         }
@@ -269,65 +302,45 @@ Guideline.prototype.deleteSomething = function (whatToDelete) {
 };
 Guideline.prototype.confirmDelete = function (whatToDelete) {
     var myself = this;
-    var popupQ = $(document.createElement("div")).attr({
-        'data-role': "popup",
-        'data-theme': 'a',
-        'data-overlay-theme': "b"
+    jqo(Guideline.ID_popup_deletepopup).popup();
+    jqo(Guideline.ID_popup_deletepopup_button_delete).data(Guideline.ID_popup_deletepopup_button_delete_key_ID, whatToDelete);
+    jqo(Guideline.ID_popup_deletepopup_button_delete).click(function () {
+        myself.deleteSomething($(this).data(Guideline.ID_popup_deletepopup_button_delete_key_ID))
     });
-    var content = $(document.createElement("div"))
-        .attr({'data-role': "main"})
-        .addClass("ui-content")
-        .appendTo(popupQ);
-    $(document.createElement("h3"))
-        .text("Warning: delete cannot be undone.")
-        .appendTo(content);
-    $(document.createElement("a"))
-        .attr({'href': "#", 'data-rel': "back"})
-        .addClass("ui-btn ui-corner-all ui-shadow ui-btn-inline ui-btn-a ui-icon-back ui-btn-icon-left")
-        .text("Cancel")
-        .appendTo(content);
-    $(document.createElement("a"))
-        .attr({'href': "#", 'data-rel': "back"})
-        .addClass("ui-btn ui-corner-all ui-shadow ui-btn-inline ui-btn-b ui-icon-delete ui-btn-icon-left")
-        .text("Delete")
-        .click(function () {
-            myself.deleteSomething(whatToDelete)
-        })
-        .appendTo(content);
 
-    popupQ.popup().popup('open');
+    jqo(Guideline.ID_popup_deletepopup).popup('open');
 
 };
 //    INDICATIONS
 //Display
 Guideline.prototype.initialiseIndication = function () {
     this.populateIndicationsSelect_Editor();
-    this.displayIndication();
+    this.displayIndication_editor();
 };
-Guideline.prototype.populateIndicationsSelect_Editor = function () {
-    populateValidSelectIDWithTheseOptions(Guideline.ID_editor_select_indications, this.indicationsNames(), "");
+Guideline.prototype.populateIndicationsSelect_Editor = function (initialIndex) {
+    populateValidSelectIDWithTheseOptions(Guideline.ID_editor_select_indications, this.indicationsNames(), "", initialIndex);
     showTrueHideFalse(Phase.ID_editor_hanger_phase_top, this.indications.length > 0);
     showTrueHideFalse(Drug.ID_editor_hanger_drug_top, this.indications.length > 0);
 };
-Guideline.prototype.displayIndication = function () {
+Guideline.prototype.displayIndication_editor = function () {
     if (this.active_Indication_editor()) {
-        this.active_Indication_editor().displayIndication();
+        this.active_Indication_editor().displayIndication_editor();
     }
     else {
-        emptyThisHangerWithID(Indication.ID_editor_hanger_indication_top_texts);
-        emptyThisHangerWithID(Phase.ID_editor_hanger_phase_top_texts);
-        emptyThisHangerWithID(Drug.ID_editor_hanger_drug_texts);
-        jqo(Guideline.ID_editor_select_indications).empty().selectmenu('refresh');
-        jqo(Indication.ID_editor_select_phases).empty().selectmenu('refresh');
-        jqo(Phase.ID_editor_select_drugs).empty().selectmenu('refresh');
+        jqo(Indication.ID_editor_hanger_indication_top_texts).hide();
+        jqo(Phase.ID_editor_hanger_phase_top_texts).hide();
+        jqo(Drug.ID_editor_hanger_drug_texts).hide();
+        emptySelectArrayOfIDs([Guideline.ID_editor_select_indications, Indication.ID_editor_select_phases, Phase.ID_editor_select_drugs]);
+        // jqo(Guideline.ID_editor_select_indications).empty().selectmenu('refresh');
+        // jqo(Indication.ID_editor_select_phases).empty().selectmenu('refresh');
+        // jqo(Phase.ID_editor_select_drugs).empty().selectmenu('refresh');
     }
 };
 //Events
 Guideline.prototype.addIndication = function () {
     this.indications.push(new Indication("Untitled"));
-    this.populateIndicationsSelect_Editor();
-    Guideline.selectedIndicationIndex_editor(this.indications.length - 1);
-    this.active_Indication_editor().displayIndication();
+    this.populateIndicationsSelect_Editor(this.indicationsNames().length - 1);
+    this.active_Indication_editor().displayIndication_editor();
 };
 
 //    PHASES Events
@@ -342,6 +355,12 @@ Guideline.prototype.addDrug = function () {
 
     if (this.active_Phase_editor()) {
         this.active_Phase_editor().addDrug();
+    }
+};
+Guideline.prototype.addThreshold = function () {
+    console.log('add threshold');
+    if (this.active_Drug_editor()) {
+        this.active_Drug_editor().addThreshold();
     }
 };
 
@@ -359,11 +378,7 @@ Guideline.prototype.activeIndication_prescribe = function () {
     return this.indications[Guideline.selectedIndicationIndex_prescribe()];
 };
 Guideline.prototype.indicationsNames = function () {
-    var namesArray = [];
-    for (var i = 0; i < this.indications.length; i++) {
-        namesArray.push(this.indications[i].name)
-    }
-    return namesArray;
+    return extractNamesFromArray(this.indications)
 };
 Guideline.prototype.completeHTMLsetup_Prescribe = function () {
     var myself = this;
@@ -377,14 +392,14 @@ Guideline.prototype.completeHTMLsetup_Prescribe = function () {
 Guideline.prototype.displayGuideline_prescribe = function () {
     populateValidSelectIDWithTheseOptions(Guideline.ID_prescribe_select_indications, this.indicationsNames(), "");
     if (this.activeIndication_prescribe()) {
-        this.activeIndication_prescribe().displayWeightAndIndication();
+        this.activeIndication_prescribe().displayWeightAndIndication_prescribe();
     }
 
 };
 // EVents
 Guideline.prototype.selectIndicationsChanged = function () {
     if (this.activeIndication_prescribe()) {
-        this.activeIndication_prescribe().displayWeightAndIndication();
+        this.activeIndication_prescribe().displayWeightAndIndication_prescribe();
     }
 };
 

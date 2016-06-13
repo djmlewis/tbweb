@@ -10,6 +10,7 @@ jQuery(document).one("pagecreate", "#page_prescribe", completeHTMLForPrescribing
 jQuery(document).one("pagebeforeshow", "#page_prescribe", displayGuidelineForPrescribing);
 jQuery(document).one("pagecreate", "#page_editor", completeHTMLForEditing);
 jQuery(document).one("pagebeforeshow", "#page_editor", displayGuidelineForEditing);
+jQuery(document).on("pagebeforeshow", "#page_export", displayGuidelineForExport);
 
 
 /* FUNCTIONS */
@@ -30,5 +31,9 @@ function completeHTMLForEditing() {
 
 function displayGuidelineForEditing() {
     window.gActiveGuideline.displayGuideline_editing();
+}
+
+function displayGuidelineForExport() {
+    window.gActiveGuideline.exportGuideline();
 }
 

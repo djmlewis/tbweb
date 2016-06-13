@@ -13,15 +13,18 @@ function integerArrayFromTo(from, to) {
         return [];
     }
 }
+/*
 function acronymSpanForString(acronym) {
     return $(document.createElement("span")).text(" acronym").addClass("phaseAcronym")
 }
 function uniqueIDforDrugHangerDivInPhase(phaseIndex) {
     return 'ph_' + phaseIndex;
 }
-function emptyThisHangerWithID(id) {
-    jqo(id).empty();
-}
+ function emptyThisHangerWithID(id) {
+ jqo(id).empty();
+ }
+
+ */
 function jqo(id) {
     return $('#' + id);
 }
@@ -34,105 +37,56 @@ function showTrueHideFalse(elementID, isTrue) {
     else {
         jqo(elementID).hide();
     }
-
 }
 
-function populateValidSelectIDWithTheseOptions(selectID, options, suffix) {
+function populateValidSelectIDWithTheseOptions(selectID, options, suffix, initialIndex, initialValue) {
     var select = jqo(selectID);
+    //select first if none specified
+    initialIndex = initialIndex ? initialIndex : 0;
     select.empty();
+    var suffixOK = (suffix ? suffix : "");
     for (var i = 0; i < options.length; i++) {
+        var optionVal = options[i];
         $(document.createElement("option"))
             .prop('value', i)
-            .text([options[i], (suffix || "")].join(" "))
+            .attr('selected', initialIndex == i || initialValue == optionVal)
+            .text([optionVal, suffixOK].join(" "))
+            .data({option_index: i, option_value: optionVal})
             .appendTo(select);
     }
     select.selectmenu('refresh');
 }
 
+function selectedValueFromSelectWithID(id) {
+    return parseInt($('#' + id + ' option:selected').data().option_value);
+    //console.log(selval);
+    //return selval;
+}
+
+function emptySelectArrayOfIDs(idArray) {
+    idArray.forEach(function (itemID) {
+        jqo(itemID).empty().selectmenu('refresh');
+    })
+}
+
+function extractNamesFromArray(array) {
+    return array.map(function (item) {
+        return item.name;
+    });
+}
 /*
- function populateSelectWithTheseOptions(select, options, suffix) {
- select.empty();
- for (var i = 0; i < options.length; i++) {
- $(document.createElement("option"))
- .prop('value', i)
- .text([options[i], (suffix || "")].join(" "))
- .appendTo(select);
- }
- }
-
- function createSelectLabelAndSelectMenuWithTheseOptions(id, options, optionsSuffix, labeltext, mini) {
- //var guideline = window.gActiveGuideline;
- var select = $(document.createElement("select"))
- .attr({'id': id, 'name': id, 'data-mini': mini})
- .attr({'id': id, 'name': id})
- // .change(function () {
- //     guideline.selectmenuChanged(id);
- // })
- .trigger('create');
- populateSelectWithTheseOptions(select, options, optionsSuffix);
-
- var label = $(document.createElement("label"))
- .attr('for', id)
- .text(labeltext);
- return {label_: label, select_: select};
- }
-
-
- function appendLabelAndTextValueTo(fieldContain, id, labeltext, texttext, inputType) {
-    var localFC = $(document.createElement("div")).addClass("ui-field-contain").appendTo(fieldContain);
-
-    $(document.createElement("label"))
-        .attr('for', id)
-        .text(labeltext)
-        .appendTo(localFC);
-    $(document.createElement("input"))
-        .attr({
-            'type': inputType || "text",
-            'id': id,
-            'name': id,
-            'placeholder': labeltext
-        })
-        .prop('value', texttext)
-        .on('input propertychange paste', function () {
-            window.gActiveGuideline.someTextInputChanged(id.charAt(0))
-        })
-        .appendTo(localFC);
-}
-function appendLabelAndTextAreaValueTo(fieldContain, id, labeltext, texttext) {
-    var localFC = $(document.createElement("div")).addClass("ui-field-contain").appendTo(fieldContain);
-
-    $(document.createElement("label"))
-        .attr('for', id)
-        .text(labeltext)
-        .appendTo(localFC);
-    $(document.createElement("textarea"))
-        .attr({
-            'id': id,
-            'name': id,
-            'placeholder': labeltext
-        })
-        .prop('value', texttext)
-        .on('input propertychange paste', function () {
-            window.gActiveGuideline.someTextInputChanged(id.charAt(0))
-        })
-        .appendTo(localFC);
+ function selectedIndexFromSelectWithID(id) {
+ return selval = parseInt($('#' + id + ' option:selected').data().option_index);
+ //console.log(selval);
+ //return selval;
 }
 
-function triggerCreateElementsOnThisHangerWithID(id) {
-    $('#' + id).trigger("create");
-}
- function addChangeEventToSelects() {
- $('[type=text], [type=number]').on('input propertychange paste', function () {
- window.gActiveGuideline.someTextInputChanged($(this).attr('id'));
- });
- }
+ function selectOptionWithValueInSelectWithID(id, compareValue) {
+ jqo(id)
+ .find('option')
+ .each(function (index,element){element.attr('selected',element.data().option_value==compareValue)})
+ .selectmenu('refresh');
 
- function appendSelectMenuWithTheseOptions(fieldContain, id, options, optionsSuffix, labeltext, mini) {
- var labelAndSelect = createSelectLabelAndSelectMenuWithTheseOptions(id, options, optionsSuffix, labeltext, mini);
- $(document.createElement("div")).addClass("ui-field-contain")
- .append(labelAndSelect.label_)
- .append(labelAndSelect.select_)
- .appendTo(fieldContain);
  }
 
  */

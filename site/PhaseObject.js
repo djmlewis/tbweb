@@ -80,53 +80,48 @@ Phase.completeHTMLsetup_Editor = function () {
 };
 // Save
 Phase.prototype.saveObjectSpecificData = function () {
-    this.name = jqo(Phase.ID_editor_text_phase_name).val() || '???';
-    this.duration = jqo(Phase.ID_editor_text_phase_duration).val() || '???';
-    this.drugsAcronym = jqo(Phase.ID_editor_text_phase_acronym).val() || '???';
-
+    this.name = jqo(Phase.ID_editor_text_phase_name).val() || '';
+    this.duration = jqo(Phase.ID_editor_text_phase_duration).val() || '';
+    this.drugsAcronym = jqo(Phase.ID_editor_text_phase_acronym).val() || '';
+    window.gActiveGuideline.saveGuidelineInLocalStorage();
 };
 
 // Display
-Phase.prototype.displayPhase = function () {
-    this.displayTextsForPhase();
+Phase.prototype.displayPhase_editor = function () {
+    this.displayTextsForPhase_editor();
     //cascade down
-    this.initialiseDrugs();
+    this.initialiseDrugs_editor();
 };
-Phase.prototype.initialiseDrugs = function () {
-    this.populateDrugsSelect();
-    this.displayDrugsEditor();
+Phase.prototype.initialiseDrugs_editor = function () {
+    this.populateDrugsSelect_editor();
+    this.displayDrugs_editor();
 };
-Phase.prototype.displayTextsForPhase = function () {
+Phase.prototype.displayTextsForPhase_editor = function () {
     jqo(Phase.ID_editor_text_phase_name).val(this.name);
     jqo(Phase.ID_editor_text_phase_duration).val(this.duration);
     jqo(Phase.ID_editor_text_phase_acronym).val(this.drugsAcronym);
 
 };
 // Drugs
-Phase.prototype.populateDrugsSelect = function () {
-    var jqo_select_drugs = jqo(Phase.ID_editor_select_drugs);
-    jqo_select_drugs.empty();
-    for (var i = 0; i < this.drugs.length; i++) {
-        $(document.createElement("option"))
-            .prop('value', i)
-            .text(this.drugs[i].name)
-            .appendTo(jqo_select_drugs);
-    }
-    //refresh the selectmenu as created already in markup
-    jqo_select_drugs.selectmenu('refresh');
+Phase.prototype.drugsNames = function () {
+    return extractNamesFromArray(this.drugs);
 };
-Phase.prototype.displayDrugsEditor = function () {
+Phase.prototype.populateDrugsSelect_editor = function (initialIndex) {
+    populateValidSelectIDWithTheseOptions(Phase.ID_editor_select_drugs, this.drugsNames(), "", initialIndex);
+};
+Phase.prototype.displayDrugs_editor = function () {
     if (this.active_Drug_editor()) {
-        this.active_Drug_editor().displayDrugsEditor();
+        this.active_Drug_editor().displayDrugs_editor();
     }
     else {
-        emptyThisHangerWithID(Drug.ID_editor_hanger_drug_texts);
-        jqo(Phase.ID_editor_select_drugs).empty().selectmenu('refresh');
+        jqo(Drug.ID_editor_hanger_drug_texts).hide();
+        emptySelectArrayOfIDs([Phase.ID_editor_select_drugs]);
+        //jqo(Phase.ID_editor_select_drugs).empty().selectmenu('refresh');
     }
 
 };
 Phase.prototype.addDrug = function () {
-    switch (Drug.selecteddoseCalculationMethodIndex()) {
+    switch (Drug.selectedDoseCalculationMethodIndex()) {
         case Drug.doseCalculationMethodOptionsIndex_Drug_mgKg:
             this.drugs.push(new Drug_mgKg());
             break;
@@ -139,13 +134,15 @@ Phase.prototype.addDrug = function () {
         default:
             console.log('no drug');
     }
-    this.populateDrugsSelect();
-    Phase.selectedDrugIndex(this.drugs.length - 1);
-    this.active_Drug_editor().displayDrugsEditor();
+    this.populateDrugsSelect_editor(this.drugsNames().length - 1);
+    this.active_Drug_editor().displayDrugs_editor();
 };
 Phase.prototype.deleteDrug = function () {
     if (this.drugs.length > Phase.selectedDrugIndex()) {
         this.drugs.splice(Phase.selectedDrugIndex(), 1);
-        this.initialiseDrugs();
+        this.initialiseDrugs_editor();
     }
+};
+Phase.prototype.deleteThreshold = function () {
+    console.log('delete thereshold');
 };

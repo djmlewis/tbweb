@@ -5,8 +5,15 @@
     <title>Prescribe</title>
 
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <!--CSS -->
-    <link rel="stylesheet" href="jquery.mobile-1.4.5.css">
+    <!-- My CSS -->
+    <link rel="stylesheet" href="myStyles.css"><!-- type="text/css" -->
+    <link rel="stylesheet" href="colours.css">
+
+    <!--JQM CSS -->
+    <link rel="stylesheet" href="jquery.mobile.icons.min.css">
+    <link rel="stylesheet" href="jquery.mobile.structure-1.4.5.min.css">
+    <!--<link rel="stylesheet" href="jquery.mobile-1.4.5.css">-->
+
     <!-- JQM JS -->
     <script src="jquery-1.12.3.js"></script>
     <script src="jquery.mobile-1.4.5.js"></script>
@@ -19,26 +26,36 @@
     <script src="ThresholdsObjects.js"></script>
     <script src="globalFunctions.js"></script>
     <script src="startup-script-globals.js"></script>
-    <!--this page-->
+
 </head>
 
 <body>
 
-<div data-role="page" id="page_editor"><!-- Page -->
+<div data-role="page" id="page_editor" data-theme="a"><!-- Page -->
     <div data-role="header" id="page_header_editor"><!-- Header -->
         <h2 id="page_headertitle_editor"></h2>
         <!-- VIEW button -->
         <a href="#page_prescribe" class="ui-btn ui-btn-left ui-corner-all ui-icon-bullets ui-btn-icon-notext">View</a>
         <!-- EXPORT button -->
-        <a id="editor_header_button_export" href="#"
+        <a id="editor_header_button_export" href="#page_export"
            class="ui-btn ui-btn-right ui-corner-all ui-icon-action ui-btn-icon-notext">Export</a>
     </div>
     <div role="main" class="ui-content" id="ui-content-editor"><!-- Content -->
         <div id="editor-top-hanger">
-            <!-- Guideline buttons group   -->
-            <button id="Geditor_button_saveguideline" class="ui-btn ui-corner-all ui-icon-check ui-btn-icon-notext">
-                Save
-            </button>
+            <div class="ui-grid-b ui-responsive">
+                <div class="ui-block-a">
+                </div>
+                <div class="ui-block-b">
+                </div>
+                <div class="ui-block-c">
+                    <!-- Guideline buttons group   -->
+                    <div data-role="controlgroup" data-type="horizontal" data-mini="true">
+                        <button id="Geditor_button_saveguideline" class="ui-btn ui-icon-check ui-btn-icon-notext">Save
+                        </button>
+                    </div>
+                </div>
+            </div><!-- /grid-a -->
+
             <!-- GUIDELINE Texts Hanger -->
             <div id="editor_hanger_guideline_texts" class="ui-field-contain">
                 <!-- Name -->
@@ -50,21 +67,35 @@
             <!-- INDICATION top Hanger -->
             <div id="editor_hanger_indication_top">
                 <!-- INDICATION heading Bar -->
-                <h4 class="ui-bar ui-bar-b">Indications</h4>
-                <!-- INDICATION Select &  buttons group -->
-                <div data-role="controlgroup" data-type="horizontal">
-                    <button id="Ieditor_indication_button_add" class="ui-btn ui-icon-plus ui-btn-icon-notext">Add
-                    </button>
-                    <button id="Ieditor_indication_button_delete" class="ui-btn ui-icon-minus ui-btn-icon-notext">
-                        Delete
-                    </button>
-                    <button id="Ieditor_indication_button_save" class="ui-btn ui-icon-check ui-btn-icon-notext">Save
-                    </button>
-                </div>
-                <div data-role="controlgroup" data-type="horizontal"><!-- Delete, Select and Save -->
-                    <label for="editor_select_indications">Indications</label>
-                    <select id="editor_select_indications" name="editor_select_indications"></select>
-                </div>
+                <h4 class="ui-bar ui-bar-a">Indications</h4>
+                <div class="ui-grid-b ui-responsive">
+                    <div class="ui-block-a">
+                        <!-- INDICATION Select &  buttons group -->
+                        <div data-role="controlgroup" data-type="horizontal" data-mini="true">
+                            <button id="Ieditor_indication_button_add" class="ui-btn ui-icon-plus ui-btn-icon-notext">
+                                Add
+                            </button>
+                        </div>
+                    </div>
+                    <div class="ui-block-b">
+                        <div data-role="controlgroup" data-type="horizontal" data-mini="true"><!-- Select  -->
+                            <label for="editor_select_indications">Indications</label>
+                            <select data-mini="true" id="editor_select_indications"
+                                    name="editor_select_indications"></select>
+                        </div>
+                    </div>
+                    <div class="ui-block-c">
+                        <div data-role="controlgroup" data-type="horizontal" data-mini="true"><!-- Select  -->
+                            <button id="Ieditor_indication_button_save" class="ui-btn ui-icon-check ui-btn-icon-notext">
+                                Save
+                            </button>
+                            <button id="Ieditor_indication_button_delete"
+                                    class="ui-btn ui-icon-minus ui-btn-icon-notext">Delete
+                            </button>
+                        </div>
+                    </div>
+                </div><!-- /grid-a -->
+
                 <!-- INDICATION texts Hanger -->
                 <div id="editor_hanger_indication_top_texts" class="ui-field-contain">
                     <!-- Name -->
@@ -76,147 +107,238 @@
 
             <!-- PHASE top Hanger -->
             <div id="editor_hanger_phase_top">
-                <h4 class="ui-bar ui-bar-b">Phases</h4>
-                <!-- PHASE Select &  buttons group -->
-                <div data-role="controlgroup" data-type="horizontal"><!-- Add -->
-                    <button id="Peditor_phase_button_add" class="ui-btn ui-icon-plus ui-btn-icon-notext">Add</button>
-                    <button id="Peditor_phase_button_delete" class="ui-btn ui-icon-minus ui-btn-icon-notext">Delete
-                    </button>
-                    <button id="Peditor_phase_button_save" class="ui-btn ui-icon-check ui-btn-icon-notext">Save</button>
-                </div>
-                <div data-role="controlgroup" data-type="horizontal"><!-- Delete, Select and Save -->
-                    <label for="editor_select_phases">Indications</label>
-                    <select id="editor_select_phases" name="editor_select_phases"></select>
-                </div>
+                <h4 class="ui-bar ui-bar-a">Phases</h4>
+                <div class="ui-grid-b ui-responsive">
+                    <div class="ui-block-a">
+                        <!-- PHASE Select &  buttons group -->
+                        <div data-role="controlgroup" data-type="horizontal" data-mini="true"><!-- Add -->
+                            <button id="Peditor_phase_button_add" class="ui-btn ui-icon-plus ui-btn-icon-notext">Add
+                            </button>
+                        </div>
+                    </div>
+                    <div class="ui-block-b">
+                        <div data-role="controlgroup" data-type="horizontal" data-mini="true">
+                            <!-- Delete, Select and Save -->
+                            <label for="editor_select_phases">Indications</label>
+                            <select data-mini="true" id="editor_select_phases" name="editor_select_phases"></select>
+                        </div>
+                    </div>
+                    <div class="ui-block-c">
+                        <div data-role="controlgroup" data-type="horizontal" data-mini="true">
+                            <!-- Delete, Select and Save -->
+                            <button id="Peditor_phase_button_save" class="ui-btn ui-icon-check ui-btn-icon-notext">
+                                Save
+                            </button>
+                            <button id="Peditor_phase_button_delete" class="ui-btn ui-icon-minus ui-btn-icon-notext">
+                                Delete
+                            </button>
+                        </div>
+                    </div>
+                </div><!-- /grid-a -->
+
                 <!-- PHASE texts Hanger -->
                 <div id="editor_hanger_phase_top_texts" class="ui-field-contain">
                     <!-- Name -->
-                    <label for="Peditor_text_phase_name">Name</label>
-                    <input id="Peditor_text_phase_name" name="Peditor_text_phase_name" type="text" placeholder="Name">
+                    <div class="ui-field-contain">
+                        <label for="Peditor_text_phase_name">Name</label>
+                        <input id="Peditor_text_phase_name" name="Peditor_text_phase_name" type="text"
+                               placeholder="Name">
+                    </div>
                     <!-- Duration -->
-                    <label for="Peditor_text_phase_duration">Duration</label>
-                    <input id="Peditor_text_phase_duration" name="Peditor_text_phase_duration" type="text"
-                           placeholder="Duration">
+                    <div class="ui-field-contain">
+                        <label for="Peditor_text_phase_duration">Duration</label>
+                        <input id="Peditor_text_phase_duration" name="Peditor_text_phase_duration" type="text"
+                               placeholder="Duration">
+                    </div>
                     <!-- Acronym -->
-                    <label for="Peditor_text_phase_acronym">Acronym</label>
-                    <input id="Peditor_text_phase_acronym" name="Peditor_text_phase_acronym" type="text"
-                           placeholder="Acronym">
+                    <div class="ui-field-contain">
+                        <label for="Peditor_text_phase_acronym">Acronym</label>
+                        <input id="Peditor_text_phase_acronym" name="Peditor_text_phase_acronym" type="text"
+                               placeholder="Acronym">
+                    </div>
                 </div><!-- PHASE texts Hanger -->
             </div><!-- PHASE top Hanger -->
 
             <!-- DRUG top Hanger -->
             <div id="editor_hanger_drug_top">
-                <h4 class="ui-bar ui-bar-b">Drugs</h4>
-                <!-- Drugs Select &  buttons group -->
-                <div data-role="controlgroup" data-type="horizontal"><!-- Add -->
-                    <label for="editor_select_drugHowDoseCalc">Drugs</label>
-                    <select id="editor_select_drugHowDoseCalc" name="editor_select_drugHowDoseCalc"></select>
-                    <button id="Deditordrug_button_add" class="ui-btn ui-icon-plus ui-btn-icon-left ui-btn-icon-notext">
-                        Add
-                    </button>
-                    <button id="Deditordrug_button_delete" class="ui-btn ui-icon-minus ui-btn-icon-notext">Delete
-                    </button>
-                    <button id="Deditordrug_button_save" class="ui-btn ui-icon-check ui-btn-icon-notext">Save</button>
-                </div>
-                <div data-role="controlgroup" data-type="horizontal"><!-- Delete, Select and Save -->
-                    <label for="editor_select_drugs">Drugs</label>
-                    <select id="editor_select_drugs" name="editor_select_drugs"></select>
-                </div>
+                <h4 class="ui-bar ui-bar-a">Drugs</h4>
+                <div class="ui-grid-b ui-responsive">
+                    <div class="ui-block-a">
+                        <!-- Drugs Select &  buttons group -->
+                        <div data-role="controlgroup" data-type="horizontal" data-mini="true"><!-- +-/ -->
+                            <button id="Deditordrug_button_add"
+                                    class="ui-btn ui-icon-plus ui-btn-icon-left ui-btn-icon-notext">Add
+                            </button>
+                            <label for="editor_select_drugHowDoseCalc">Drugs</label>
+                            <select id="editor_select_drugHowDoseCalc" name="editor_select_drugHowDoseCalc"></select>
+                        </div>
+                    </div>
+                    <div class="ui-block-b">
+                        <div data-role="controlgroup" data-type="horizontal" data-mini="true"><!--  Select  -->
+                            <label for="editor_select_drugs">Drugs</label>
+                            <select data-mini="true" id="editor_select_drugs" name="editor_select_drugs"></select>
+                        </div>
+                    </div>
+                    <div class="ui-block-c">
+                        <div data-role="controlgroup" data-type="horizontal" data-mini="true"><!--  Select  -->
+                            <button id="Deditordrug_button_save" class="ui-btn ui-icon-check ui-btn-icon-notext">Save
+                            </button>
+                            <button id="Deditordrug_button_delete" class="ui-btn ui-icon-minus ui-btn-icon-notext">
+                                Delete
+                            </button>
+                        </div>
+                    </div>
+                </div><!-- /grid-a -->
+
+
                 <!-- DRUGS texts Hanger -->
                 <div id="℞editor_hanger_drug_texts" class="ui-field-contain">
-                    <label for="Deditor_text_drug_name">Name</label>
-                    <input id="Deditor_text_drug_name" name="Deditor_text_drug_name" type="text" placeholder="Name">
-                    <label for="Deditor_text_drug_acronym">Acronym</label>
-                    <input id="Deditor_text_drug_acronym" name="Deditor_text_drug_acronym" type="text"
-                           placeholder="Acronym">
-                    <label for="Deditor_text_drug_units">Units</label>
-                    <input id="Deditor_text_drug_units" name="Deditor_text_drug_units" type="text" placeholder="Units">
-                    <label for="Deditor_text_drug_notes">Notes</label>
-                    <textarea id="Deditor_text_drug_notes" name="Deditor_text_drug_notes"
-                              placeholder="Notes"></textarea>
-                    <h5 id="editor_heading_drugHowDoseCalc" class="ui-bar ui-bar-a"></h5>
-                </div><!-- DRUGS texts Hanger -->
-                <!-- MGKG texts Hanger -->
-                <div id="℞editor_drugmgkg_hanger_texts" class="ui-field-contain">
-                    <label for="Deditor_text_drug_frequency">Frequency</label>
-                    <input id="Deditor_text_drug_frequency" name="Deditor_text_drug_frequency" type="text"
-                           placeholder="Frequency">
-                    <label for="Deditor_text_drug_maxDose">Max Dose</label>
-                    <input id="Deditor_text_drug_maxDose" name="Deditor_text_drug_maxDose" type="number"
-                           placeholder="Max Dose">
-                    <label for="Deditor_text_drug_mgkg_initial">Preferred mg/Kg</label>
-                    <input id="Deditor_text_drug_mgkg_initial" name="Deditor_text_drug_mgkg_initial" type="number"
-                           placeholder="Preferred mg/Kg">
-                    <label for="Deditor_text_drug_mgkg_min">Min mg/Kg</label>
-                    <input id="Deditor_text_drug_mgkg_min" name="Deditor_text_drug_mgkg_min" type="number"
-                           placeholder="Min mg/Kg">
-                    <label for="Deditor_text_drug_mgkg_max">Max mg/Kg</label>
-                    <input id="Deditor_text_drug_mgkg_max" name="Deditor_text_drug_mgkg_max" type="number"
-                           placeholder="Max mg/Kg">
-                    <label for="Deditor_text_drug_rounval">Rounding value</label>
-                    <input id="Deditor_text_drug_rounval" name="Deditor_text_drug_rounval" type="number"
-                           placeholder="Rounding value">
-                    <label for="editor_select_drug_roundirect">Rounding Direction</label>
-                    <select id="editor_select_drug_roundirect" name="editor_select_drug_roundirect"></select>
-                </div><!-- MGKG texts Hanger -->
-                <!-- Threshold Drug texts Hanger -->
-                <div id="℞editor_drugthresholds_hanger_texts" class="ui-field-contain ">
-                    <label for="Deditor_text_drug_threshold_frequency">Frequency</label>
-                    <input id="Deditor_text_drug_threshold_frequency" name="Deditor_text_drug_threshold_frequency"
-                           type="text" placeholder="Frequency">
-                    <div data-role="controlgroup" data-type="horizontal"><!-- Add  Delete, Save -->
-                        <button id="Deditordrugthreshold_button_add"
-                                class="ui-btn ui-icon-plus ui-btn-icon-left ui-btn-icon-notext">Add
-                        </button>
-                        <button id="Deditordrugthreshold_button_delete" class="ui-btn ui-icon-minus ui-btn-icon-notext">
-                            Delete
-                        </button>
-                        <button id="Deditordrugthreshold_button_save" class="ui-btn ui-icon-check ui-btn-icon-notext">
-                            Save
-                        </button>
+                    <div class="ui-field-contain">
+                        <label for="Deditor_text_drug_name">Name</label>
+                        <input id="Deditor_text_drug_name" name="Deditor_text_drug_name" type="text" placeholder="Name">
                     </div>
-                    <div data-role="controlgroup" data-type="horizontal"><!--  Choose -->
-                        <label for="editor_select_thresholds">Thresholds</label>
-                        <select id="editor_select_thresholds" name="editor_select_thresholds"></select>
+                    <div class="ui-field-contain">
+                        <label for="Deditor_text_drug_acronym">Acronym</label>
+                        <input id="Deditor_text_drug_acronym" name="Deditor_text_drug_acronym" type="text"
+                               placeholder="Acronym">
                     </div>
-                    <div id="editor_texts_threshold_hanger" class="ui-field-contain">
-                        <div data-role="controlgroup" data-type="horizontal"><!-- Threshold trigger -->
-                            <label for="editor_select_threshold_comparator">Comparator</label>
-                            <select id="editor_select_threshold_comparator"
-                                    name="editor_select_threshold_comparator"></select>
-                            <label for="editor_select_threshold_triggerWeight">Weight</label>
-                            <select id="editor_select_threshold_triggerWeight"
-                                    name="editor_select_threshold_triggerWeight"></select>
+                    <div class="ui-field-contain">
+                        <label for="Deditor_text_drug_units">Units</label>
+                        <input id="Deditor_text_drug_units" name="Deditor_text_drug_units" type="text"
+                               placeholder="Units">
+                    </div>
+                    <div class="ui-field-contain">
+                        <label for="Deditor_text_drug_notes">Notes</label>
+                        <textarea id="Deditor_text_drug_notes" name="Deditor_text_drug_notes"
+                                  placeholder="Notes"></textarea>
+                    </div>
+
+                    <!-- MGKG texts Hanger -->
+                    <div id="℞editor_drugmgkg_hanger_texts" class="ui-field-contain">
+                        <div class="ui-field-contain">
+                            <label for="Deditor_text_drug_frequency">Frequency</label>
+                            <input id="Deditor_text_drug_frequency" name="Deditor_text_drug_frequency" type="text"
+                                   placeholder="Frequency">
                         </div>
                         <div class="ui-field-contain">
-                            <label for="Deditor_text_threshold_dose">Dose</label>
-                            <input id="Deditor_text_threshold_dose" name="Deditor_text_threshold_dose" type="text"
-                                   placeholder="Dose">
+                            <label for="Deditor_text_drug_maxDose">Max Dose</label>
+                            <input id="Deditor_text_drug_maxDose" name="Deditor_text_drug_maxDose" type="number"
+                                   placeholder="Max Dose">
                         </div>
-                    </div>
-                </div><!-- Threshold Drug texts Hanger -->
+                        <div class="ui-field-contain">
+                            <label for="Deditor_text_drug_mgkg_initial">Initial mg/Kg</label>
+                            <input id="Deditor_text_drug_mgkg_initial" name="Deditor_text_drug_mgkg_initial"
+                                   type="number" placeholder="Preferred mg/Kg">
+                        </div>
+                        <div class="ui-field-contain">
+                            <label for="Deditor_text_drug_mgkg_min">Min mg/Kg</label>
+                            <input id="Deditor_text_drug_mgkg_min" name="Deditor_text_drug_mgkg_min" type="number"
+                                   placeholder="Min mg/Kg">
+                        </div>
+                        <div class="ui-field-contain">
+                            <label for="Deditor_text_drug_mgkg_max">Max mg/Kg</label>
+                            <input id="Deditor_text_drug_mgkg_max" name="Deditor_text_drug_mgkg_max" type="number"
+                                   placeholder="Max mg/Kg">
+                        </div>
+                        <div class="ui-field-contain">
+                            <label for="Deditor_text_drug_rounval">Rounding value</label>
+                            <input id="Deditor_text_drug_rounval" name="Deditor_text_drug_rounval" type="number"
+                                   placeholder="Rounding value">
+                        </div>
+                        <div class="ui-field-contain">
+                            <label for="editor_select_drug_roundirect">Rounding Direction</label>
+                            <select data-mini="true" data-inline='true' id="editor_select_drug_roundirect"
+                                    name="editor_select_drug_roundirect"></select>
+                        </div>
+                    </div><!-- MGKG texts Hanger -->
+                    <!-- Threshold Drug texts Hanger -->
+                    <div id="℞editor_drugthresholds_hanger_texts" class="ui-field-contain ">
+                        <h6 class="ui-bar ui-bar-a">Thresholds</h6>
+                        <div class="ui-grid-b ui-responsive">
+                            <div class="ui-block-a">
+                                <div data-role="controlgroup" data-type="horizontal" data-mini="true">
+                                    <!-- Add  Delete, Save -->
+                                    <button id="Teditordrugthreshold_button_add"
+                                            class="ui-btn ui-icon-plus ui-btn-icon-left ui-btn-icon-notext">Add
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="ui-block-b">
+                                <div data-role="controlgroup" data-type="horizontal" data-mini="true"><!-- Select  -->
+                                    <label for="editor_select_thresholds">Thresholds</label>
+                                    <select data-mini="true" id="editor_select_thresholds"
+                                            name="editor_select_thresholds"></select>
+                                </div>
+                            </div>
+                            <div class="ui-block-c">
+                                <div data-role="controlgroup" data-type="horizontal" data-mini="true">
+                                    <!-- Add  Delete, Save -->
+                                    <button id="Teditordrugthreshold_button_delete"
+                                            class="ui-btn ui-icon-minus ui-btn-icon-notext">Delete
+                                    </button>
+                                    <button id="Teditordrugthreshold_button_save"
+                                            class="ui-btn ui-icon-check ui-btn-icon-notext">Save
+                                    </button>
+                                </div>
+                            </div>
+                        </div><!-- /grid-a -->
+                        <div id="editor_texts_threshold_hanger" class="ui-field-contain">
+                            <div class="ui-grid-a ui-responsive">
+                                <div class="ui-block-a">
+                                    <div class="ui-field-contain">
+                                        <label for="editor_select_threshold_comparator">Weight</label>
+                                        <select data-mini="true" data-inline="true"
+                                                id="editor_select_threshold_comparator"
+                                                name="editor_select_threshold_comparator"></select>
+                                        <label for="editor_select_threshold_triggerWeight" class="ui-hidden-accessible">Weight</label>
+                                        <select data-mini="true" data-inline="true"
+                                                id="editor_select_threshold_triggerWeight"
+                                                name="editor_select_threshold_triggerWeight"></select>
+                                    </div>
+                                </div>
+                                <div class="ui-block-b">
+                                    <div class="ui-field-contain">
+                                        <label for="Deditor_text_threshold_dose"
+                                               class="ui-hidden-accessible">Give</label>
+                                        <input id="Deditor_text_threshold_dose" name="Deditor_text_threshold_dose"
+                                               type="text" placeholder="Dose">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div><!-- Threshold Drug texts Hanger -->
 
+                </div><!-- DRUGS texts Hanger -->
             </div><!-- DRUG top Hanger -->
 
         </div><!-- Guideline.ID_editor_hanger_top -->
     </div><!-- /content -->
-</div><!-- /page -->
+</div><!-- /editor -->
 
+<div data-role="page" id="page_prescribe" class="ui-responsive-panel"><!-- /page -->
 
-<div data-role="page" id="page_prescribe"><!-- /page -->
+    <div data-role="panel" id="infosPanel" data-position="left" data-display="reveal" data-theme="a"
+         data-overlay-theme="b">
+        <h3 id="druginstructionswarningsinfos_drugName_panel"></h3>
+        <p><strong id="druginstructionswarningsinfos_alerts_panel"></strong><span
+                id="druginstructionswarningsinfos_infos_panel"></span></p>
+        <a href="#" data-rel="close"
+           class="ui-btn ui-corner-all ui-shadow ui-btn-b ui-icon-back ui-btn-icon-notext centreButton">Close</a>
+
+    </div><!-- /panel -->
     <div data-role="header" id="page_header_prescribe">
         <h2 id="page_headertitle_prescribe"></h2>
         <!-- VIEW button -->
         <a href="#page_editor" class="ui-btn ui-btn-left ui-corner-all ui-icon-edit ui-btn-icon-notext">View</a>
         <!-- EXPORT button -->
-        <a id="prescribe_header_button_export" href="#"
+        <a id="prescribe_header_button_export" href="#page_export"
            class="ui-btn ui-btn-right ui-corner-all ui-icon-action ui-btn-icon-notext">Export</a>
 
     </div>
     <div role="main" class="ui-content" id="ui-content-prescribe"><!-- /content -->
         <!--  Indications & weight Hanger -->
         <div id="prescribe_menus_indications_weight_hanger">
-            <div data-role="controlgroup" data-type="horizontal"><!-- Delete, Choose, Save -->
+            <div data-role="controlgroup" data-type="horizontal" data-mini="true"><!-- Delete, Choose, Save -->
                 <label for="prescribe_select_indications">Thresholds</label>
                 <select id="prescribe_select_indications" name="prescribe_select_indications"></select>
                 <label for="Iprescribe_select_weight">Thresholds</label>
@@ -225,10 +347,39 @@
 
         </div>
         <!--  Drugs Collapsible -->
-        <div class="ui-field-contain" id="Iui-field-contain-drugs-prescribe"></div>
+        <div class="ui-field-contain" id="Iprescribe_drugs_hanger">
+            <ul data-role="listview" id="Iprescribe_drugs_list" data-inset="'false"></ul>
+        </div>
     </div><!-- /content -->
-</div><!-- /page -->
+</div><!-- /prescribe -->
+
+<div data-role="page" id="page_export"><!-- /page -->
+    <div data-role="header" id="page_header_export">
+        <h2 id="page_headertitle_export"></h2>
+        <!-- VIEW button -->
+        <a href="#" data-rel="back" class="ui-btn ui-btn-left ui-corner-all ui-icon-back ui-btn-icon-notext">View</a>
+    </div>
+    <div id="export_content_hanger" role="main" class="ui-content"></div><!-- /content -->
+    <div hidden><!-- data-role="page" id="page_for_popupdelete" -->
+        <div data-role="popup" id="page_popupdelete" data-theme="a" data-overlay-theme="b"><!-- /page -->
+            <div data-role="main" class="ui-content">
+                <h3>Warning: delete cannot be undone</h3>
+                <div class="ui-grid-a">
+                    <div class="ui-block-a">
+                        <a href="#" data-rel="back"
+                           class="ui-btn ui-corner-all ui-shadow  ui-btn-a ui-icon-back ui-btn-icon-left">Cancel</a>
+                    </div>
+                    <div class="ui-block-b">
+                        <a id="button_popupdelete" href="#" data-rel="back"
+                           class="ui-btn ui-corner-all ui-shadow  ui-btn-b ui-icon-delete ui-btn-icon-left">Delete</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div><!-- /export -->
 
 
 </body>
 </html>
+
