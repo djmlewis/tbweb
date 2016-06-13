@@ -7,17 +7,12 @@
   <attributes>
     <option name="HTML_ATTRIBUTE_NAME">
       <value>
-        <option name="FOREGROUND" value="693" />
+        <option name="FOREGROUND" value="3a5" />
       </value>
     </option>
     <option name="HTML_ATTRIBUTE_VALUE">
       <value>
-        <option name="FOREGROUND" value="600869" />
-      </value>
-    </option>
-    <option name="HTML_CODE">
-      <value>
-        <option name="FOREGROUND" value="73ab00" />
+        <option name="FOREGROUND" value="410b" />
       </value>
     </option>
     <option name="HTML_ENTITY_REFERENCE">
@@ -79,7 +74,7 @@
     </option>
     <option name="JS.LOCAL_VARIABLE">
       <value>
-        <option name="FOREGROUND" value="a254" />
+        <option name="FOREGROUND" value="7c09" />
       </value>
     </option>
     <option name="JS.NUMBER">
@@ -108,7 +103,13 @@
     </option>
     <option name="JS.STRING">
       <value>
-        <option name="FOREGROUND" value="73ab00" />
+        <option name="FOREGROUND" value="ff0900" />
+      </value>
+    </option>
+    <option name="JS.VALID_STRING_ESCAPE">
+      <value>
+        <option name="FOREGROUND" value="ff0900" />
+        <option name="FONT_TYPE" value="1" />
       </value>
     </option>
     <option name="TEXT">
