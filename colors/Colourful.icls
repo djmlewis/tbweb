@@ -15,6 +15,11 @@
         <option name="FOREGROUND" value="600869" />
       </value>
     </option>
+    <option name="HTML_CODE">
+      <value>
+        <option name="FOREGROUND" value="73ab00" />
+      </value>
+    </option>
     <option name="HTML_ENTITY_REFERENCE">
       <value>
         <option name="FOREGROUND" value="b84200" />

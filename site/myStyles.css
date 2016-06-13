@@ -1,0 +1,5 @@
+/* The . means it is a CLASS style */
+.centreButton {
+    margin: 0 auto;
+    text-align: center;
+}
