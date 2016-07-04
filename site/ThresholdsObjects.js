@@ -2,10 +2,11 @@
  * Created by davidlewis on 23/05/2016.
  */
 // **********  Threshold  ************
-function Threshold(triggerWeight, comparator, dose) {
-    this.triggerWeight = triggerWeight;
-    this.comparator = comparator;
-    this.dose = dose;
+function Threshold(thresholdTriggerWeight, thresholdComparator, thresholdDose) {
+    this.classSelectors = ["#Threshold"];
+    this.thresholdTriggerWeight = thresholdTriggerWeight;
+    this.thresholdComparator = thresholdComparator;
+    this.thresholdDose = thresholdDose;
 }
 
 //Statics
@@ -19,44 +20,45 @@ Threshold.comparator_greater = 4;
 
 // Static Fiuncts
 Threshold.compareDescending = function (a, b) {
-    return (a.triggerWeight == b.triggerWeight ? a.comparator - b.comparator : a.triggerWeight - b.triggerWeight)
+    return (a.thresholdTriggerWeight == b.thresholdTriggerWeight ? a.thresholdComparator - b.thresholdComparator : a.thresholdTriggerWeight - b.thresholdTriggerWeight)
 };
 Threshold.compareAscending = function (b, a) {
-    return (a.triggerWeight == b.triggerWeight ? a.comparator - b.comparator : a.triggerWeight - b.triggerWeight)
+    return (a.thresholdTriggerWeight == b.thresholdTriggerWeight ? a.thresholdComparator - b.thresholdComparator : a.thresholdTriggerWeight - b.thresholdTriggerWeight)
 };
 // INSTANCE
 Threshold.prototype.constructor = Threshold;
 Threshold.prototype.initFromJSONstringObject = function (jasonStringObject) {
     Drug.prototype.initFromJSONstringObject.call(this, jasonStringObject);
     if (jasonStringObject) {
-        if (jasonStringObject.triggerWeight) {
-            this.triggerWeight = jasonStringObject.triggerWeight;
+        if (jasonStringObject.thresholdTriggerWeight) {
+            this.thresholdTriggerWeight = jasonStringObject.thresholdTriggerWeight;
         }
-        if (jasonStringObject.comparator) {
-            this.comparator = jasonStringObject.comparator;
+        if (jasonStringObject.thresholdComparator) {
+            this.thresholdComparator = jasonStringObject.thresholdComparator;
         }
-        if (jasonStringObject.dose) {
-            this.dose = jasonStringObject.dose;
+        if (jasonStringObject.thresholdDose) {
+            this.thresholdDose = jasonStringObject.thresholdDose;
         }
     }
 
 };
 Threshold.prototype.instructionString = function () {
-    return [Threshold.comparatorStrings[this.comparator], this.triggerWeight, this.dose].join(" ");
+    var units = Guideline.global_active_Indication_editor().weightUnits || "";
+    return [Threshold.comparatorStrings[this.thresholdComparator], this.thresholdTriggerWeight, units, ":", this.thresholdDose].join(" ");
 };
 // Display
 Threshold.prototype.displayThresholdsTexts_editor = function () {
     // show threshold data
 
     if (Guideline.global_active_Indication_editor()) {
-        jqo(Drug_threshold.ID_editor_select_threshold_comparator).val(this.comparator).selectmenu('refresh');
+        jqo(Drug_threshold.ID_editor_select_threshold_comparator).val(this.thresholdComparator).selectmenu('refresh');
         populateValidSelectIDWithTheseOptions(
-            Drug_threshold.ID_editor_select_threshold_triggerWeight,
+            Drug_threshold.ID_editor_select_threshold_thresholdTriggerWeight,
             Guideline.global_active_Indication_editor().arrayOfAcceptableWeights(),
             Guideline.global_active_Indication_editor().weightUnits,
             undefined,//index
-            this.triggerWeight);
-        jqo(Drug_threshold.ID_editor_text_threshold_dose).val(this.dose);
+            this.thresholdTriggerWeight);
+        jqo(Drug_threshold.ID_editor_text_threshold_dose).val(this.thresholdDose);
     }
 };
 
@@ -66,11 +68,12 @@ function Drug_threshold(name, acronym, notes, units) {
     //super init
     Drug.call(this, name, acronym, Drug.doseCalculationMethodOptionsIndex_Drug_threshold, units, notes);
     // subclass init
+    this.classSelectors = ["#Drug", "#Drug_threshold"];
     this.thresholds = [];
 }
 
 // STATICS
-Drug_threshold.ID_editor_drugthresholds_hanger_texts = "℞editor_drugthresholds_hanger_texts";
+Drug_threshold.ID_editor_drugthresholds_hanger_texts = "editor_drugthresholds_hanger_texts";//℞
 Drug_threshold.ID_editor_select_thresholds = "editor_select_thresholds";
 Drug_threshold.ID_editor_texts_threshold_hanger = "editor_texts_threshold_hanger";
 Drug_threshold.ID_editor_drugthreshold_button_add = "Teditordrugthreshold_button_add";
@@ -78,12 +81,12 @@ Drug_threshold.ID_editor_drugthreshold_button_delete = "Teditordrugthreshold_but
 Drug_threshold.ID_editor_drugthreshold_button_save = "Teditordrugthreshold_button_save";
 
 // threshold
-Drug_threshold.ID_editor_select_threshold_triggerWeight = "editor_select_threshold_triggerWeight";
+Drug_threshold.ID_editor_select_threshold_thresholdTriggerWeight = "editor_select_threshold_thresholdTriggerWeight";
 Drug_threshold.ID_editor_select_threshold_comparator = "editor_select_threshold_comparator";
 Drug_threshold.ID_editor_text_threshold_dose = "Deditor_text_threshold_dose";
 //Weight
-Drug_threshold.selectedTriggerWeight_editor = function () {
-    return selectedValueFromSelectWithID(Drug_threshold.ID_editor_select_threshold_triggerWeight);
+Drug_threshold.selectedthresholdTriggerWeight_editor = function () {
+    return selectedValueFromSelectWithID(Drug_threshold.ID_editor_select_threshold_thresholdTriggerWeight);
 };
 
 // INSTANCE
@@ -95,7 +98,9 @@ Drug_threshold.prototype.initFromJSONstringObject = function (jasonStringObject)
         //this.thresholds is initialised in constructor
         if (jasonStringObject.thresholds) {
             for (var i = 0; i < jasonStringObject.thresholds.length; i++) {
-                this.thresholds.push(new Threshold().initFromJSONstringObject(jasonStringObject.thresholds[i]));
+                var thresh = new Threshold();
+                thresh.initFromJSONstringObject(jasonStringObject.thresholds[i]);
+                this.thresholds.push(thresh);
             }
         }
     }
@@ -132,16 +137,15 @@ Drug_threshold.prototype.displayDrugs_editor = function () {
 
     //show texts values
     //call super
-    Drug.prototype.displayTexts_editor.call(this);
+    this.displayObjectSpecificData();
     this.populateThresholdsSelect(0);
-    showTrueHideFalse(Drug_threshold.ID_editor_texts_threshold_hanger, this.activeThreshold_editor());
-
     this.displayThresholdsTexts_editor();
 
 };
 
 Drug_threshold.prototype.displayThresholdsTexts_editor = function () {
     // show threshold data
+    showTrueHideFalse(Drug_threshold.ID_editor_texts_threshold_hanger, this.activeThreshold_editor());
     if (this.activeThreshold_editor()) {
         this.activeThreshold_editor().displayThresholdsTexts_editor();
     }
@@ -166,9 +170,9 @@ Drug_threshold.prototype.deleteThreshold = function () {
 };
 Drug_threshold.prototype.saveThreshold = function () {
     if (this.activeThreshold_editor()) {
-        this.activeThreshold_editor().comparator = jqo(Drug_threshold.ID_editor_select_threshold_comparator).val();
-        this.activeThreshold_editor().triggerWeight = Drug_threshold.selectedTriggerWeight_editor();
-        this.activeThreshold_editor().dose = jqo(Drug_threshold.ID_editor_text_threshold_dose).val() || "";
+        this.activeThreshold_editor().thresholdComparator = jqo(Drug_threshold.ID_editor_select_threshold_comparator).val();
+        this.activeThreshold_editor().thresholdTriggerWeight = Drug_threshold.selectedthresholdTriggerWeight_editor();
+        this.activeThreshold_editor().thresholdDose = jqo(Drug_threshold.ID_editor_text_threshold_dose).val() || "";
         this.thresholds.sort(Threshold.compareDescending);
         window.gActiveGuideline.saveGuidelineInLocalStorage();
 
