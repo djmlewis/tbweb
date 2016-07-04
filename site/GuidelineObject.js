@@ -4,15 +4,17 @@ var useStored = false;
 // the global guideline
 window.gActiveGuideline = undefined;
 
+
 //    Objects for guidelines
 function Guideline(name) {
+    this.classSelectors = ["#Guideline"];
     this.name = name || "Untitled";
     this.indications = [];
     this.dirtyTexts = 0;
 }
 //   STATICS
-Guideline.jstring =
-    '{"name":"WHO","indications":[{"name":"Adults Daily","phases":[{"name":"ADInduction Phase","duration":"","drugsAcronym":"","drugs":[{"name":"ADI_Isoniazid","acronym":"","doseCalculationMethod":1,"units":"mg","notes":"Notes","maxDose":300,"mgkg_initial":5,"mgkg_min":4,"mgkg_max":6,"rounval":50,"roundirect":1},{"name":"ADI_Rifampicin","acronym":"","doseCalculationMethod":1,"units":"mg","notes":"Notes","maxDose":600,"mgkg_initial":10,"mgkg_min":8,"mgkg_max":12,"rounval":150,"roundirect":1},{"name":"ADI_Pyrazinamide","acronym":"","doseCalculationMethod":1,"units":"mg","notes":"Notes","maxDose":2000,"mgkg_initial":25,"mgkg_min":20,"mgkg_max":30,"rounval":100,"roundirect":1},{"name":"ADI_Ethambutol","acronym":"","doseCalculationMethod":1,"units":"mg","notes":"Notes","maxDose":1600,"mgkg_initial":15,"mgkg_min":15,"mgkg_max":20,"rounval":100,"roundirect":1}]},{"name":"ADContinuation Phase","duration":"","drugsAcronym":"","drugs":[{"name":"ADC_Isoniazid","acronym":"","doseCalculationMethod":1,"units":"mg","notes":"Notes","maxDose":300,"mgkg_initial":5,"mgkg_min":4,"mgkg_max":6,"rounval":50,"roundirect":1},{"name":"ADC_Rifampicin","acronym":"","doseCalculationMethod":1,"units":"mg","notes":"Notes","maxDose":600,"mgkg_initial":10,"mgkg_min":8,"mgkg_max":12,"rounval":150,"roundirect":1}]}]},{"name":"DOTs","phases":[{"name":"D_Induction Phase","duration":"","drugsAcronym":"","drugs":[{"name":"DI_Ethambutol","acronym":"","doseCalculationMethod":1,"units":"mg","notes":"Notes","maxDose":1600,"mgkg_initial":15,"mgkg_min":15,"mgkg_max":20,"rounval":100,"roundirect":1}]},{"name":"D_Continuation Phase","duration":"","drugsAcronym":"","drugs":[{"name":"DC_Rifampicin","acronym":"","doseCalculationMethod":1,"units":"mg","notes":"Notes","maxDose":600,"mgkg_initial":10,"mgkg_min":8,"mgkg_max":12,"rounval":150,"roundirect":1}]}]}]}';
+Guideline.jstring = '{"classSelectors":["#Guideline"],"name":"WHO","indications":[{"classSelectors":["#Indication"],"name":"Adults Daily","weightUnits":"Kg","minWeight":30,"maxWeight":100,"startWeight":60,"weight":60,"phases":[{"classSelectors":["#Phase"],"name":"ADInduction Phase","duration":"","drugsAcronym":"","drugs":[{"classSelectors":["#Drug","#Drug_threshold"],"name":"threshes drug","acronym":"TD","doseCalculationMethod":2,"units":"threshes","notes":"threshes notes","thresholds":[{"classSelectors":["#Threshold"],"thresholdTriggerWeight":100,"thresholdComparator":"1","thresholdDose":"max dose"}]}]},{"classSelectors":["#Phase"],"name":"ADContinuation Phase","duration":"","drugsAcronym":"","drugs":[{"classSelectors":["#Drug","#Drug_mgKg"],"name":"ADC_Isoniazid","acronym":"","doseCalculationMethod":1,"units":"mg","notes":"Notes","maxDose":300,"mgkg_initial":5,"mgkg_min":4,"mgkg_max":6,"roundval":50,"roundirect":1},{"classSelectors":["#Drug","#Drug_mgKg"],"name":"ADC_Rifampicin","acronym":"","doseCalculationMethod":1,"units":"mg","notes":"Notes","maxDose":600,"mgkg_initial":10,"mgkg_min":8,"mgkg_max":12,"roundval":150,"roundirect":1}]}]},{"classSelectors":["#Indication"],"name":"DOTs","weightUnits":"Kg","minWeight":30,"maxWeight":100,"startWeight":60,"weight":60,"phases":[{"classSelectors":["#Phase"],"name":"D_Induction Phase","duration":"","drugsAcronym":"","drugs":[{"classSelectors":["#Drug","#Drug_mgKg"],"name":"DI_Ethambutol","acronym":"","doseCalculationMethod":1,"units":"mg","notes":"Notes","maxDose":1600,"mgkg_initial":15,"mgkg_min":15,"mgkg_max":20,"roundval":100,"roundirect":1}]},{"classSelectors":["#Phase"],"name":"D_Continuation Phase","duration":"","drugsAcronym":"","drugs":[{"classSelectors":["#Drug","#Drug_mgKg"],"name":"DC_Rifampicin","acronym":"","doseCalculationMethod":1,"units":"mg","notes":"Notes","maxDose":600,"mgkg_initial":10,"mgkg_min":8,"mgkg_max":12,"roundval":150,"roundirect":1}]}]}],"dirtyTexts":0}';
+//    '{"name":"WHO","indications":[{"name":"Adults Daily","phases":[{"name":"ADInduction Phase","duration":"","drugsAcronym":"","drugs":[{"name":"ADI_Isoniazid","acronym":"","doseCalculationMethod":1,"units":"mg","notes":"Notes","maxDose":300,"mgkg_initial":5,"mgkg_min":4,"mgkg_max":6,"roundval":50,"roundirect":1},{"name":"ADI_Rifampicin","acronym":"","doseCalculationMethod":1,"units":"mg","notes":"Notes","maxDose":600,"mgkg_initial":10,"mgkg_min":8,"mgkg_max":12,"roundval":150,"roundirect":1},{"name":"ADI_Pyrazinamide","acronym":"","doseCalculationMethod":1,"units":"mg","notes":"Notes","maxDose":2000,"mgkg_initial":25,"mgkg_min":20,"mgkg_max":30,"roundval":100,"roundirect":1},{"name":"ADI_Ethambutol","acronym":"","doseCalculationMethod":1,"units":"mg","notes":"Notes","maxDose":1600,"mgkg_initial":15,"mgkg_min":15,"mgkg_max":20,"roundval":100,"roundirect":1}]},{"name":"ADContinuation Phase","duration":"","drugsAcronym":"","drugs":[{"name":"ADC_Isoniazid","acronym":"","doseCalculationMethod":1,"units":"mg","notes":"Notes","maxDose":300,"mgkg_initial":5,"mgkg_min":4,"mgkg_max":6,"roundval":50,"roundirect":1},{"name":"ADC_Rifampicin","acronym":"","doseCalculationMethod":1,"units":"mg","notes":"Notes","maxDose":600,"mgkg_initial":10,"mgkg_min":8,"mgkg_max":12,"roundval":150,"roundirect":1}]}]},{"name":"DOTs","phases":[{"name":"D_Induction Phase","duration":"","drugsAcronym":"","drugs":[{"name":"DI_Ethambutol","acronym":"","doseCalculationMethod":1,"units":"mg","notes":"Notes","maxDose":1600,"mgkg_initial":15,"mgkg_min":15,"mgkg_max":20,"roundval":100,"roundirect":1}]},{"name":"D_Continuation Phase","duration":"","drugsAcronym":"","drugs":[{"name":"DC_Rifampicin","acronym":"","doseCalculationMethod":1,"units":"mg","notes":"Notes","maxDose":600,"mgkg_initial":10,"mgkg_min":8,"mgkg_max":12,"roundval":150,"roundirect":1}]}]}]}';
 // Dirty texts
 
 //   IDs
@@ -22,7 +24,7 @@ Guideline.ID_editor_hanger_guideline_editor_texts = "editor_hanger_guideline_tex
 Guideline.ID_editor_text_guideline_editor_name = "Geditor_text_guideline_editor_name";
 Guideline.ID_editor_select_indications = "editor_select_indications";
 Guideline.ID_editor_header = "page_header_editor";
-Guideline.ID_editor_headertitle = "page_headertitle_editor";
+Guideline.ID_editor_bar_header_guideline = "bar_header_guideline";
 Guideline.ID_editor_header_button_export = "Geditor_header_button_export";
 Guideline.KEY_objectType_Guideline = 'G';
 Guideline.KEY_objectType_Indication = 'I';
@@ -71,6 +73,7 @@ Guideline.global_active_Drug_editor = function () {
 
 //  INSTANCE
 Guideline.prototype.constructor = Guideline;
+Guideline.prototype = Object.create(EditableDataObject.prototype);
 //    IN OUTs
 Guideline.prototype.loadSettingsAndGlobals = function () {
 
@@ -110,8 +113,6 @@ Guideline.prototype.initFromJSONstringObject = function (jasonStringObject) {
 Guideline.prototype.initFromJSONstring = function (jasonString) {
     if (jasonString) {
         var g = JSON.parse(jasonString);
-        console.log(g);
-
         if (g) {
             this.initFromJSONstringObject(g);
         }
@@ -119,6 +120,7 @@ Guideline.prototype.initFromJSONstring = function (jasonString) {
 };
 Guideline.prototype.exportGuideline = function () {
     //window.open().document.write(JSON.stringify(this));
+    console.log(JSON.stringify(this));
     var content = jqo(Guideline.ID_export_content_hanger);
     content.empty();
     content.append(JSON.stringify(this));
@@ -173,17 +175,16 @@ Guideline.prototype.completeHTMLsetup_Editor = function () {
 };
 //    Display GL
 Guideline.prototype.displayGuideline_editing = function () {
-    this.displayTextsForGuideLine();
+    this.displayObjectSpecificData();
+    jqo(Guideline.ID_editor_bar_header_guideline).text(this.name || "");
     //cascade down
     this.initialiseIndication();
 };
-Guideline.prototype.displayTextsForGuideLine = function () {
-    jqo(Guideline.ID_editor_text_guideline_editor_name).val(this.name);
-};
 //    Save
 Guideline.prototype.saveObjectSpecificData = function () {
-    this.name = jqo(Guideline.ID_editor_text_guideline_editor_name).val() || '';
-    this.saveGuidelineInLocalStorage();
+    EditableDataObject.prototype.saveObjectSpecificData.call(this);
+    jqo(Guideline.ID_editor_bar_header_guideline).text(this.name || "");
+
 };
 // GLOBAL EVENTS
 Guideline.prototype.someTextInputChanged = function (objectID) {
@@ -270,35 +271,35 @@ Guideline.prototype.addSomething = function (whatToAdd) {
         default:
             break;
     }
+    scrollIDIntoView('bottomOf_editor');
 };
 Guideline.prototype.deleteSomething = function (whatToDelete) {
-    {
-        switch (whatToDelete) {
-            case Guideline.KEY_objectType_Indication:
-                if (this.indications.length > Guideline.selectedIndicationIndex_editor()) {
-                    this.indications.splice(Guideline.selectedIndicationIndex_editor(), 1);
-                    this.initialiseIndication();
-                }
-                break;
-            case Guideline.KEY_objectType_Phase:
-                if (this.active_Indication_editor()) {
-                    this.active_Indication_editor().deletePhase();
-                }
-                break;
-            case Guideline.KEY_objectType_Drug:
-                if (this.active_Phase_editor()) {
-                    this.active_Phase_editor().deleteDrug();
-                }
-                break;
-            case Guideline.KEY_objectType_Threshold:
-                if (this.active_Drug_editor()) {
-                    this.active_Drug_editor().deleteThreshold();
-                }
-                break;
-            default:
-                break;
-        }
+    switch (whatToDelete) {
+        case Guideline.KEY_objectType_Indication:
+            if (this.indications.length > Guideline.selectedIndicationIndex_editor()) {
+                this.indications.splice(Guideline.selectedIndicationIndex_editor(), 1);
+                this.initialiseIndication();
+            }
+            break;
+        case Guideline.KEY_objectType_Phase:
+            if (this.active_Indication_editor()) {
+                this.active_Indication_editor().deletePhase();
+            }
+            break;
+        case Guideline.KEY_objectType_Drug:
+            if (this.active_Phase_editor()) {
+                this.active_Phase_editor().deleteDrug();
+            }
+            break;
+        case Guideline.KEY_objectType_Threshold:
+            if (this.active_Drug_editor()) {
+                this.active_Drug_editor().deleteThreshold();
+            }
+            break;
+        default:
+            break;
     }
+    this.saveGuidelineInLocalStorage();
 };
 Guideline.prototype.confirmDelete = function (whatToDelete) {
     var myself = this;

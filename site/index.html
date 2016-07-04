@@ -19,6 +19,7 @@
     <script src="jquery.mobile-1.4.5.js"></script>
 
     <!--My JS-->
+    <script src="EditableDataObject.js"></script>
     <script src="GuidelineObject.js"></script>
     <script src="DrugObject.js"></script>
     <script src="PhaseObject.js"></script>
@@ -33,7 +34,7 @@
 
 <div data-role="page" id="page_editor" data-theme="a"><!-- Page -->
     <div data-role="header" id="page_header_editor"><!-- Header -->
-        <h2 id="page_headertitle_editor"></h2>
+        <h2>Edit Guideline</h2>
         <!-- VIEW button -->
         <a href="#page_prescribe" class="ui-btn ui-btn-left ui-corner-all ui-icon-bullets ui-btn-icon-notext">View</a>
         <!-- EXPORT button -->
@@ -42,6 +43,7 @@
     </div>
     <div role="main" class="ui-content" id="ui-content-editor"><!-- Content -->
         <div id="editor-top-hanger">
+            <h4 class="ui-bar ui-bar-a" id="bar_header_guideline"></h4>
             <div class="ui-grid-b ui-responsive">
                 <div class="ui-block-a">
                 </div>
@@ -55,13 +57,13 @@
                     </div>
                 </div>
             </div><!-- /grid-a -->
-
             <!-- GUIDELINE Texts Hanger -->
-            <div id="editor_hanger_guideline_texts" class="ui-field-contain">
-                <!-- Name -->
-                <label for="Geditor_text_guideline_editor_name">Name</label>
-                <input id="Geditor_text_guideline_editor_name" name="Geditor_text_guideline_editor_name" type="text"
+            <div id="Guideline"> <!-- Guideline Class -->
+                <div id="editor_hanger_guideline_texts" class="ui-field-contain">
+                    <label for="Geditor_text_guideline_editor_name">Name</label>
+                    <input id="Geditor_text_guideline_editor_name" name="name" type="text"
                        placeholder="Name">
+                </div>
             </div>
 
             <!-- INDICATION top Hanger -->
@@ -189,70 +191,74 @@
                         </div>
                     </div>
                 </div><!-- /grid-a -->
-
-
                 <!-- DRUGS texts Hanger -->
-                <div id="℞editor_hanger_drug_texts" class="ui-field-contain">
-                    <div class="ui-field-contain">
-                        <label for="Deditor_text_drug_name">Name</label>
-                        <input id="Deditor_text_drug_name" name="Deditor_text_drug_name" type="text" placeholder="Name">
-                    </div>
-                    <div class="ui-field-contain">
-                        <label for="Deditor_text_drug_acronym">Acronym</label>
-                        <input id="Deditor_text_drug_acronym" name="Deditor_text_drug_acronym" type="text"
-                               placeholder="Acronym">
-                    </div>
-                    <div class="ui-field-contain">
-                        <label for="Deditor_text_drug_units">Units</label>
-                        <input id="Deditor_text_drug_units" name="Deditor_text_drug_units" type="text"
-                               placeholder="Units">
-                    </div>
-                    <div class="ui-field-contain">
-                        <label for="Deditor_text_drug_notes">Notes</label>
-                        <textarea id="Deditor_text_drug_notes" name="Deditor_text_drug_notes"
+                <div id="editor_hanger_drug_texts" class="℞ ui-field-contain"><!-- ℞ -->
+                    <div id="Drug">
+                        <div class="ui-field-contain">
+                            <label for="Deditor_text_drug_name">Name</label>
+                            <input id="Deditor_text_drug_name" name="name" type="text" placeholder="Name">
+                        </div>
+                        <div class="ui-field-contain">
+                            <label for="Deditor_text_drug_acronym">Acronym</label>
+                            <input id="Deditor_text_drug_acronym" name="acronym" type="text"
+                                   placeholder="Acronym">
+                        </div>
+                        <div class="ui-field-contain">
+                            <label for="Deditor_text_drug_units">Units</label>
+                            <input id="Deditor_text_drug_units" name="units" type="text"
+                                   placeholder="Units">
+                        </div>
+                        <div class="ui-field-contain">
+                            <label for="Deditor_text_drug_notes">Notes</label>
+                        <textarea id="Deditor_text_drug_notes" name="notes"
                                   placeholder="Notes"></textarea>
-                    </div>
-
+                        </div>
+                    </div><!-- Drug class -->
                     <!-- MGKG texts Hanger -->
-                    <div id="℞editor_drugmgkg_hanger_texts" class="ui-field-contain">
-                        <div class="ui-field-contain">
-                            <label for="Deditor_text_drug_frequency">Frequency</label>
-                            <input id="Deditor_text_drug_frequency" name="Deditor_text_drug_frequency" type="text"
-                                   placeholder="Frequency">
+                    <div id="Drug_mgKg">
+                        <div id="editor_drugmgkg_hanger_texts" class="℞ ui-field-contain"><!-- ℞ -->
+                            <div class="ui-field-contain">
+                                <label for="Deditor_text_drug_frequency">Frequency</label>
+                                <input id="Deditor_text_drug_frequency" name="frequency" type="text"
+                                       placeholder="Frequency">
+                            </div>
+                            <div class="ui-field-contain">
+                                <label for="Deditor_text_drug_maxDose">Max Dose</label>
+                                <input id="Deditor_text_drug_maxDose" name="maxDose" type="number"
+                                       placeholder="Max Dose">
+                            </div>
+                            <div class="ui-field-contain">
+                                <label for="Deditor_text_drug_mgkg_initial">Initial mg/Kg</label>
+                                <input id="Deditor_text_drug_mgkg_initial" name="mgkg_initial"
+                                       type="number" placeholder="Preferred mg/Kg">
+                            </div>
+                            <div class="ui-field-contain">
+                                <label for="Deditor_text_drug_mgkg_min">Min mg/Kg</label>
+                                <input id="Deditor_text_drug_mgkg_min" name="mgkg_min" type="number"
+                                       placeholder="Min mg/Kg">
+                            </div>
+                            <div class="ui-field-contain">
+                                <label for="Deditor_text_drug_mgkg_max">Max mg/Kg</label>
+                                <input id="Deditor_text_drug_mgkg_max" name="mgkg_max" type="number"
+                                       placeholder="Max mg/Kg">
+                            </div>
+                            <div class="ui-field-contain">
+                                <label for="Deditor_text_drug_rounval">Rounding value</label>
+                                <input id="Deditor_text_drug_rounval" name="roundval" type="number"
+                                       placeholder="Rounding value">
+                            </div>
+                            <div class="ui-field-contain">
+                                <label for="editor_select_drug_roundirect">Rounding Direction</label>
+                                <select data-mini="true" data-inline='true' id="editor_select_drug_roundirect"
+                                        name="roundirect"></select>
+                            </div>
                         </div>
-                        <div class="ui-field-contain">
-                            <label for="Deditor_text_drug_maxDose">Max Dose</label>
-                            <input id="Deditor_text_drug_maxDose" name="Deditor_text_drug_maxDose" type="number"
-                                   placeholder="Max Dose">
-                        </div>
-                        <div class="ui-field-contain">
-                            <label for="Deditor_text_drug_mgkg_initial">Initial mg/Kg</label>
-                            <input id="Deditor_text_drug_mgkg_initial" name="Deditor_text_drug_mgkg_initial"
-                                   type="number" placeholder="Preferred mg/Kg">
-                        </div>
-                        <div class="ui-field-contain">
-                            <label for="Deditor_text_drug_mgkg_min">Min mg/Kg</label>
-                            <input id="Deditor_text_drug_mgkg_min" name="Deditor_text_drug_mgkg_min" type="number"
-                                   placeholder="Min mg/Kg">
-                        </div>
-                        <div class="ui-field-contain">
-                            <label for="Deditor_text_drug_mgkg_max">Max mg/Kg</label>
-                            <input id="Deditor_text_drug_mgkg_max" name="Deditor_text_drug_mgkg_max" type="number"
-                                   placeholder="Max mg/Kg">
-                        </div>
-                        <div class="ui-field-contain">
-                            <label for="Deditor_text_drug_rounval">Rounding value</label>
-                            <input id="Deditor_text_drug_rounval" name="Deditor_text_drug_rounval" type="number"
-                                   placeholder="Rounding value">
-                        </div>
-                        <div class="ui-field-contain">
-                            <label for="editor_select_drug_roundirect">Rounding Direction</label>
-                            <select data-mini="true" data-inline='true' id="editor_select_drug_roundirect"
-                                    name="editor_select_drug_roundirect"></select>
-                        </div>
-                    </div><!-- MGKG texts Hanger -->
+                    </div><!-- Drug_mgKg class -->
                     <!-- Threshold Drug texts Hanger -->
-                    <div id="℞editor_drugthresholds_hanger_texts" class="ui-field-contain ">
+                    <div id="Drug_threshold">
+                        <!-- Drug_threshold class has no specifix texts-->
+                    </div><!-- Drug_threshold class -->
+                    <div id="editor_drugthresholds_hanger_texts" class="℞ ui-field-contain "><!-- ℞ -->
                         <h6 class="ui-bar ui-bar-a">Thresholds</h6>
                         <div class="ui-grid-b ui-responsive">
                             <div class="ui-block-a">
@@ -282,36 +288,39 @@
                                 </div>
                             </div>
                         </div><!-- /grid-a -->
-                        <div id="editor_texts_threshold_hanger" class="ui-field-contain">
-                            <div class="ui-grid-a ui-responsive">
-                                <div class="ui-block-a">
-                                    <div class="ui-field-contain">
-                                        <label for="editor_select_threshold_comparator">Weight</label>
-                                        <select data-mini="true" data-inline="true"
-                                                id="editor_select_threshold_comparator"
-                                                name="editor_select_threshold_comparator"></select>
-                                        <label for="editor_select_threshold_triggerWeight" class="ui-hidden-accessible">Weight</label>
-                                        <select data-mini="true" data-inline="true"
-                                                id="editor_select_threshold_triggerWeight"
-                                                name="editor_select_threshold_triggerWeight"></select>
+                        <div id="Threshold">
+                            <div id="editor_texts_threshold_hanger" class="ui-field-contain">
+                                <div class="ui-grid-a ui-responsive">
+                                    <div class="ui-block-a">
+                                        <div class="ui-field-contain">
+                                            <label for="editor_select_threshold_comparator">Weight</label>
+                                            <select data-mini="true" data-inline="true"
+                                                    id="editor_select_threshold_comparator"
+                                                    name="thresholdComparator"></select>
+                                            <label for="editor_select_threshold_triggerWeight"
+                                                   class="ui-hidden-accessible">Weight</label>
+                                            <select data-mini="true" data-inline="true"
+                                                    id="editor_select_threshold_triggerWeight"
+                                                    name="thresholdTriggerWeight"></select>
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="ui-block-b">
-                                    <div class="ui-field-contain">
-                                        <label for="Deditor_text_threshold_dose"
-                                               class="ui-hidden-accessible">Give</label>
-                                        <input id="Deditor_text_threshold_dose" name="Deditor_text_threshold_dose"
-                                               type="text" placeholder="Dose">
+                                    <div class="ui-block-b">
+                                        <div class="ui-field-contain">
+                                            <label for="Deditor_text_threshold_dose"
+                                                   class="ui-hidden-accessible">Give</label>
+                                            <input id="Deditor_text_threshold_dose" name="thresholdDose"
+                                                   type="text" placeholder="Dose">
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
+                        </div><!-- Threshold class -->
                     </div><!-- Threshold Drug texts Hanger -->
-
                 </div><!-- DRUGS texts Hanger -->
             </div><!-- DRUG top Hanger -->
 
         </div><!-- Guideline.ID_editor_hanger_top -->
+        <div id="bottomOf_editor"></div>
     </div><!-- /content -->
 </div><!-- /editor -->
 
