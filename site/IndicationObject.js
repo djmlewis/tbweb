@@ -2,6 +2,7 @@
  * Created by davidlewis on 11/05/2016.
  */
 function Indication(name, wtUnits, minWt, maxWt, startWeight) {
+    this.classSelectors = ["#Indication"];
     this.name = name || "Untitled";
     this.weightUnits = wtUnits || 'Kg';
     this.minWeight = minWt || 30;

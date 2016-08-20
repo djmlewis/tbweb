@@ -13,6 +13,7 @@ function DrugInstructionsInfosAlerts(name, instructions, infos, alerts) {
 
 // ********** DRUG ************
 function Drug(name, acronym, doseCalculationMethod, units, notes) {
+    this.classSelectors = ["#Drug"];
     this.name = name || "Untitled";
     this.acronym = acronym || "";
     this.doseCalculationMethod = doseCalculationMethod || Drug.doseCalculationMethodOptionsIndex_Drug;
@@ -22,13 +23,13 @@ function Drug(name, acronym, doseCalculationMethod, units, notes) {
 
 // STATICS
 // Dirty texts
-Drug.SEL_editor_subHangerPrefixSelector = '[id *= "℞"]';
+Drug.SEL_editor_subHangerPrefixSelector = '.℞';//'[id *= "℞"]';
 Drug.ID_editor_hanger_drug_top = "editor_hanger_drug_top";
 Drug.ID_editor_drug_button_add = "Deditordrug_button_add";
 Drug.ID_editor_drug_button_delete = "Deditordrug_button_delete";
 Drug.ID_editor_drug_button_save = "Deditordrug_button_save";
 
-Drug.ID_editor_hanger_drug_texts = "℞editor_hanger_drug_texts";
+Drug.ID_editor_hanger_drug_texts = "editor_hanger_drug_texts";//℞
 Drug.ID_editor_text_drug_name = "Deditor_text_drug_name";
 Drug.ID_editor_text_drug_acronym = "Deditor_text_drug_acronym";
 Drug.ID_editor_text_drug_units = "Deditor_text_drug_units";
@@ -66,6 +67,7 @@ Drug.addAlertsOrInfosToCollapsible = function (arrayToParse, addAlertIcon, colla
 
 // INSTANCE 
 Drug.prototype.constructor = Drug;
+Drug.prototype = Object.create(EditableDataObject.prototype);
 Drug.prototype.initFromJSONstringObject = function (jasonStringObject) {
     if (jasonStringObject) {
         if (jasonStringObject.name) {
@@ -92,14 +94,7 @@ Drug.prototype.displayDrugs_editor = function () {
     //over ridden in all subclasses that then called by each _Drug version in turn
     // hide all the hangers first then show ours
     $(Drug.SEL_editor_subHangerPrefixSelector).hide();
-    this.displayTexts_editor();
     jqo(Drug.ID_editor_hanger_drug_texts).show();
-};
-Drug.prototype.displayTexts_editor = function () {
-    jqo(Drug.ID_editor_text_drug_name).val(this.name);
-    jqo(Drug.ID_editor_text_drug_acronym).val(this.acronym);
-    jqo(Drug.ID_editor_text_drug_units).val(this.units);
-    jqo(Drug.ID_editor_text_drug_notes).val(this.notes);
 };
 /* threshold compatibility
  Drug.prototype.addThreshold = function () {
@@ -116,6 +111,7 @@ Drug.prototype.drugInstructionsInfosAlertsForWeight = function (weight) {
 };
 
 // Save
+/*
 Drug.prototype.saveObjectSpecificData = function () {
     this.name = jqo(Drug.ID_editor_text_drug_name).val() || '';
     this.acronym = jqo(Drug.ID_editor_text_drug_acronym).val() || '';
@@ -124,22 +120,24 @@ Drug.prototype.saveObjectSpecificData = function () {
     window.gActiveGuideline.saveGuidelineInLocalStorage();
 
 };
+ */
 
 // ********** DRUG MGKG  ************
-function Drug_mgKg(name, acronym, maxDose, mgkg_initial, mgkg_min, mgkg_max, rounval, roundirect, notes, frequency) {
+function Drug_mgKg(name, acronym, maxDose, mgkg_initial, mgkg_min, mgkg_max, roundval, roundirect, notes, frequency) {
     //super init
     Drug.call(this, name, acronym, Drug.doseCalculationMethodOptionsIndex_Drug_mgKg, "mg", notes);
     // subclass init
+    this.classSelectors = ["#Drug", "#Drug_mgKg"];
+    this.frequency = frequency;
     this.maxDose = maxDose;
     this.mgkg_initial = mgkg_initial;
     this.mgkg_min = mgkg_min;
     this.mgkg_max = mgkg_max;
-    this.rounval = rounval;
+    this.roundval = roundval;
     this.roundirect = roundirect || 0;
-    this.frequency = frequency;
 }
 // STATICS
-Drug_mgKg.ID_editor_drugmgkg_hanger_texts = "℞editor_drugmgkg_hanger_texts";
+Drug_mgKg.ID_editor_drugmgkg_hanger_texts = "editor_drugmgkg_hanger_texts";//℞
 Drug_mgKg.ID_editor_text_drug_frequency = "Deditor_text_drug_frequency";
 Drug_mgKg.ID_editor_text_drug_maxDose = "Deditor_text_drug_maxDose";
 Drug_mgKg.ID_editor_text_drug_mgkg_initial = "Deditor_text_drug_mgkg_initial";
@@ -171,8 +169,8 @@ Drug_mgKg.prototype.initFromJSONstringObject = function (jasonStringObject) {
         if (jasonStringObject.mgkg_max) {
             this.mgkg_max = jasonStringObject.mgkg_max;
         }
-        if (jasonStringObject.rounval) {
-            this.rounval = jasonStringObject.rounval;
+        if (jasonStringObject.roundval) {
+            this.roundval = jasonStringObject.roundval;
         }
         if (jasonStringObject.roundirect) {
             this.roundirect = jasonStringObject.roundirect;
@@ -184,19 +182,22 @@ Drug_mgKg.prototype.initFromJSONstringObject = function (jasonStringObject) {
 };
 
 // Save
+/*
 Drug_mgKg.prototype.saveObjectSpecificData = function () {
+ saveObject(this);
+ window.gActiveGuideline.saveGuidelineInLocalStorage();
     Drug.prototype.saveObjectSpecificData.call(this);
     // should be fixed at init>>>> this.doseCalculationMethod = jqo(Drug.ID_editor_select_drugHowDoseCalc).val() || '';
+
     this.frequency = jqo(Drug_mgKg.ID_editor_text_drug_frequency).val() || '';
     this.maxDose = jqo(Drug_mgKg.ID_editor_text_drug_maxDose).val() || '';
     this.mgkg_initial = jqo(Drug_mgKg.ID_editor_text_drug_mgkg_initial).val() || '';
     this.mgkg_min = jqo(Drug_mgKg.ID_editor_text_drug_mgkg_min).val() || '';
     this.mgkg_max = jqo(Drug_mgKg.ID_editor_text_drug_mgkg_max).val() || '';
     this.roundirect = jqo(Drug_mgKg.ID_editor_select_drug_roundirect).val() || '';
-    this.rounval = jqo(Drug_mgKg.ID_editor_text_drug_rounval).val() || '';
-    window.gActiveGuideline.saveGuidelineInLocalStorage();
-
+ this.roundval = jqo(Drug_mgKg.ID_editor_text_drug_rounval).val() || '';
 };
+ */
 
 Drug_mgKg.prototype.displayDrugs_editor = function () {
     //now call super
@@ -204,21 +205,7 @@ Drug_mgKg.prototype.displayDrugs_editor = function () {
     // do anything special here
     jqo(Drug_mgKg.ID_editor_drugmgkg_hanger_texts).show();
 
-    //show texts values
-    //call super
-    Drug.prototype.displayTexts_editor.call(this);
-    this.displayTexts_editor();
-};
-
-Drug_mgKg.prototype.displayTexts_editor = function () {
-    jqo(Drug_mgKg.ID_editor_text_drug_frequency).val(this.frequency);
-    jqo(Drug_mgKg.ID_editor_text_drug_maxDose).val(this.maxDose);
-    jqo(Drug_mgKg.ID_editor_text_drug_mgkg_initial).val(this.mgkg_initial);
-    jqo(Drug_mgKg.ID_editor_text_drug_mgkg_min).val(this.mgkg_min);
-    jqo(Drug_mgKg.ID_editor_text_drug_mgkg_max).val(this.mgkg_max);
-    jqo(Drug_mgKg.ID_editor_text_drug_rounval).val(this.rounval);
-    jqo(Drug_mgKg.ID_editor_select_drug_roundirect).val(this.roundirect).selectmenu('refresh');
-
+    this.displayObjectSpecificData();
 };
 
 Drug_mgKg.prototype.drugInstructionsInfosAlertsForWeight = function (weight) {
@@ -229,15 +216,15 @@ Drug_mgKg.prototype.drugInstructionsInfosAlertsForWeight = function (weight) {
 // dont use calculatedDose now, apply changes to correctedDose
     var correctedDose = calculatedDose;
 // apply rounding if necessary
-    if (correctedDose % this.rounval != 0) {
+    if (correctedDose % this.roundval != 0) {
         switch (this.roundirect) {//-1 down 0 ignore +1 up
             case -1:
-                correctedDose = Math.floor(correctedDose / this.rounval) * this.rounval;
-                infosarray.push(["Dose rounded DOWN by", this.rounval.toString(), this.units].join(" "));
+                correctedDose = Math.floor(correctedDose / this.roundval) * this.roundval;
+                infosarray.push(["Dose rounded DOWN by", this.roundval.toString(), this.units].join(" "));
                 break;
             case 1:
-                correctedDose = (Math.floor(correctedDose / this.rounval) + 1) * this.rounval;
-                infosarray.push(["Dose rounded UP by", this.rounval.toString(), this.units].join(" "));
+                correctedDose = (Math.floor(correctedDose / this.roundval) + 1) * this.roundval;
+                infosarray.push(["Dose rounded UP by", this.roundval.toString(), this.units].join(" "));
                 break;
         }
     }

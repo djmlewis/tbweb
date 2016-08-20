@@ -3,6 +3,7 @@
  */
 
 function Phase(name, duration, drugsAcronym) {
+    this.classSelectors = ["#Phase"];
     this.name = name || "Untitled";
     this.duration = duration || "";
     this.drugsAcronym = drugsAcronym || "";

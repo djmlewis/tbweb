@@ -1,6 +1,17 @@
 /**
  * Created by davidjmlewis on 22/04/2016.
  */
+function selectorForKeyAndObjectName(key, objectName) {
+    return '[name*="' + objectName + '-' + key + '"]';
+}
+
+function saveObject(obj) {
+    var propNames = Object.keys(obj);
+    for (var k = 0; k < propNames.length; k++) {
+        var elem = $(selectorForKeyAndObjectName(propNames[k], obj.classSelectors));
+        obj[propNames[k]] = elem.val() ? elem.val() : obj[propNames[k]];
+    }
+}
 function integerArrayFromTo(from, to) {
     if (from <= to) {
         var array = [];
@@ -13,18 +24,7 @@ function integerArrayFromTo(from, to) {
         return [];
     }
 }
-/*
-function acronymSpanForString(acronym) {
-    return $(document.createElement("span")).text(" acronym").addClass("phaseAcronym")
-}
-function uniqueIDforDrugHangerDivInPhase(phaseIndex) {
-    return 'ph_' + phaseIndex;
-}
- function emptyThisHangerWithID(id) {
- jqo(id).empty();
- }
 
- */
 function jqo(id) {
     return $('#' + id);
 }
@@ -74,6 +74,10 @@ function extractNamesFromArray(array) {
         return item.name;
     });
 }
+
+function scrollIDIntoView(id) {
+    document.getElementById(id).scrollIntoView();
+}
 /*
  function selectedIndexFromSelectWithID(id) {
  return selval = parseInt($('#' + id + ' option:selected').data().option_index);
@@ -88,5 +92,16 @@ function extractNamesFromArray(array) {
  .selectmenu('refresh');
 
  }
+
+ function acronymSpanForString(acronym) {
+ return $(document.createElement("span")).text(" acronym").addClass("phaseAcronym")
+ }
+ function uniqueIDforDrugHangerDivInPhase(phaseIndex) {
+ return 'ph_' + phaseIndex;
+ }
+ function emptyThisHangerWithID(id) {
+ jqo(id).empty();
+ }
+
 
  */
